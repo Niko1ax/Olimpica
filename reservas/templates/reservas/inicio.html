@@ -137,6 +137,7 @@
                 margin-right: 12px;
             }
 
+
             .hero, main {
                 padding-left: 5%;
                 padding-right: 5%;
@@ -145,15 +146,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">⚽ OLIMPICA</div>
-
-        <nav>
-            <a href="#inicio">Inicio</a>
-            <a href="#complejos">Complejos</a>
-            <a href="/admin/">Administración</a>
-        </nav>
-    </header>
+    {% include 'reservas/navbar.html' %}
 
     <section class="hero" id="inicio">
         <h1>Tu próximo partido empieza acá.</h1>
@@ -162,6 +155,7 @@
             y prepará tu próximo partido desde un solo lugar.
         </p>
         <a class="boton" href="#complejos">Explorar complejos</a>
+        <a class="boton" href="{% url 'buscar_canchas' %}">Buscar por horario</a>
     </section>
 
     <main id="complejos">

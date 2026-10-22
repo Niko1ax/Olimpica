@@ -1,3 +1,14 @@
+from .models import PerfilUsuario, Complejo
+from .forms import ComplejoForm
+from .models import Reserva
+from .forms import RegistroForm
+
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.db import transaction
+from django.shortcuts import redirect, render
+from .models import PerfilUsuario
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -221,4 +232,167 @@ def mis_reservas(request):
         request,
         "reservas/mis_reservas.html",
         {"reservas": reservas, "error": ""},
+    )
+
+
+
+def registro(request):
+    if request.method == "POST":
+        formulario = RegistroForm(request.POST)
+
+        if formulario.is_valid():
+            with transaction.atomic():
+                usuario = formulario.save()
+
+                PerfilUsuario.objects.create(
+                    usuario=usuario,
+                    rol="JUGADOR",
+                    telefono=formulario.cleaned_data["telefono"],
+                )
+
+            login(request, usuario)
+            return redirect("buscar_canchas")
+    else:
+        formulario = RegistroForm()
+
+    return render(
+        request,
+        "reservas/registro.html",
+        {"formulario": formulario},
+    )
+
+@login_required
+def cancelar_reserva(request, reserva_id):
+    if request.method != "POST":
+        return redirect("mis_reservas")
+
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="JUGADOR",
+    ).first()
+
+    if perfil is None:
+        return redirect("mis_reservas")
+
+    reserva = get_object_or_404(
+        Reserva,
+        pk=reserva_id,
+        jugador=perfil,
+    )
+
+    if reserva.estado not in ["PENDIENTE", "CONFIRMADA"]:
+        return redirect("mis_reservas")
+
+    ahora = timezone.localtime()
+    inicio_reserva = timezone.make_aware(
+        datetime.combine(reserva.fecha, reserva.hora_inicio),
+        timezone.get_current_timezone(),
+    )
+
+    if inicio_reserva <= ahora:
+        return redirect("mis_reservas")
+
+    reserva.estado = "CANCELADA"
+    reserva.save(update_fields=["estado"])
+
+    return redirect("mis_reservas")
+
+
+@login_required
+def panel_reservas(request):
+    # Solo el personal autorizado puede acceder al panel.
+    if not request.user.is_staff:
+        return redirect("inicio")
+
+    reservas = Reserva.objects.select_related(
+        "jugador",
+        "jugador__usuario",
+        "cancha",
+        "cancha__complejo",
+    ).order_by("-fecha", "-hora_inicio")
+
+    return render(
+        request,
+        "reservas/panel_reservas.html",
+        {"reservas": reservas},
+    )
+
+
+@login_required
+def actualizar_estado_reserva(request, reserva_id):
+    # Solo el personal autorizado puede cambiar estados.
+    if not request.user.is_staff:
+        return redirect("inicio")
+
+    if request.method != "POST":
+        return redirect("panel_reservas")
+
+    reserva = get_object_or_404(Reserva, pk=reserva_id)
+    nuevo_estado = request.POST.get("estado")
+
+    estados_permitidos = {
+        "PENDIENTE",
+        "CONFIRMADA",
+        "CANCELADA",
+    }
+
+    if nuevo_estado in estados_permitidos:
+        reserva.estado = nuevo_estado
+        reserva.save(update_fields=["estado"])
+
+    return redirect("panel_reservas")
+
+
+@login_required
+def administrar_complejos(request):
+    if not request.user.is_staff:
+        return redirect("inicio")
+
+    complejos = Complejo.objects.prefetch_related("canchas").order_by("nombre")
+
+    return render(
+        request,
+        "reservas/administrar_complejos.html",
+        {"complejos": complejos},
+    )
+
+
+@login_required
+def crear_complejo(request):
+    if not request.user.is_staff:
+        return redirect("inicio")
+
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if perfil is None:
+        return render(
+            request,
+            "reservas/crear_complejo.html",
+            {
+                "formulario": ComplejoForm(),
+                "error": (
+                    "Tu cuenta administradora necesita un perfil "
+                    "de dueño para crear complejos."
+                ),
+            },
+        )
+
+    if request.method == "POST":
+        formulario = ComplejoForm(request.POST)
+
+        if formulario.is_valid():
+            complejo = formulario.save(commit=False)
+            complejo.dueno = perfil
+            complejo.save()
+            return redirect("administrar_complejos")
+    else:
+        formulario = ComplejoForm()
+
+    return render(
+        request,
+        "reservas/crear_complejo.html",
+        {"formulario": formulario, "error": ""},
     )

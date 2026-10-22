@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de reservas | Olimpica</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            color: #222;
+        }
+
+        header {
+            background: #176b3a;
+            color: white;
+            padding: 22px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header a {
+            color: white;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .tabla-contenedor {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: 0 3px 12px #0000000d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        th {
+            background: #f7f9f7;
+        }
+
+        select, button {
+            padding: 9px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #176b3a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        button:hover {
+            background: #12552e;
+        }
+
+        .estado {
+            font-weight: bold;
+        }
+
+        .vacio {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'reservas/navbar.html' %}
+    <header>
+        <h1>Olimpica | Gestión de reservas</h1>
+        <p>Panel interno para administrar las solicitudes de reserva.</p>
+        <a href="{% url 'inicio' %}">Volver al inicio</a>
+    </header>
+
+    <main>
+        <div class="tabla-contenedor">
+            <h2>Todas las reservas</h2>
+
+            {% if reservas %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N.º</th>
+                            <th>Jugador</th>
+                            <th>Cancha</th>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Precio</th>
+                            <th>Estado actual</th>
+                            <th>Gestionar</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for reserva in reservas %}
+                            <tr>
+                                <td>{{ reserva.id }}</td>
+                                <td>
+                                    {{ reserva.jugador.usuario.username }}
+                                </td>
+                                <td>
+                                    {{ reserva.cancha.complejo.nombre }}
+                                    - {{ reserva.cancha.nombre }}
+                                </td>
+                                <td>{{ reserva.fecha|date:"d/m/Y" }}</td>
+                                <td>
+                                    {{ reserva.hora_inicio|time:"H:i" }}
+                                    a {{ reserva.hora_fin|time:"H:i" }}
+                                </td>
+                                <td>${{ reserva.precio_total }}</td>
+                                <td class="estado">
+                                    {{ reserva.get_estado_display }}
+                                </td>
+                                <td>
+                                    <form method="post"
+                                          action="{% url 'actualizar_estado_reserva' reserva.id %}">
+                                        {% csrf_token %}
+
+                                        <select name="estado" aria-label="Nuevo estado">
+                                            <option value="PENDIENTE"
+                                                {% if reserva.estado == "PENDIENTE" %}selected{% endif %}>
+                                                Pendiente
+                                            </option>
+                                            <option value="CONFIRMADA"
+                                                {% if reserva.estado == "CONFIRMADA" %}selected{% endif %}>
+                                                Confirmada
+                                            </option>
+                                            <option value="CANCELADA"
+                                                {% if reserva.estado == "CANCELADA" %}selected{% endif %}>
+                                                Cancelada
+                                            </option>
+                                        </select>
+
+                                        <button type="submit">
+                                            Guardar estado
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="vacio">
+                    Todavía no hay reservas registradas.
+                </p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

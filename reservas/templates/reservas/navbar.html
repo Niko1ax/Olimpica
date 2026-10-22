@@ -1,0 +1,110 @@
+
+<nav class="olimpica-nav">
+    <a class="marca" href="{% url 'inicio' %}">⚽ Olimpica</a>
+
+    <div class="enlaces">
+        <a href="{% url 'inicio' %}">Inicio</a>
+        <a href="{% url 'buscar_canchas' %}">Buscar canchas</a>
+
+        {% if user.is_authenticated %}
+            {% if not user.is_staff %}
+                <a href="{% url 'mis_reservas' %}">Mis reservas</a>
+            {% endif %}
+
+          
+        {% if user.is_staff %}
+            <a href="{% url 'panel_reservas' %}">Administrar reservas</a>
+            <a href="{% url 'administrar_complejos' %}">Complejos y canchas</a>
+        {% endif %}
+
+
+            <span class="usuario">
+                Hola, {{ user.username }}
+            </span>
+
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="boton-sesion">Cerrar sesión</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Iniciar sesión</a>
+            <a class="boton-registro" href="{% url 'registro' %}">Registrarse</a>
+        {% endif %}
+    </div>
+</nav>
+
+<style>
+    .olimpica-nav {
+        background: #123f2d;
+        color: white;
+        padding: 16px 5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    .olimpica-nav .marca {
+        color: white;
+        font-size: 23px;
+        font-weight: bold;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .olimpica-nav .enlaces {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+    }
+
+    .olimpica-nav .enlaces > a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .olimpica-nav .enlaces > a:hover {
+        text-decoration: underline;
+    }
+
+    .olimpica-nav .usuario {
+        font-size: 14px;
+        color: #e0f2e5;
+    }
+
+    .olimpica-nav .boton-registro,
+    .olimpica-nav .boton-sesion {
+        background: white;
+        color: #176b3a !important;
+        padding: 10px 14px;
+        border-radius: 6px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .olimpica-nav .logout-form {
+        margin: 0;
+    }
+
+    .olimpica-nav .boton-sesion {
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    @media (max-width: 650px) {
+        .olimpica-nav {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .olimpica-nav .enlaces {
+            justify-content: flex-start;
+        }
+    }
+</style>

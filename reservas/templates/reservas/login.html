@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar | Olimpica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            margin: 0;
+            padding: 40px 16px;
+        }
+        .contenedor {
+            max-width: 400px;
+            margin: 40px auto;
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #00000012;
+        }
+        h1 { color: #176b3a; text-align: center; }
+        label { display: block; margin-top: 16px; }
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            margin-top: 6px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 22px;
+            background: #176b3a;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        a { color: #176b3a; }
+        .error { color: #b42318; }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Olimpica</h1>
+        <h2>Iniciar sesión</h2>
+
+        {% if form.errors %}
+            <p class="error">El usuario o la contraseña son incorrectos.</p>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_username">Usuario</label>
+            <input type="text" name="username" id="id_username"
+                   autocomplete="username" required>
+
+            <label for="id_password">Contraseña</label>
+            <input type="password" name="password" id="id_password"
+                   autocomplete="current-password" required>
+
+            <button type="submit">Ingresar</button>
+        </form>
+
+        <p>¿Todavía no tenés cuenta?
+            <a href="{% url 'registro' %}">Registrate acá</a>
+        </p>
+        <p><a href="{% url 'inicio' %}">Volver al inicio</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar complejos | Olimpica</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f1f5f1;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 18px;
+        }
+
+        h1, h2 { color: #176b3a; }
+
+        .complejo {
+            background: white;
+            padding: 22px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #0000000d;
+        }
+
+        .cancha {
+            padding: 14px;
+            margin-top: 12px;
+            background: #f7f9f7;
+            border-radius: 7px;
+        }
+
+        .sin-datos {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .enlace {
+            display: inline-block;
+            background: #176b3a;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .secundario {
+            color: #176b3a;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'reservas/navbar.html' %}
+
+    <main>
+        <h1>Administrar complejos y canchas</h1>
+        
+        <p>
+            <a class="enlace" href="{% url 'crear_complejo' %}">
+                + Registrar nuevo complejo
+            </a>
+        </p>
+
+        <p>Consultá los complejos registrados y las canchas de cada uno.</p>
+
+        <p>
+            <a class="enlace" href="{% url 'panel_reservas' %}">
+                Gestionar reservas
+            </a>
+        </p>
+
+        {% for complejo in complejos %}
+            <section class="complejo">
+                <h2>{{ complejo.nombre }}</h2>
+                <p><strong>Dirección:</strong> {{ complejo.direccion }}</p>
+
+                {% if complejo.telefono %}
+                    <p><strong>Teléfono:</strong> {{ complejo.telefono }}</p>
+                {% endif %}
+
+                {% if complejo.descripcion %}
+                    <p>{{ complejo.descripcion }}</p>
+                {% endif %}
+
+                <h3>Canchas</h3>
+
+                {% for cancha in complejo.canchas.all %}
+                    <div class="cancha">
+                        <strong>{{ cancha.nombre }}</strong>
+                        <p>Superficie: {{ cancha.get_superficie_display }}</p>
+                        <p>Precio por hora: ${{ cancha.precio_por_hora }}</p>
+                        <p>
+                            Estado:
+                            {% if cancha.activa %}
+                                Activa
+                            {% else %}
+                                Inactiva
+                            {% endif %}
+                        </p>
+                    </div>
+                {% empty %}
+                    <p>Este complejo todavía no tiene canchas.</p>
+                {% endfor %}
+            </section>
+        {% empty %}
+            <div class="sin-datos">
+                Todavía no hay complejos registrados.
+            </div>
+        {% endfor %}
+    </main>
+</body>
+</html>

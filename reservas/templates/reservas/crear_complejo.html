@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar complejo | Olimpica</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            color: #222;
+        }
+
+        main {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0000000d;
+        }
+
+        h1 { color: #176b3a; }
+
+        .campo { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        textarea { resize: vertical; }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #176b3a;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .error {
+            background: #fff1f0;
+            color: #a12622;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .volver {
+            display: inline-block;
+            margin-left: 12px;
+            color: #176b3a;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'reservas/navbar.html' %}
+
+    <main>
+        <h1>Registrar complejo</h1>
+        <p>Ingresá los datos del nuevo complejo deportivo.</p>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if formulario.errors %}
+            <div class="error">
+                Revisá los campos ingresados:
+                {{ formulario.errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for campo in formulario %}
+                <div class="campo">
+                    <label for="{{ campo.id_for_label }}">
+                        {{ campo.label }}
+                    </label>
+                    {{ campo }}
+
+                    {% for error_campo in campo.errors %}
+                        <p class="error">{{ error_campo }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Guardar complejo</button>
+            <a class="volver" href="{% url 'administrar_complejos' %}">
+                Volver
+            </a>
+        </form>
+    </main>
+</body>
+</html>

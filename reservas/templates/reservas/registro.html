@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creá tu cuenta en Olimpica para reservar canchas.">
+    <title>Crear cuenta | Olimpica</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            margin: 0;
+            padding: 35px 16px;
+            color: #222;
+        }
+
+        .contenedor {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 32px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px #0000000d;
+        }
+
+        h1 {
+            color: #176b3a;
+            font-size: 29px;
+            margin: 0 0 10px;
+        }
+
+        .descripcion {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .campo { margin-bottom: 19px; }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #a6d8b8;
+            border-color: #176b3a;
+        }
+
+        .ayuda {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 6px 0 0;
+        }
+
+        .error-campo {
+            color: #b42318;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .errores-generales {
+            background: #fff1f0;
+            color: #a12622;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+        }
+
+        .errores-generales ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: #176b3a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { background: #12552e; }
+
+        .enlace {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        a { color: #176b3a; }
+    </style>
+</head>
+
+<body>
+    <main class="contenedor">
+        <h1>Crear cuenta en Olimpica</h1>
+        <p class="descripcion">
+            Registrate para buscar canchas y reservar tu próximo partido.
+        </p>
+
+        {% if formulario.non_field_errors %}
+            <div class="errores-generales">
+                {{ formulario.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label for="{{ formulario.username.id_for_label }}">
+                    Nombre de usuario
+                </label>
+                {{ formulario.username }}
+                {% for error in formulario.username.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.email.id_for_label }}">
+                    Correo electrónico
+                </label>
+                {{ formulario.email }}
+                {% for error in formulario.email.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.telefono.id_for_label }}">
+                    Número de teléfono
+                </label>
+                {{ formulario.telefono }}
+                {% for error in formulario.telefono.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.password1.id_for_label }}">
+                    Contraseña
+                </label>
+                {{ formulario.password1 }}
+                <p class="ayuda">
+                    Evitá usar tu nombre o una contraseña fácil de adivinar.
+                </p>
+                {% for error in formulario.password1.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.password2.id_for_label }}">
+                    Confirmar contraseña
+                </label>
+                {{ formulario.password2 }}
+                {% for error in formulario.password2.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <button type="submit">Crear cuenta</button>
+        </form>
+
+        <div class="enlace">
+            ¿Ya tenés cuenta?
+            <a href="{% url 'login' %}">Iniciá sesión</a>
+            <br>
+            <a href="{% url 'inicio' %}">Volver al inicio</a>
+        </div>
+    </main>
+</body>
+</html>

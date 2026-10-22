@@ -45,6 +45,7 @@
     </style>
 </head>
 <body>
+    {% include 'reservas/navbar.html' %}
     <header>
         <a href="{% url 'inicio' %}">⚽ OLIMPICA</a>
     </header>
@@ -68,6 +69,17 @@
         {% else %}
             <p>Todavía no tenés reservas registradas.</p>
         {% endif %}
+
+        
+        {% if reserva.estado == "PENDIENTE" or reserva.estado == "CONFIRMADA" %}
+            <form method="post"
+                action="{% url 'cancelar_reserva' reserva.id %}"
+                onsubmit="return confirm('¿Seguro que querés cancelar esta reserva?');">
+                {% csrf_token %}
+                <button type="submit">Cancelar reserva</button>
+            </form>
+        {% endif %}
+
 
         <p><a href="{% url 'buscar_canchas' %}">Buscar otra cancha</a></p>
     </main>
