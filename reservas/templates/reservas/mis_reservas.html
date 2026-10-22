@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mis reservas | Olimpica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f7f4;
+            color: #17251d;
+        }
+
+        header {
+            background: #123d2b;
+            padding: 20px 8%;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        article {
+            background: white;
+            border: 1px solid #dfe7df;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .estado {
+            font-weight: bold;
+            color: #1b5a3b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'inicio' %}">⚽ OLIMPICA</a>
+    </header>
+
+    <main>
+        <h1>Mis reservas</h1>
+
+        {% if error %}
+            <p>{{ error }}</p>
+        {% elif reservas %}
+            {% for reserva in reservas %}
+                <article>
+                    <h2>{{ reserva.cancha.nombre }}</h2>
+                    <p><strong>Complejo:</strong> {{ reserva.cancha.complejo.nombre }}</p>
+                    <p><strong>Fecha:</strong> {{ reserva.fecha }}</p>
+                    <p><strong>Horario:</strong> {{ reserva.hora_inicio }} a {{ reserva.hora_fin }}</p>
+                    <p><strong>Total:</strong> ${{ reserva.precio_total }}</p>
+                    <p class="estado">Estado: {{ reserva.get_estado_display }}</p>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p>Todavía no tenés reservas registradas.</p>
+        {% endif %}
+
+        <p><a href="{% url 'buscar_canchas' %}">Buscar otra cancha</a></p>
+    </main>
+</body>
+</html>

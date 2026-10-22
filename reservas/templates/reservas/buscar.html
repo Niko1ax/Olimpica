@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar canchas | Olimpica</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #17251d;
+            background: #f4f7f4;
+        }
+
+        header {
+            background: #123d2b;
+            color: white;
+            padding: 20px 8%;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #dfe7df;
+            margin-bottom: 28px;
+        }
+
+        .campos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #bac9bd;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 13px 22px;
+            border: 0;
+            border-radius: 7px;
+            background: #1b5a3b;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .resultados {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 18px;
+        }
+
+        .tarjeta {
+            padding: 22px;
+            background: white;
+            border: 1px solid #dfe7df;
+            border-radius: 12px;
+        }
+
+        .tarjeta h3 { color: #1b5a3b; }
+
+        .precio {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #a51d2d;
+            background: #fff0f0;
+            padding: 12px;
+            border-radius: 7px;
+        }
+
+        .mensaje {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'inicio' %}">⚽ OLIMPICA</a>
+    </header>
+
+    <main>
+        <h1>Buscá tu cancha</h1>
+        <p>Elegí la fecha y el horario para consultar las canchas disponibles.</p>
+
+        <section class="panel">
+            <form method="get" action="{% url 'buscar_canchas' %}">
+                <div class="campos">
+                    <div>
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" name="fecha"
+                               value="{{ fecha }}" required>
+                    </div>
+
+                    <div>
+                        <label for="hora_inicio">Desde</label>
+                        <input type="time" id="hora_inicio" name="hora_inicio"
+                               value="{{ hora_inicio }}" required>
+                    </div>
+
+                    <div>
+                        <label for="hora_fin">Hasta</label>
+                        <input type="time" id="hora_fin" name="hora_fin"
+                               value="{{ hora_fin }}" required>
+                    </div>
+                </div>
+
+                <button type="submit">Buscar disponibilidad</button>
+            </form>
+        </section>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if busqueda_realizada and not error %}
+            <h2>Resultados de la búsqueda</h2>
+
+            {% if canchas %}
+                <div class="resultados">
+                    {% for cancha in canchas %}
+                        <article class="tarjeta">
+                            <h3>{{ cancha.nombre }}</h3>
+                            <p><strong>Complejo:</strong> {{ cancha.complejo.nombre }}</p>
+                            <p><strong>Dirección:</strong> {{ cancha.complejo.direccion }}</p>
+                            <p><strong>Superficie:</strong> {{ cancha.get_superficie_display }}</p>
+                            <p class="precio">
+                                ${{ cancha.precio_por_hora }} / hora
+                            </p>
+                            <p>Disponible para el horario consultado.</p>
+                            <a href="{% url 'reservar_cancha' cancha.id %}?fecha={{ fecha }}&hora_inicio={{ hora_inicio }}&hora_fin={{ hora_fin }}">Reservar esta cancha</a>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="mensaje">
+                    No encontramos canchas disponibles para ese horario.
+                    Probá con otra fecha u otro horario.
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="mensaje">
+                Ingresá una fecha y un horario para consultar la disponibilidad.
+            </div>
+        {% endif %}
+
+        <p><a href="{% url 'inicio' %}">Volver al inicio</a></p>
+    </main>
+</body>
+</html>

@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reservar cancha | Olimpica</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f4;
+            color: #17251d;
+        }
+
+        header {
+            background: #123d2b;
+            padding: 20px 8%;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .panel {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid #dfe7df;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #bac9bd;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            background: #1b5a3b;
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .error {
+            background: #fff0f0;
+            color: #a51d2d;
+            padding: 12px;
+            border-radius: 7px;
+        }
+
+        .precio {
+            background: #e6f5e9;
+            padding: 14px;
+            border-radius: 7px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'inicio' %}">⚽ OLIMPICA</a>
+    </header>
+
+    <main>
+        <div class="panel">
+            <h1>Reservar cancha</h1>
+
+            <h2>{{ cancha.nombre }}</h2>
+            <p><strong>Complejo:</strong> {{ cancha.complejo.nombre }}</p>
+            <p><strong>Dirección:</strong> {{ cancha.complejo.direccion }}</p>
+            <p><strong>Superficie:</strong> {{ cancha.get_superficie_display }}</p>
+            <p class="precio">
+                Precio por hora: ${{ cancha.precio_por_hora }}
+            </p>
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" name="fecha"
+                       value="{{ fecha }}" required>
+
+                <label for="hora_inicio">Hora de inicio</label>
+                <input type="time" id="hora_inicio" name="hora_inicio"
+                       value="{{ hora_inicio }}" required>
+
+                <label for="hora_fin">Hora de fin</label>
+                <input type="time" id="hora_fin" name="hora_fin"
+                       value="{{ hora_fin }}" required>
+
+                <button type="submit">Confirmar reserva</button>
+            </form>
+
+            <p><a href="{% url 'buscar_canchas' %}">Volver al buscador</a></p>
+        </div>
+    </main>
+</body>
+</html>
