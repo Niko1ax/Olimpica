@@ -1,3 +1,10 @@
+from .models import Cancha, PerfilUsuario, Reserva
+from datetime import datetime, time, timedelta
+from .models import Cancha, Reserva
+
+from .forms import CanchaForm
+from .models import Cancha
+
 from .models import PerfilUsuario, Complejo
 from .forms import ComplejoForm
 from .models import Reserva
@@ -13,7 +20,6 @@ from datetime import datetime
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -40,39 +46,66 @@ def inicio(request):
 def buscar_canchas(request):
     fecha = request.GET.get("fecha", "")
     hora_inicio = request.GET.get("hora_inicio", "")
-    hora_fin = request.GET.get("hora_fin", "")
 
     contexto = {
         "fecha": fecha,
         "hora_inicio": hora_inicio,
-        "hora_fin": hora_fin,
         "canchas": [],
         "busqueda_realizada": False,
         "error": "",
+        "fecha_minima": timezone.localdate().isoformat(),
+        "fecha_maxima": (
+            timezone.localdate() + timedelta(days=365)
+        ).isoformat(),
+        "horarios": [
+            f"{hora:02d}:00"
+            for hora in range(10, 24)
+        ],
     }
 
-    # Al entrar por primera vez, solo mostramos el formulario.
-    if not fecha and not hora_inicio and not hora_fin:
+    if not fecha and not hora_inicio:
         return render(request, "reservas/buscar.html", contexto)
 
-    # Validar que se hayan completado los tres campos.
-    if not fecha or not hora_inicio or not hora_fin:
-        contexto["error"] = "Completá la fecha, la hora de inicio y la hora de fin."
+    if not fecha or not hora_inicio:
+        contexto["error"] = "Elegí una fecha y una hora de inicio."
         return render(request, "reservas/buscar.html", contexto)
 
     try:
         fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
         inicio_obj = datetime.strptime(hora_inicio, "%H:%M").time()
-        fin_obj = datetime.strptime(hora_fin, "%H:%M").time()
     except ValueError:
-        contexto["error"] = "La fecha o el horario ingresado no es válido."
+        contexto["error"] = "La fecha o el horario no son válidos."
         return render(request, "reservas/buscar.html", contexto)
 
-    if fin_obj <= inicio_obj:
-        contexto["error"] = "La hora de fin debe ser posterior a la hora de inicio."
+    hoy = timezone.localdate()
+    limite = hoy + timedelta(days=365)
+
+    if fecha_obj < hoy or fecha_obj > limite:
+        contexto["error"] = (
+            "Elegí una fecha entre hoy y los próximos 365 días."
+        )
         return render(request, "reservas/buscar.html", contexto)
 
-    reservas_que_ocupan_horario = Reserva.objects.filter(
+    if inicio_obj.minute != 0 or not (
+        time(10, 0) <= inicio_obj <= time(23, 0)
+    ):
+        contexto["error"] = (
+            "Los horarios disponibles comienzan cada hora, "
+            "desde las 10:00 hasta las 23:00."
+        )
+        return render(request, "reservas/buscar.html", contexto)
+
+    if fecha_obj == hoy and inicio_obj <= timezone.localtime().time().replace(
+        tzinfo=None, second=0, microsecond=0
+    ):
+        contexto["error"] = "Elegí un horario que todavía no haya comenzado."
+        return render(request, "reservas/buscar.html", contexto)
+
+    fin_obj = (
+        datetime.combine(fecha_obj, inicio_obj) + timedelta(hours=1)
+    ).time()
+
+    reservas_ocupadas = Reserva.objects.filter(
         cancha=OuterRef("pk"),
         fecha=fecha_obj,
         estado__in=["PENDIENTE", "CONFIRMADA"],
@@ -81,19 +114,24 @@ def buscar_canchas(request):
     )
 
     canchas_disponibles = (
-        Cancha.objects.filter(activa=True)
-        .annotate(
-            horario_ocupado=Exists(reservas_que_ocupan_horario)
+        Cancha.objects.filter(
+            activa=True,
+            complejo__activo=True,
         )
+        .annotate(horario_ocupado=Exists(reservas_ocupadas))
         .filter(horario_ocupado=False)
         .select_related("complejo")
         .order_by("complejo__nombre", "nombre")
     )
 
-    contexto["canchas"] = canchas_disponibles
-    contexto["busqueda_realizada"] = True
+    contexto.update({
+        "canchas": canchas_disponibles,
+        "busqueda_realizada": True,
+        "hora_fin": fin_obj.strftime("%H:%M"),
+    })
 
     return render(request, "reservas/buscar.html", contexto)
+
 
 
 @login_required
@@ -102,6 +140,7 @@ def reservar_cancha(request, cancha_id):
         Cancha.objects.select_related("complejo"),
         pk=cancha_id,
         activa=True,
+        complejo__activo=True,
     )
 
     perfil = PerfilUsuario.objects.filter(
@@ -115,10 +154,7 @@ def reservar_cancha(request, cancha_id):
             "reservas/reservar.html",
             {
                 "cancha": cancha,
-                "error": (
-                    "Necesitás tener un perfil de jugador "
-                    "para realizar una reserva."
-                ),
+                "error": "Necesitás un perfil de jugador para reservar.",
             },
         )
 
@@ -126,56 +162,73 @@ def reservar_cancha(request, cancha_id):
     hora_inicio = request.POST.get(
         "hora_inicio", request.GET.get("hora_inicio", "")
     )
-    hora_fin = request.POST.get(
-        "hora_fin", request.GET.get("hora_fin", "")
-    )
 
     contexto = {
         "cancha": cancha,
         "fecha": fecha,
         "hora_inicio": hora_inicio,
-        "hora_fin": hora_fin,
         "error": "",
     }
 
-    if request.method == "GET":
+    if request.method not in ["GET", "POST"]:
+        return redirect("buscar_canchas")
+
+    if not fecha or not hora_inicio:
+        contexto["error"] = "Elegí una fecha y una hora de inicio."
         return render(request, "reservas/reservar.html", contexto)
 
     try:
         fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
         inicio_obj = datetime.strptime(hora_inicio, "%H:%M").time()
-        fin_obj = datetime.strptime(hora_fin, "%H:%M").time()
     except ValueError:
-        contexto["error"] = "Ingresá una fecha y horarios válidos."
+        contexto["error"] = "La fecha o el horario no son válidos."
         return render(request, "reservas/reservar.html", contexto)
 
-    if fin_obj <= inicio_obj:
-        contexto["error"] = "La hora de fin debe ser posterior al inicio."
+    hoy = timezone.localdate()
+    limite = hoy + timedelta(days=365)
+
+    if fecha_obj < hoy or fecha_obj > limite:
+        contexto["error"] = "Elegí una fecha entre hoy y los próximos 365 días."
         return render(request, "reservas/reservar.html", contexto)
 
-    if fecha_obj < timezone.localdate():
-        contexto["error"] = "No podés reservar una fecha pasada."
+    if inicio_obj.minute != 0 or not (
+        time(10, 0) <= inicio_obj <= time(23, 0)
+    ):
+        contexto["error"] = "Elegí un horario entre las 10:00 y las 23:00, en punto."
         return render(request, "reservas/reservar.html", contexto)
 
-    if fecha_obj == timezone.localdate():
-        ahora = timezone.localtime().time().replace(tzinfo=None)
-        if inicio_obj <= ahora:
-            contexto["error"] = "Elegí un horario futuro."
-            return render(request, "reservas/reservar.html", contexto)
+    if fecha_obj == hoy and inicio_obj <= timezone.localtime().time().replace(
+        tzinfo=None, second=0, microsecond=0
+    ):
+        contexto["error"] = "Elegí un horario que todavía no haya comenzado."
+        return render(request, "reservas/reservar.html", contexto)
 
-    duracion = (
-        datetime.combine(fecha_obj, fin_obj)
-        - datetime.combine(fecha_obj, inicio_obj)
-    ).total_seconds() / 3600
+    inicio_dt = datetime.combine(fecha_obj, inicio_obj)
+    fin_dt = inicio_dt + timedelta(hours=1)
+    fin_obj = fin_dt.time()
 
+    duracion = Decimal("1")
     precio_total = (
-        cancha.precio_por_hora * Decimal(str(duracion))
+        cancha.precio_por_hora * duracion
     ).quantize(Decimal("0.01"))
+
+    if request.method == "GET":
+        contexto["hora_fin"] = fin_obj.strftime("%H:%M")
+        contexto["precio_total"] = precio_total
+        return render(request, "reservas/reservar.html", contexto)
 
     try:
         with transaction.atomic():
+            # Revalidar el estado de la cancha dentro de la transacción.
+            cancha_actual = get_object_or_404(
+                Cancha.objects.select_related("complejo"),
+                pk=cancha_id,
+                activa=True,
+                complejo__activo=True,
+            )
+
             ocupada = Reserva.objects.filter(
-                cancha=cancha,
+                cancha=cancha_actual,
                 fecha=fecha_obj,
                 estado__in=["PENDIENTE", "CONFIRMADA"],
                 hora_inicio__lt=fin_obj,
@@ -184,14 +237,17 @@ def reservar_cancha(request, cancha_id):
 
             if ocupada:
                 contexto["error"] = (
-                    "Ese horario ya no está disponible. "
-                    "Volvé al buscador y elegí otro."
+                    "Ese horario ya no está disponible. Elegí otro turno."
                 )
-                return render(request, "reservas/reservar.html", contexto)
+                contexto["hora_fin"] = fin_obj.strftime("%H:%M")
+                contexto["precio_total"] = precio_total
+                return render(
+                    request, "reservas/reservar.html", contexto
+                )
 
-            reserva = Reserva.objects.create(
+            Reserva.objects.create(
                 jugador=perfil,
-                cancha=cancha,
+                cancha=cancha_actual,
                 fecha=fecha_obj,
                 hora_inicio=inicio_obj,
                 hora_fin=fin_obj,
@@ -208,6 +264,7 @@ def reservar_cancha(request, cancha_id):
     return redirect("mis_reservas")
 
 
+
 @login_required
 def mis_reservas(request):
     perfil = PerfilUsuario.objects.filter(
@@ -219,19 +276,41 @@ def mis_reservas(request):
         return render(
             request,
             "reservas/mis_reservas.html",
-            {"reservas": [], "error": "Tu cuenta no tiene un perfil de jugador."},
+            {
+                "reservas": [],
+                "error": "Tu cuenta no tiene un perfil de jugador.",
+            },
         )
 
+    ahora = timezone.localtime()
+    hoy = timezone.localdate()
+    hora_actual = ahora.time().replace(tzinfo=None)
+
     reservas = (
-        Reserva.objects.filter(jugador=perfil)
+        Reserva.objects.filter(
+            jugador=perfil,
+            estado__in=["PENDIENTE", "CONFIRMADA"],
+        )
+        .filter(
+            fecha__gte=hoy,
+        )
         .select_related("cancha", "cancha__complejo")
-        .order_by("-fecha", "-hora_inicio")
+        .order_by("fecha", "hora_inicio")
     )
+
+    # Si la reserva es para hoy, mostrarla solo si aún no terminó.
+    reservas = [
+        reserva for reserva in reservas
+        if reserva.fecha > hoy or reserva.hora_fin > hora_actual
+    ]
 
     return render(
         request,
         "reservas/mis_reservas.html",
-        {"reservas": reservas, "error": ""},
+        {
+            "reservas": reservas,
+            "error": "",
+        },
     )
 
 
@@ -298,18 +377,29 @@ def cancelar_reserva(request, reserva_id):
     return redirect("mis_reservas")
 
 
+
 @login_required
 def panel_reservas(request):
-    # Solo el personal autorizado puede acceder al panel.
-    if not request.user.is_staff:
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if request.user.is_staff:
+        reservas = Reserva.objects.all()
+    elif perfil is not None:
+        reservas = Reserva.objects.filter(
+            cancha__complejo__dueno=perfil,
+        )
+    else:
         return redirect("inicio")
 
-    reservas = Reserva.objects.select_related(
+    reservas = reservas.select_related(
         "jugador",
         "jugador__usuario",
         "cancha",
         "cancha__complejo",
-    ).order_by("-fecha", "-hora_inicio")
+    ).order_by("fecha", "hora_inicio")
 
     return render(
         request,
@@ -318,16 +408,27 @@ def panel_reservas(request):
     )
 
 
+
 @login_required
 def actualizar_estado_reserva(request, reserva_id):
-    # Solo el personal autorizado puede cambiar estados.
-    if not request.user.is_staff:
-        return redirect("inicio")
-
     if request.method != "POST":
         return redirect("panel_reservas")
 
-    reserva = get_object_or_404(Reserva, pk=reserva_id)
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if request.user.is_staff:
+        reservas = Reserva.objects.all()
+    elif perfil is not None:
+        reservas = Reserva.objects.filter(
+            cancha__complejo__dueno=perfil,
+        )
+    else:
+        return redirect("inicio")
+
+    reserva = get_object_or_404(reservas, pk=reserva_id)
     nuevo_estado = request.POST.get("estado")
 
     estados_permitidos = {
@@ -343,12 +444,25 @@ def actualizar_estado_reserva(request, reserva_id):
     return redirect("panel_reservas")
 
 
+
 @login_required
 def administrar_complejos(request):
-    if not request.user.is_staff:
-        return redirect("inicio")
+    if request.user.is_staff:
+        complejos = Complejo.objects.prefetch_related(
+            "canchas"
+        ).order_by("nombre")
+    else:
+        perfil = PerfilUsuario.objects.filter(
+            usuario=request.user,
+            rol="DUENIO",
+        ).first()
 
-    complejos = Complejo.objects.prefetch_related("canchas").order_by("nombre")
+        if perfil is None:
+            return redirect("inicio")
+
+        complejos = Complejo.objects.filter(
+            dueno=perfil
+        ).prefetch_related("canchas").order_by("nombre")
 
     return render(
         request,
@@ -359,14 +473,13 @@ def administrar_complejos(request):
 
 @login_required
 def crear_complejo(request):
-    if not request.user.is_staff:
-        return redirect("inicio")
-
     perfil = PerfilUsuario.objects.filter(
         usuario=request.user,
         rol="DUENIO",
     ).first()
 
+    # El administrador puede gestionar complejos solo si
+    # también tiene un perfil de dueño.
     if perfil is None:
         return render(
             request,
@@ -374,8 +487,8 @@ def crear_complejo(request):
             {
                 "formulario": ComplejoForm(),
                 "error": (
-                    "Tu cuenta administradora necesita un perfil "
-                    "de dueño para crear complejos."
+                    "Tu usuario necesita un perfil de dueño "
+                    "para registrar un complejo."
                 ),
             },
         )
@@ -396,3 +509,179 @@ def crear_complejo(request):
         "reservas/crear_complejo.html",
         {"formulario": formulario, "error": ""},
     )
+
+
+@login_required
+def crear_cancha(request):
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if perfil is None:
+        return redirect("inicio")
+
+    # El dueño solo puede elegir sus propios complejos.
+    complejos_propios = Complejo.objects.filter(dueno=perfil)
+
+    if request.method == "POST":
+        formulario = CanchaForm(
+            request.POST,
+            user=request.user,
+        )
+
+        if formulario.is_valid():
+            cancha = formulario.save(commit=False)
+
+            # Comprobación adicional del propietario.
+            if not complejos_propios.filter(
+                pk=cancha.complejo_id
+            ).exists():
+                return redirect("inicio")
+
+            cancha.save()
+            return redirect("administrar_complejos")
+    else:
+        formulario = CanchaForm(user=request.user)
+
+    return render(
+        request,
+        "reservas/crear_cancha.html",
+        {"formulario": formulario},
+    )
+
+
+
+@login_required
+def editar_complejo(request, complejo_id):
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if perfil is None and not request.user.is_staff:
+        return redirect("inicio")
+
+    complejos = Complejo.objects.all()
+
+    if not request.user.is_staff:
+        complejos = complejos.filter(dueno=perfil)
+
+    complejo = get_object_or_404(complejos, pk=complejo_id)
+
+    if request.method == "POST":
+        formulario = ComplejoForm(request.POST, instance=complejo)
+
+        if formulario.is_valid():
+            formulario.save()
+            return redirect("administrar_complejos")
+    else:
+        formulario = ComplejoForm(instance=complejo)
+
+    return render(
+        request,
+        "reservas/editar_complejo.html",
+        {
+            "formulario": formulario,
+            "complejo": complejo,
+        },
+    )
+
+
+@login_required
+def cambiar_estado_complejo(request, complejo_id):
+    if request.method != "POST":
+        return redirect("administrar_complejos")
+
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if perfil is None and not request.user.is_staff:
+        return redirect("inicio")
+
+    complejos = Complejo.objects.all()
+
+    if not request.user.is_staff:
+        complejos = complejos.filter(dueno=perfil)
+
+    complejo = get_object_or_404(complejos, pk=complejo_id)
+    complejo.activo = not complejo.activo
+    complejo.save(update_fields=["activo"])
+
+    return redirect("administrar_complejos")
+
+
+@login_required
+def editar_cancha(request, cancha_id):
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if perfil is None and not request.user.is_staff:
+        return redirect("inicio")
+
+    canchas = Cancha.objects.select_related("complejo")
+
+    if not request.user.is_staff:
+        canchas = canchas.filter(complejo__dueno=perfil)
+
+    cancha = get_object_or_404(canchas, pk=cancha_id)
+
+    if request.method == "POST":
+        formulario = CanchaForm(
+            request.POST,
+            instance=cancha,
+            user=request.user,
+        )
+
+        if formulario.is_valid():
+            cancha_editada = formulario.save(commit=False)
+
+            if not request.user.is_staff:
+                if cancha_editada.complejo.dueno_id != perfil.id:
+                    return redirect("inicio")
+
+            cancha_editada.save()
+            return redirect("administrar_complejos")
+    else:
+        formulario = CanchaForm(
+            instance=cancha,
+            user=request.user,
+        )
+
+    return render(
+        request,
+        "reservas/editar_cancha.html",
+        {
+            "formulario": formulario,
+            "cancha": cancha,
+        },
+    )
+
+
+@login_required
+def cambiar_estado_cancha(request, cancha_id):
+    if request.method != "POST":
+        return redirect("administrar_complejos")
+
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if perfil is None and not request.user.is_staff:
+        return redirect("inicio")
+
+    canchas = Cancha.objects.select_related("complejo")
+
+    if not request.user.is_staff:
+        canchas = canchas.filter(complejo__dueno=perfil)
+
+    cancha = get_object_or_404(canchas, pk=cancha_id)
+    cancha.activa = not cancha.activa
+    cancha.save(update_fields=["activa"])
+
+    return redirect("administrar_complejos")

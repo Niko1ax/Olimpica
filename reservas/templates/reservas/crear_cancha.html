@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar cancha | Olimpica</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            color: #222;
+        }
+
+        main {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0000000d;
+        }
+
+        h1 { color: #176b3a; }
+
+        .campo { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: white;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 12px 18px;
+            background: #176b3a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { background: #12552e; }
+
+        .error {
+            color: #a12622;
+            margin-top: 7px;
+        }
+
+        .volver {
+            color: #176b3a;
+            margin-left: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'reservas/navbar.html' %}
+
+    <main>
+        <h1>Registrar cancha</h1>
+        <p>Completá los datos de la cancha que querés incorporar.</p>
+
+        {% if formulario.non_field_errors %}
+            <div class="error">{{ formulario.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for campo in formulario %}
+                <div class="campo">
+                    <label for="{{ campo.id_for_label }}">
+                        {{ campo.label }}
+                    </label>
+
+                    {{ campo }}
+
+                    {% for error in campo.errors %}
+                        <div class="error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Guardar cancha</button>
+            <a class="volver" href="{% url 'administrar_complejos' %}">
+                Volver
+            </a>
+        </form>
+    </main>
+</body>
+</html>

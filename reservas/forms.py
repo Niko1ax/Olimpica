@@ -1,3 +1,5 @@
+from .models import Cancha, Complejo, PerfilUsuario
+from .models import Cancha
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -78,3 +80,63 @@ class ComplejoForm(forms.ModelForm):
                 "placeholder": "Contá qué ofrece el complejo...",
             }),
         }
+
+        
+
+class CanchaForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if user is not None and not user.is_staff:
+            perfil = PerfilUsuario.objects.filter(
+                usuario=user,
+                rol="DUENIO",
+            ).first()
+
+            if perfil is not None:
+                self.fields["complejo"].queryset = Complejo.objects.filter(
+                    dueno=perfil
+                )
+            else:
+                self.fields["complejo"].queryset = Complejo.objects.none()
+
+    class Meta:
+        model = Cancha
+        fields = [
+            "complejo",
+            "nombre",
+            "superficie",
+            "precio_por_hora",
+            "activa",
+        ]
+        labels = {
+            "complejo": "Complejo deportivo",
+            "nombre": "Nombre de la cancha",
+            "superficie": "Tipo de superficie",
+            "precio_por_hora": "Precio por hora",
+            "activa": "Cancha activa",
+        }
+        widgets = {
+            "complejo": forms.Select(),
+            "nombre": forms.TextInput(
+                attrs={"placeholder": "Ej.: Cancha 1"}
+            ),
+            "superficie": forms.Select(),
+            "precio_por_hora": forms.NumberInput(
+                attrs={
+                    "min": "0.01",
+                    "step": "0.01",
+                    "placeholder": "Ej.: 25000",
+                }
+            ),
+        }
+
+    def clean_precio_por_hora(self):
+        precio = self.cleaned_data["precio_por_hora"]
+
+        if precio <= 0:
+            raise forms.ValidationError(
+                "El precio por hora debe ser mayor que cero."
+            )
+
+        return precio

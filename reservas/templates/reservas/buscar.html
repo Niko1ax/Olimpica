@@ -5,180 +5,280 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar canchas | Olimpica</title>
+
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
+            background: #f1f5f1;
+            color: #222;
             font-family: Arial, sans-serif;
-            color: #17251d;
-            background: #f4f7f4;
-        }
-
-        header {
-            background: #123d2b;
-            color: white;
-            padding: 20px 8%;
-        }
-
-        header a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
         }
 
         main {
-            max-width: 1050px;
-            margin: 35px auto;
-            padding: 0 20px;
+            max-width: 1100px;
+            margin: 26px auto;
+            padding: 0 18px;
         }
 
-        .panel {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #dfe7df;
-            margin-bottom: 28px;
+        h1, h2, h3 {
+            color: #176b3a;
         }
 
-        .campos {
+        .descripcion {
+            margin-bottom: 14px;
+        }
+
+        .formulario-busqueda {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #d9e5db;
+            border-radius: 10px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
         }
 
         label {
-            display: block;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 8px;
         }
 
-        input {
+        input,
+        select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #bac9bd;
-            border-radius: 7px;
-            font-size: 16px;
+            min-width: 0;
+            padding: 11px;
+            border: 1px solid #b8cbbd;
+            border-radius: 6px;
+            background: white;
+            font-size: 14px;
         }
 
-        button {
-            margin-top: 20px;
-            padding: 13px 22px;
-            border: 0;
-            border-radius: 7px;
-            background: #1b5a3b;
+        input:focus,
+        select:focus {
+            outline: 2px solid #80b995;
+            border-color: #176b3a;
+        }
+
+        .boton {
+            display: inline-block;
+            width: fit-content;
+            padding: 11px 17px;
+            border: none;
+            border-radius: 6px;
+            background: #176b3a;
             color: white;
-            font-size: 16px;
             font-weight: bold;
+            font-size: 14px;
+            text-decoration: none;
             cursor: pointer;
+        }
+
+        .boton:hover {
+            background: #12532d;
+        }
+
+        .boton-buscar {
+            grid-column: 1 / -1;
+        }
+
+        .mensaje {
+            margin-top: 22px;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+            line-height: 1.5;
+        }
+
+        .error {
+            color: #a32121;
+            background: #fff0f0;
+            border: 1px solid #f0caca;
         }
 
         .resultados {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
         }
 
-        .tarjeta {
-            padding: 22px;
+        .tarjeta-cancha {
+            padding: 20px;
             background: white;
-            border: 1px solid #dfe7df;
-            border-radius: 12px;
+            border: 1px solid #d9e5db;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #00000008;
         }
 
-        .tarjeta h3 { color: #1b5a3b; }
+        .tarjeta-cancha h2 {
+            margin-top: 0;
+        }
+
+        .detalle {
+            margin: 9px 0;
+            line-height: 1.5;
+        }
 
         .precio {
-            font-size: 21px;
+            color: #176b3a;
+            font-size: 20px;
             font-weight: bold;
         }
 
-        .error {
-            color: #a51d2d;
-            background: #fff0f0;
-            padding: 12px;
-            border-radius: 7px;
+        .horario {
+            padding: 10px;
+            background: #edf6ef;
+            border-radius: 6px;
         }
 
-        .mensaje {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+        .volver {
+            display: inline-block;
+            margin-top: 18px;
+            color: #176b3a;
+        }
+
+        @media (max-width: 650px) {
+            .formulario-busqueda,
+            .resultados {
+                grid-template-columns: 1fr;
+            }
+
+            .boton-buscar {
+                grid-column: auto;
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
     {% include 'reservas/navbar.html' %}
-    <header>
-        <a href="{% url 'inicio' %}">⚽ OLIMPICA</a>
-    </header>
 
     <main>
         <h1>Buscá tu cancha</h1>
-        <p>Elegí la fecha y el horario para consultar las canchas disponibles.</p>
 
-        <section class="panel">
-            <form method="get" action="{% url 'buscar_canchas' %}">
-                <div class="campos">
-                    <div>
-                        <label for="fecha">Fecha</label>
-                        <input type="date" id="fecha" name="fecha"
-                               value="{{ fecha }}" required>
-                    </div>
+        <p class="descripcion">
+            Elegí la fecha y el horario de inicio para consultar las canchas disponibles.
+            Cada turno dura exactamente una hora.
+        </p>
 
-                    <div>
-                        <label for="hora_inicio">Desde</label>
-                        <input type="time" id="hora_inicio" name="hora_inicio"
-                               value="{{ hora_inicio }}" required>
-                    </div>
+        <form method="get" action="{% url 'buscar_canchas' %}"
+              class="formulario-busqueda">
 
-                    <div>
-                        <label for="hora_fin">Hasta</label>
-                        <input type="time" id="hora_fin" name="hora_fin"
-                               value="{{ hora_fin }}" required>
-                    </div>
-                </div>
+            <div class="campo">
+                <label for="fecha">Fecha</label>
+                <input
+                    type="date"
+                    id="fecha"
+                    name="fecha"
+                    value="{{ fecha }}"
+                    min="{{ fecha_minima }}"
+                    max="{{ fecha_maxima }}"
+                    required
+                >
+            </div>
 
-                <button type="submit">Buscar disponibilidad</button>
-            </form>
-        </section>
+            <div class="campo">
+                <label for="hora_inicio">Hora de inicio</label>
+                <select id="hora_inicio" name="hora_inicio" required>
+                    <option value="">Elegí un horario</option>
+
+                    {% for horario in horarios %}
+                        <option
+                            value="{{ horario }}"
+                            {% if hora_inicio == horario %}selected{% endif %}
+                        >
+                            {{ horario }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="boton boton-buscar">
+                Buscar disponibilidad
+            </button>
+        </form>
 
         {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
+            <div class="mensaje error">
+                {{ error }}
+            </div>
+        {% elif busqueda_realizada %}
+            <div class="mensaje">
+                Resultados para el {{ fecha }} a las {{ hora_inicio }}.
+                Duración: una hora
+                (hasta las {{ hora_fin }}).
+            </div>
 
-        {% if busqueda_realizada and not error %}
-            <h2>Resultados de la búsqueda</h2>
+            <div class="resultados">
+                {% for cancha in canchas %}
+                    <article class="tarjeta-cancha">
+                        <h2>{{ cancha.nombre }}</h2>
 
-            {% if canchas %}
-                <div class="resultados">
-                    {% for cancha in canchas %}
-                        <article class="tarjeta">
-                            <h3>{{ cancha.nombre }}</h3>
-                            <p><strong>Complejo:</strong> {{ cancha.complejo.nombre }}</p>
-                            <p><strong>Dirección:</strong> {{ cancha.complejo.direccion }}</p>
-                            <p><strong>Superficie:</strong> {{ cancha.get_superficie_display }}</p>
-                            <p class="precio">
-                                ${{ cancha.precio_por_hora }} / hora
+                        <p class="detalle">
+                            <strong>Complejo:</strong>
+                            {{ cancha.complejo.nombre }}
+                        </p>
+
+                        <p class="detalle">
+                            <strong>Dirección:</strong>
+                            {{ cancha.complejo.direccion }}
+                        </p>
+
+                        {% if cancha.complejo.telefono %}
+                            <p class="detalle">
+                                <strong>Teléfono:</strong>
+                                {{ cancha.complejo.telefono }}
                             </p>
-                            <p>Disponible para el horario consultado.</p>
-                            <a href="{% url 'reservar_cancha' cancha.id %}?fecha={{ fecha }}&hora_inicio={{ hora_inicio }}&hora_fin={{ hora_fin }}">Reservar esta cancha</a>
-                        </article>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="mensaje">
-                    No encontramos canchas disponibles para ese horario.
-                    Probá con otra fecha u otro horario.
-                </div>
-            {% endif %}
+                        {% endif %}
+
+                        <p class="detalle">
+                            <strong>Superficie:</strong>
+                            {{ cancha.get_superficie_display }}
+                        </p>
+
+                        <p class="precio">
+                            ${{ cancha.precio_por_hora }} por hora
+                        </p>
+
+                        <p class="horario">
+                            <strong>Turno:</strong>
+                            {{ hora_inicio }} a {{ hora_fin }}
+                        </p>
+
+                        <a
+                            class="boton"
+                            href="{% url 'reservar_cancha' cancha.id %}?fecha={{ fecha }}&hora_inicio={{ hora_inicio }}"
+                        >
+                            Reservar esta cancha
+                        </a>
+                    </article>
+                {% empty %}
+                    <div class="mensaje">
+                        No hay canchas disponibles para ese día y horario.
+                        Probá con otro turno.
+                    </div>
+                {% endfor %}
+            </div>
+
         {% else %}
             <div class="mensaje">
                 Ingresá una fecha y un horario para consultar la disponibilidad.
             </div>
         {% endif %}
 
-        <p><a href="{% url 'inicio' %}">Volver al inicio</a></p>
+        <a class="volver" href="{% url 'inicio' %}">Volver al inicio</a>
     </main>
 </body>
 </html>

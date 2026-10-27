@@ -32,6 +32,7 @@ class Complejo(models.Model):
         on_delete=models.PROTECT,
         related_name="complejos"
     )
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre

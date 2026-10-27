@@ -58,4 +58,34 @@ urlpatterns = [
         name="crear_complejo",
     ),
 
+    
+    path(
+        "crear-cancha/",
+        views.crear_cancha,
+        name="crear_cancha",
+    ),
+
+    
+    path(
+        "complejos/<int:complejo_id>/editar/",
+        views.editar_complejo,
+        name="editar_complejo",
+    ),
+    path(
+        "complejos/<int:complejo_id>/estado/",
+        views.cambiar_estado_complejo,
+        name="cambiar_estado_complejo",
+    ),
+    path(
+        "canchas/<int:cancha_id>/editar/",
+        views.editar_cancha,
+        name="editar_cancha",
+    ),
+    path(
+        "canchas/<int:cancha_id>/estado/",
+        views.cambiar_estado_cancha,
+        name="cambiar_estado_cancha",
+    ),
+
+
 ]

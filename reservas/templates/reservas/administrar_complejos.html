@@ -72,17 +72,50 @@
             </a>
         </p>
 
-        <p>Consultá los complejos registrados y las canchas de cada uno.</p>
-
+        
         <p>
-            <a class="enlace" href="{% url 'panel_reservas' %}">
-                Gestionar reservas
+            <a class="enlace" href="{% url 'crear_cancha' %}">
+                + Registrar nueva cancha
             </a>
         </p>
+
+
+        <p>Consultá los complejos registrados y las canchas de cada uno.</p>
+
+            
+        {% if user.is_staff %}
+            <p>
+                <a class="enlace" href="{% url 'panel_reservas' %}">
+                    Gestionar reservas
+                </a>
+            </p>
+        {% endif %}
+
 
         {% for complejo in complejos %}
             <section class="complejo">
                 <h2>{{ complejo.nombre }}</h2>
+                                    
+                    <p>
+                        <a class="enlace"
+                        href="{% url 'editar_complejo' complejo.id %}">
+                            Editar complejo
+                        </a>
+                    </p>
+
+                    <form method="post"
+                        action="{% url 'cambiar_estado_complejo' complejo.id %}">
+                        {% csrf_token %}
+                        <button class="enlace" type="submit">
+                            {% if complejo.activo %}Desactivar complejo{% else %}Reactivar complejo{% endif %}
+                        </button>
+                    </form>
+
+                    <p>
+                        Estado del complejo:
+                        {% if complejo.activo %}Activo{% else %}Inactivo{% endif %}
+                    </p>
+
                 <p><strong>Dirección:</strong> {{ complejo.direccion }}</p>
 
                 {% if complejo.telefono %}
@@ -98,6 +131,22 @@
                 {% for cancha in complejo.canchas.all %}
                     <div class="cancha">
                         <strong>{{ cancha.nombre }}</strong>
+                        
+                            <p>
+                                <a class="enlace"
+                                href="{% url 'editar_cancha' cancha.id %}">
+                                    Editar cancha
+                                </a>
+                            </p>
+
+                            <form method="post"
+                                action="{% url 'cambiar_estado_cancha' cancha.id %}">
+                                {% csrf_token %}
+                                <button class="enlace" type="submit">
+                                    {% if cancha.activa %}Desactivar cancha{% else %}Reactivar cancha{% endif %}
+                                </button>
+                            </form>
+
                         <p>Superficie: {{ cancha.get_superficie_display }}</p>
                         <p>Precio por hora: ${{ cancha.precio_por_hora }}</p>
                         <p>
