@@ -1,3 +1,6 @@
+from django.utils.dateparse import parse_date
+from django.db.models import Count, Sum, Q
+from datetime import timedelta
 from .models import Cancha, PerfilUsuario, Reserva
 from datetime import datetime, time, timedelta
 from .models import Cancha, Reserva
@@ -379,32 +382,64 @@ def cancelar_reserva(request, reserva_id):
 
 
 @login_required
-def panel_reservas(request):
+def reportes(request):
     perfil = PerfilUsuario.objects.filter(
         usuario=request.user,
-        rol="DUENIO",
+        rol="DUENIO"
     ).first()
 
     if request.user.is_staff:
-        reservas = Reserva.objects.all()
+        reservas_base = Reserva.objects.all()
     elif perfil is not None:
-        reservas = Reserva.objects.filter(
-            cancha__complejo__dueno=perfil,
+        reservas_base = Reserva.objects.filter(
+            cancha__complejo__dueno=perfil
         )
     else:
         return redirect("inicio")
 
-    reservas = reservas.select_related(
+    hoy = timezone.localdate()
+    inicio_semana = hoy - timedelta(days=hoy.weekday())
+    fin_semana = inicio_semana + timedelta(days=6)
+
+    reservas = reservas_base.filter(
+        fecha__gte=inicio_semana,
+        fecha__lte=fin_semana
+    ).select_related(
         "jugador",
         "jugador__usuario",
         "cancha",
-        "cancha__complejo",
+        "cancha__complejo"
     ).order_by("fecha", "hora_inicio")
+
+    resumen = reservas.aggregate(
+        total=Count("id"),
+        pendientes=Count(
+            "id",
+            filter=Q(estado="PENDIENTE")
+        ),
+        confirmadas=Count(
+            "id",
+            filter=Q(estado="CONFIRMADA")
+        ),
+        canceladas=Count(
+            "id",
+            filter=Q(estado="CANCELADA")
+        ),
+        recaudacion=Sum(
+            "precio_total",
+            filter=Q(estado="CONFIRMADA")
+        )
+    )
 
     return render(
         request,
-        "reservas/panel_reservas.html",
-        {"reservas": reservas},
+        "reservas/reportes.html",
+        {
+            "reservas": reservas,
+            "inicio_semana": inicio_semana,
+            "fin_semana": fin_semana,
+            "resumen": resumen,
+        }
     )
 
 
@@ -685,3 +720,33 @@ def cambiar_estado_cancha(request, cancha_id):
     cancha.save(update_fields=["activa"])
 
     return redirect("administrar_complejos")
+
+@login_required
+def panel_reservas(request):
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO"
+    ).first()
+
+    if request.user.is_staff:
+        reservas = Reserva.objects.all()
+    elif perfil is not None:
+        reservas = Reserva.objects.filter(
+            cancha__complejo__dueno=perfil
+        )
+    else:
+        return redirect("inicio")
+
+    reservas = reservas.select_related(
+        "jugador",
+        "jugador__usuario",
+        "cancha",
+        "cancha__complejo"
+    ).order_by("fecha", "hora_inicio")
+
+    return render(
+        request,
+        "reservas/panel_reservas.html",
+        {"reservas": reservas}
+    )
+

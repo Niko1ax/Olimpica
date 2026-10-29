@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte | Olímpica</title>
+</head>
+<body>
+<div class="contenedor">
+    <h1>Reportes</h1>
+
+    <p>
+        Período:
+        <strong>{{ inicio_semana|date:"d/m/Y" }}</strong>
+        al
+        <strong>{{ fin_semana|date:"d/m/Y" }}</strong>
+    </p>
+
+    <div class="resumen">
+        <div class="tarjeta">
+            <h3>Total de reservas</h3>
+            <p>{{ resumen.total|default:0 }}</p>
+        </div>
+
+        <div class="tarjeta">
+            <h3>Pendientes</h3>
+            <p>{{ resumen.pendientes|default:0 }}</p>
+        </div>
+
+        <div class="tarjeta">
+            <h3>Confirmadas</h3>
+            <p>{{ resumen.confirmadas|default:0 }}</p>
+        </div>
+
+        <div class="tarjeta">
+            <h3>Canceladas</h3>
+            <p>{{ resumen.canceladas|default:0 }}</p>
+        </div>
+
+        <div class="tarjeta">
+            <h3>Recaudación estimada</h3>
+            <p>
+                ${{ resumen.recaudacion|default:0|floatformat:2 }}
+            </p>
+        </div>
+    </div>
+
+    <h2>Detalle de reservas</h2>
+
+    {% if reservas %}
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Horario</th>
+                        <th>Complejo</th>
+                        <th>Cancha</th>
+                        <th>Jugador</th>
+                        <th>Estado</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for reserva in reservas %}
+                        <tr>
+                            <td>{{ reserva.fecha|date:"d/m/Y" }}</td>
+                            <td>
+                                {{ reserva.hora_inicio|time:"H:i" }}
+                                -
+                                {{ reserva.hora_fin|time:"H:i" }}
+                            </td>
+                            <td>{{ reserva.cancha.complejo.nombre }}</td>
+                            <td>{{ reserva.cancha.nombre }}</td>
+                            <td>{{ reserva.jugador.usuario.username }}</td>
+                            <td>{{ reserva.get_estado_display }}</td>
+                            <td>${{ reserva.precio_total|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No hay reservas registradas para esta semana.</p>
+    {% endif %}
+
+    <a href="{% url 'panel_reservas' %}" class="boton-volver">
+        Volver al panel de reservas
+    </a>
+</div>
+
+<style>
+    .contenedor {
+        max-width: 1200px;
+        margin: 35px auto;
+        padding: 25px;
+    }
+
+    .resumen {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 16px;
+        margin: 25px 0 35px;
+    }
+
+    .tarjeta {
+        background: #123f2d;
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .tarjeta h3 {
+        font-size: 15px;
+        margin-top: 0;
+    }
+
+    .tarjeta p {
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 0;
+    }
+
+    .tabla-contenedor {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background: #123f2d;
+        color: white;
+    }
+
+    .boton-volver {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 18px;
+        background: #123f2d;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+        .contenedor {
+            padding: 12px;
+        }
+    }
+</style>
+</body>
+</html>

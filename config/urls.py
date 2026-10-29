@@ -86,6 +86,9 @@ urlpatterns = [
         views.cambiar_estado_cancha,
         name="cambiar_estado_cancha",
     ),
-
-
+    path(
+        "reportes/",
+        views.reportes,
+        name="reportes",
+    ),
 ]
