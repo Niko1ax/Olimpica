@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+from .models import Cancha, Pago
 
 class RegistroForm(UserCreationForm):
     email = forms.EmailField(
@@ -140,3 +141,22 @@ class CanchaForm(forms.ModelForm):
             )
 
         return precio
+
+class PagoForm(forms.ModelForm):
+    class Meta:
+        model = Pago
+        fields = ["metodo", "comprobante"]
+        widgets = {
+            "metodo": forms.Select(attrs={
+                "class": "form-control"
+            }),
+            "comprobante": forms.ClearableFileInput(attrs={
+                "class": "form-control"
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["metodo"].label = "Método de pago"
+        self.fields["comprobante"].label = "Comprobante de pago"
+        self.fields["comprobante"].required = True

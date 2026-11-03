@@ -4,6 +4,9 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from reservas import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.inicio, name="inicio"),
@@ -87,5 +90,34 @@ urlpatterns = [
         name="cambiar_estado_cancha",
     ),
 
+    path(
+        "reserva/<int:reserva_id>/registrar-pago/",
+        views.registrar_pago,
+        name="registrar_pago"
+    ),
+
+    path(
+        "pagos-pendientes/",
+        views.pagos_pendientes,
+        name="pagos_pendientes"
+    ),
+
+    path(
+        "pagos/<int:pago_id>/actualizar/",
+        views.actualizar_estado_pago,
+        name="actualizar_estado_pago"
+    ),
+
+    path(
+        "reservas/<int:reserva_id>/registrar-saldo/",
+        views.registrar_saldo,
+        name="registrar_saldo"
+    ),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

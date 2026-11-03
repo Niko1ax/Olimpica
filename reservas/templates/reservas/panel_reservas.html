@@ -53,6 +53,7 @@
             text-align: left;
             padding: 13px 10px;
             border-bottom: 1px solid #e5e5e5;
+            vertical-align: top;
         }
 
         th {
@@ -63,6 +64,7 @@
             padding: 9px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            max-width: 100%;
         }
 
         button {
@@ -86,11 +88,36 @@
             text-align: center;
             color: #666;
         }
+
+        .pago-saldo {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .pago-saldo select {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .pago-registrado {
+            color: #176b3a;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .ayuda {
+            color: #666;
+            font-size: 13px;
+            margin: 5px 0;
+        }
     </style>
 </head>
 
 <body>
     {% include 'reservas/navbar.html' %}
+
     <header>
         <h1>Olimpica | Gestión de reservas</h1>
         <p>Panel interno para administrar las solicitudes de reserva.</p>
@@ -120,22 +147,29 @@
                         {% for reserva in reservas %}
                             <tr>
                                 <td>{{ reserva.id }}</td>
+
                                 <td>
                                     {{ reserva.jugador.usuario.username }}
                                 </td>
+
                                 <td>
                                     {{ reserva.cancha.complejo.nombre }}
                                     - {{ reserva.cancha.nombre }}
                                 </td>
+
                                 <td>{{ reserva.fecha|date:"d/m/Y" }}</td>
+
                                 <td>
                                     {{ reserva.hora_inicio|time:"H:i" }}
                                     a {{ reserva.hora_fin|time:"H:i" }}
                                 </td>
+
                                 <td>${{ reserva.precio_total }}</td>
+
                                 <td class="estado">
                                     {{ reserva.get_estado_display }}
                                 </td>
+
                                 <td>
                                     <form method="post"
                                           action="{% url 'actualizar_estado_reserva' reserva.id %}">
@@ -146,10 +180,12 @@
                                                 {% if reserva.estado == "PENDIENTE" %}selected{% endif %}>
                                                 Pendiente
                                             </option>
+
                                             <option value="CONFIRMADA"
                                                 {% if reserva.estado == "CONFIRMADA" %}selected{% endif %}>
                                                 Confirmada
                                             </option>
+
                                             <option value="CANCELADA"
                                                 {% if reserva.estado == "CANCELADA" %}selected{% endif %}>
                                                 Cancelada
@@ -160,11 +196,44 @@
                                             Guardar estado
                                         </button>
                                     </form>
+
+                                    {% if reserva.estado == "CONFIRMADA" and reserva.senia_aprobada and not reserva.saldo_pagado %}
+                                        <div class="pago-saldo">
+                                            <strong>Registrar saldo restante (70%)</strong>
+
+                                            <p class="ayuda">
+                                                Confirmá el medio de pago con el que el jugador abonó el saldo.
+                                            </p>
+
+                                            <form method="post"
+                                                  action="{% url 'registrar_saldo' reserva.id %}">
+                                                {% csrf_token %}
+
+                                                <select name="metodo" required>
+                                                    <option value="">Seleccionar método</option>
+                                                    <option value="EFECTIVO">Efectivo</option>
+                                                    <option value="TRANSFERENCIA">Transferencia</option>
+                                                    <option value="MERCADO_PAGO">Mercado Pago</option>
+                                                </select>
+
+                                                <button type="submit"
+                                                        onclick="return confirm('¿Confirmás que recibiste el saldo restante de esta reserva?')">
+                                                    Registrar saldo
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                    {% elif reserva.saldo_pagado %}
+                                        <p class="pago-registrado">
+                                            Saldo restante registrado.
+                                        </p>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+
             {% else %}
                 <p class="vacio">
                     Todavía no hay reservas registradas.

@@ -1,0 +1,132 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar pago</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .contenedor {
+            max-width: 550px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #183b35;
+        }
+
+        .detalle {
+            background: #edf5f1;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .importe {
+            font-size: 25px;
+            font-weight: bold;
+            color: #16834a;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            background: #16834a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #11683a;
+        }
+
+        .volver {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #183b35;
+            text-decoration: none;
+        }
+
+        .ayuda {
+            color: #666;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+    <h1>Registrar seña</h1>
+
+    <div class="detalle">
+        <p><strong>Reserva:</strong> #{{ reserva.id }}</p>
+        <p><strong>Fecha:</strong> {{ reserva.fecha }}</p>
+        <p><strong>Hora:</strong> {{ reserva.hora_inicio }}</p>
+        <p><strong>Precio total:</strong> ${{ reserva.precio_total }}</p>
+
+        <p>Seña correspondiente al 30%:</p>
+        <div class="importe">${{ importe_senia }}</div>
+
+        <p class="ayuda">
+            El 70% restante se abona en el complejo.
+        </p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ formulario.non_field_errors }}
+
+        <label for="{{ formulario.metodo.id_for_label }}">
+            Método de pago
+        </label>
+        {{ formulario.metodo }}
+        {{ formulario.metodo.errors }}
+
+        <label for="{{ formulario.comprobante.id_for_label }}">
+            Comprobante de pago
+        </label>
+        {{ formulario.comprobante }}
+        {{ formulario.comprobante.errors }}
+
+        <button type="submit">Enviar comprobante</button>
+    </form>
+
+    <a href="{% url 'mis_reservas' %}" class="volver">
+        Volver a mis reservas
+    </a>
+</div>
+
+</body>
+</html>

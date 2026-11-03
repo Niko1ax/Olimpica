@@ -20,18 +20,27 @@ from datetime import datetime
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from .models import Reserva, Pago
 from django.utils import timezone
 
 from .models import Cancha, Complejo, PerfilUsuario, Reserva
 
 from datetime import datetime
 
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Prefetch
 from django.shortcuts import render
 
 from .models import Cancha, Complejo, Reserva
 
+from .models import Pago
+from .forms import PagoForm
+
+from django.contrib import messages
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Pago, Reserva, PerfilUsuario
+
+from django.views.decorators.http import require_POST
 
 def inicio(request):
     complejos = Complejo.objects.all().prefetch_related("canchas")
@@ -265,6 +274,7 @@ def reservar_cancha(request, cancha_id):
 
 
 
+
 @login_required
 def mis_reservas(request):
     perfil = PerfilUsuario.objects.filter(
@@ -290,19 +300,32 @@ def mis_reservas(request):
         Reserva.objects.filter(
             jugador=perfil,
             estado__in=["PENDIENTE", "CONFIRMADA"],
-        )
-        .filter(
             fecha__gte=hoy,
         )
         .select_related("cancha", "cancha__complejo")
+        .prefetch_related(
+            Prefetch(
+                "pagos",
+                queryset=Pago.objects.filter(
+                    tipo="SENIA"
+                ).order_by("-id"),
+                to_attr="senias",
+            )
+        )
         .order_by("fecha", "hora_inicio")
     )
 
-    # Si la reserva es para hoy, mostrarla solo si aún no terminó.
+    # Mostrar únicamente reservas que todavía no terminaron.
     reservas = [
         reserva for reserva in reservas
         if reserva.fecha > hoy or reserva.hora_fin > hora_actual
     ]
+
+    # Obtener la última seña registrada para cada reserva.
+    for reserva in reservas:
+        reserva.pago_senia = (
+            reserva.senias[0] if reserva.senias else None
+        )
 
     return render(
         request,
@@ -378,6 +401,7 @@ def cancelar_reserva(request, reserva_id):
 
 
 
+
 @login_required
 def panel_reservas(request):
     perfil = PerfilUsuario.objects.filter(
@@ -385,21 +409,48 @@ def panel_reservas(request):
         rol="DUENIO",
     ).first()
 
+    # El administrador puede ver todas las reservas.
     if request.user.is_staff:
         reservas = Reserva.objects.all()
+
+    # El dueño solamente puede ver las reservas de sus complejos.
     elif perfil is not None:
         reservas = Reserva.objects.filter(
             cancha__complejo__dueno=perfil,
         )
+
     else:
         return redirect("inicio")
 
-    reservas = reservas.select_related(
-        "jugador",
-        "jugador__usuario",
-        "cancha",
-        "cancha__complejo",
-    ).order_by("fecha", "hora_inicio")
+    reservas = (
+        reservas
+        .select_related(
+            "jugador",
+            "jugador__usuario",
+            "cancha",
+            "cancha__complejo",
+        )
+        .prefetch_related(
+            Prefetch(
+                "pagos",
+                queryset=Pago.objects.all(),
+                to_attr="pagos_cargados",
+            )
+        )
+        .order_by("fecha", "hora_inicio")
+    )
+
+    # Comprobar el estado de la seña y del saldo de cada reserva.
+    for reserva in reservas:
+        reserva.senia_aprobada = any(
+            pago.tipo == "SENIA" and pago.estado == "APROBADO"
+            for pago in reserva.pagos_cargados
+        )
+
+        reserva.saldo_pagado = any(
+            pago.tipo == "SALDO" and pago.estado == "APROBADO"
+            for pago in reserva.pagos_cargados
+        )
 
     return render(
         request,
@@ -685,3 +736,241 @@ def cambiar_estado_cancha(request, cancha_id):
     cancha.save(update_fields=["activa"])
 
     return redirect("administrar_complejos")
+
+@login_required
+def registrar_pago(request, reserva_id):
+    reserva = get_object_or_404(
+        Reserva,
+        id=reserva_id,
+        jugador__usuario=request.user
+    )
+
+    # Solo se puede pagar una reserva pendiente.
+    if reserva.estado != "PENDIENTE":
+        messages.error(request, "Esta reserva no admite el registro de una seña.")
+        return redirect("mis_reservas")
+
+    # Evitar registrar otra seña si ya existe una pendiente o aprobada.
+    pago_existente = Pago.objects.filter(
+        reserva=reserva,
+        tipo="SENIA",
+        estado__in=["PENDIENTE", "APROBADO"]
+    ).exists()
+
+    if pago_existente:
+        messages.warning(request, "Ya existe una seña registrada para esta reserva.")
+        return redirect("mis_reservas")
+
+    from decimal import Decimal
+
+    importe_senia = (reserva.precio_total * Decimal("0.30")).quantize(
+        Decimal("0.01")
+    )
+
+    if request.method == "POST":
+        formulario = PagoForm(request.POST, request.FILES)
+
+        if formulario.is_valid():
+            pago = formulario.save(commit=False)
+            pago.reserva = reserva
+            pago.tipo = "SENIA"
+            pago.importe = importe_senia
+            pago.estado = "PENDIENTE"
+            pago.save()
+
+            messages.success(
+                request,
+                "El comprobante fue enviado. El dueño del complejo debe verificar el pago."
+            )
+            return redirect("mis_reservas")
+    else:
+        formulario = PagoForm()
+
+    return render(request, "reservas/registrar_pago.html", {
+        "formulario": formulario,
+        "reserva": reserva,
+        "importe_senia": importe_senia,
+    })
+
+@login_required
+def pagos_pendientes(request):
+
+    if request.user.is_staff:
+        pagos = Pago.objects.filter(
+            estado="PENDIENTE"
+        )
+    else:
+        try:
+            perfil = request.user.perfil
+        except PerfilUsuario.DoesNotExist:
+            messages.error(request, "No tenés un perfil asociado.")
+            return redirect("inicio")
+
+        if perfil.rol != "DUENIO":
+            messages.error(request, "No tenés permiso para acceder.")
+            return redirect("inicio")
+
+        pagos = Pago.objects.filter(
+            reserva__cancha__complejo__dueno=perfil,
+            estado="PENDIENTE"
+        )
+
+    pagos = pagos.select_related(
+        "reserva",
+        "reserva__jugador__usuario",
+        "reserva__cancha",
+        "reserva__cancha__complejo"
+    ).order_by("-id")
+
+    return render(
+        request,
+        "reservas/pagos_pendientes.html",
+        {"pagos": pagos}
+    )
+
+@login_required
+@require_POST
+def actualizar_estado_pago(request, pago_id):
+
+    pago = get_object_or_404(Pago, id=pago_id)
+
+    # Verificar permisos
+    if not request.user.is_staff:
+        try:
+            perfil = request.user.perfil
+        except PerfilUsuario.DoesNotExist:
+            messages.error(request, "No tenés permiso para realizar esta acción.")
+            return redirect("inicio")
+
+        if (
+            perfil.rol != "DUENIO"
+            or pago.reserva.cancha.complejo.dueno_id != perfil.id
+        ):
+            messages.error(request, "No tenés permiso para gestionar este pago.")
+            return redirect("inicio")
+
+    # Solo se pueden procesar pagos pendientes
+    if pago.estado != "PENDIENTE":
+        messages.warning(request, "Este pago ya fue procesado.")
+        return redirect("pagos_pendientes")
+
+    accion = request.POST.get("accion")
+
+    if accion == "aprobar":
+
+        pago.estado = "APROBADO"
+        pago.fecha_pago = timezone.now()
+        pago.save()
+
+        if pago.tipo == "SENIA":
+            pago.reserva.estado = "CONFIRMADA"
+            pago.reserva.save(update_fields=["estado"])
+
+        messages.success(
+            request,
+            "El pago fue aprobado y la reserva quedó confirmada."
+        )
+
+    elif accion == "rechazar":
+
+        pago.estado = "RECHAZADO"
+        pago.save(update_fields=["estado"])
+
+        messages.warning(
+            request,
+            "El pago fue rechazado. El jugador podrá enviar otro comprobante."
+        )
+
+    else:
+        messages.error(request, "Acción no válida.")
+
+    return redirect("pagos_pendientes")
+
+
+@login_required
+@require_POST
+def registrar_saldo(request, reserva_id):
+
+    reserva = get_object_or_404(
+        Reserva.objects.select_related(
+            "cancha",
+            "cancha__complejo"
+        ),
+        id=reserva_id
+    )
+
+    # Verificar permisos del dueño o administrador.
+    if not request.user.is_staff:
+        perfil = PerfilUsuario.objects.filter(
+            usuario=request.user,
+            rol="DUENIO"
+        ).first()
+
+        if perfil is None or reserva.cancha.complejo.dueno_id != perfil.id:
+            messages.error(
+                request,
+                "No tenés permiso para registrar este pago."
+            )
+            return redirect("inicio")
+
+    # La reserva debe estar confirmada.
+    if reserva.estado != "CONFIRMADA":
+        messages.error(
+            request,
+            "La reserva todavía no está confirmada."
+        )
+        return redirect("panel_reservas")
+
+    # Verificar que la seña haya sido aprobada.
+    senia_aprobada = Pago.objects.filter(
+        reserva=reserva,
+        tipo="SENIA",
+        estado="APROBADO"
+    ).exists()
+
+    if not senia_aprobada:
+        messages.error(
+            request,
+            "Primero debe aprobarse la seña."
+        )
+        return redirect("panel_reservas")
+
+    # Evitar registrar dos veces el saldo.
+    saldo_existente = Pago.objects.filter(
+        reserva=reserva,
+        tipo="SALDO",
+        estado="APROBADO"
+    ).exists()
+
+    if saldo_existente:
+        messages.warning(
+            request,
+            "El saldo de esta reserva ya fue registrado."
+        )
+        return redirect("panel_reservas")
+
+    importe_saldo = (
+        reserva.precio_total * Decimal("0.70")
+    ).quantize(Decimal("0.01"))
+
+    metodo = request.POST.get("metodo")
+
+    if metodo not in ["EFECTIVO", "TRANSFERENCIA", "MERCADO_PAGO"]:
+        messages.error(request, "Seleccioná un método de pago válido.")
+        return redirect("panel_reservas")
+
+    Pago.objects.create(
+        reserva=reserva,
+        tipo="SALDO",
+        importe=importe_saldo,
+        metodo=metodo,
+        estado="APROBADO",
+        fecha_pago=timezone.now()
+    )
+
+    messages.success(
+        request,
+        f"Se registró correctamente el saldo de ${importe_saldo}."
+    )
+
+    return redirect("panel_reservas")

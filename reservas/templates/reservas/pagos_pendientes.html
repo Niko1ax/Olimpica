@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pagos pendientes | Olimpica</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f7f4;
+            color: #17251d;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        article {
+            background: white;
+            border: 1px solid #dfe7df;
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            color: #123d2b;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .estado {
+            color: #a87500;
+            font-weight: bold;
+        }
+
+        .comprobante {
+            display: inline-block;
+            margin: 12px 0;
+            padding: 10px 15px;
+            background: #e8f2ec;
+            color: #123d2b;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .comprobante:hover {
+            background: #d6e8dc;
+        }
+
+        .vacio {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .acciones button {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .boton-aprobar {
+            background: #16834a;
+        }
+
+        .boton-aprobar:hover {
+            background: #11683a;
+        }
+
+        .boton-rechazar {
+            background: #b83232;
+        }
+
+        .boton-rechazar:hover {
+            background: #922525;
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'reservas/navbar.html' %}
+
+    <main>
+        <h1>Pagos pendientes de revisión</h1>
+
+        {% if pagos %}
+
+            {% for pago in pagos %}
+
+                <article>
+                    <h2>Pago #{{ pago.id }}</h2>
+
+                    <p>
+                        <strong>Jugador:</strong>
+                        {{ pago.reserva.jugador.usuario.username }}
+                    </p>
+
+                    <p>
+                        <strong>Complejo:</strong>
+                        {{ pago.reserva.cancha.complejo.nombre }}
+                    </p>
+
+                    <p>
+                        <strong>Cancha:</strong>
+                        {{ pago.reserva.cancha.nombre }}
+                    </p>
+
+                    <p>
+                        <strong>Fecha de reserva:</strong>
+                        {{ pago.reserva.fecha }}
+                    </p>
+
+                    <p>
+                        <strong>Tipo de pago:</strong>
+                        {{ pago.get_tipo_display }}
+                    </p>
+
+                    <p>
+                        <strong>Importe:</strong>
+                        ${{ pago.importe }}
+                    </p>
+
+                    <p>
+                        <strong>Método:</strong>
+                        {{ pago.get_metodo_display }}
+                    </p>
+
+                    <p class="estado">
+                        Estado: {{ pago.get_estado_display }}
+                    </p>
+
+                    {% if pago.comprobante %}
+                        <a
+                            href="{{ pago.comprobante.url }}"
+                            target="_blank"
+                            class="comprobante">
+                            Ver comprobante
+                        </a>
+                    {% else %}
+                        <p>No se adjuntó ningún comprobante.</p>
+                    {% endif %}
+
+                    <div class="acciones">
+
+                    <form method="POST"
+                        action="{% url 'actualizar_estado_pago' pago.id %}"
+                        onsubmit="return confirm('¿Confirmás la aprobación de este pago?');">
+
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="aprobar">
+
+                        <button type="submit" class="boton-aprobar">
+                            Aprobar pago
+                        </button>
+                    </form>
+
+                    <form method="POST"
+                        action="{% url 'actualizar_estado_pago' pago.id %}"
+                        onsubmit="return confirm('¿Confirmás el rechazo de este pago?');">
+
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="rechazar">
+
+                        <button type="submit" class="boton-rechazar">
+                            Rechazar pago
+                        </button>
+                    </form>
+
+                </div>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p class="vacio">
+                No hay pagos pendientes de revisión.
+            </p>
+
+        {% endif %}
+    </main>
+
+</body>
+</html>

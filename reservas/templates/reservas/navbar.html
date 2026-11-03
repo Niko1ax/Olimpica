@@ -14,6 +14,7 @@
         {% elif user.perfil.rol == "DUENIO" %}
             <a href="{% url 'panel_reservas' %}">Administrar reservas</a>
             <a href="{% url 'administrar_complejos' %}">Mis complejos y canchas</a>
+            <a href="{% url 'pagos_pendientes' %}">Revisar pagos</a>
         {% else %}
             <a href="{% url 'mis_reservas' %}">Mis reservas</a>
         {% endif %}

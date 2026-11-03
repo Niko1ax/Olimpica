@@ -107,12 +107,17 @@ class Reserva(models.Model):
         )
 
 
+
 class Pago(models.Model):
+    TIPOS = [
+        ("SENIA", "Seña"),
+        ("SALDO", "Saldo restante"),
+    ]
+
     METODOS = [
-        ("EFECTIVO", "Efectivo"),
         ("TRANSFERENCIA", "Transferencia"),
         ("MERCADO_PAGO", "Mercado Pago"),
-        ("TARJETA", "Tarjeta"),
+        ("EFECTIVO", "Efectivo"),
     ]
 
     ESTADOS = [
@@ -121,28 +126,39 @@ class Pago(models.Model):
         ("RECHAZADO", "Rechazado"),
     ]
 
-    reserva = models.OneToOneField(
+    reserva = models.ForeignKey(
         Reserva,
         on_delete=models.PROTECT,
-        related_name="pago"
+        related_name="pagos"
     )
-    importe = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
+
+    tipo = models.CharField(
+        max_length=10,
+        choices=TIPOS,
+        default="SENIA"
     )
+
+    importe = models.DecimalField(max_digits=10, decimal_places=2)
     metodo = models.CharField(max_length=20, choices=METODOS)
     estado = models.CharField(
         max_length=10,
         choices=ESTADOS,
         default="PENDIENTE"
     )
-    fecha_pago = models.DateTimeField(
+
+    comprobante = models.FileField(
+        upload_to="comprobantes/",
         null=True,
         blank=True
     )
 
+    fecha_pago = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
-        return f"Pago de reserva #{self.reserva_id} - {self.estado}"
+        return (
+            f"{self.get_tipo_display()} - "
+            f"Reserva #{self.reserva_id} - {self.estado}"
+        )
 
 
 class Resena(models.Model):
