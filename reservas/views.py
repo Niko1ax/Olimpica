@@ -1,3 +1,6 @@
+from django.utils.dateparse import parse_date
+from django.db.models import Count, Sum, Q
+from datetime import timedelta
 from .models import Cancha, PerfilUsuario, Reserva
 from datetime import datetime, time, timedelta
 from .models import Cancha, Reserva
@@ -402,62 +405,73 @@ def cancelar_reserva(request, reserva_id):
 
 
 
+
 @login_required
-def panel_reservas(request):
+def reportes(request):
     perfil = PerfilUsuario.objects.filter(
         usuario=request.user,
-        rol="DUENIO",
+        rol="DUENIO"
     ).first()
 
     # El administrador puede ver todas las reservas.
     if request.user.is_staff:
-        reservas = Reserva.objects.all()
+        reservas_base = Reserva.objects.all()
 
     # El dueño solamente puede ver las reservas de sus complejos.
     elif perfil is not None:
-        reservas = Reserva.objects.filter(
-            cancha__complejo__dueno=perfil,
+        reservas_base = Reserva.objects.filter(
+            cancha__complejo__dueno=perfil
         )
 
     else:
         return redirect("inicio")
 
-    reservas = (
-        reservas
-        .select_related(
-            "jugador",
-            "jugador__usuario",
-            "cancha",
-            "cancha__complejo",
+    # Obtener las reservas de la semana actual.
+    hoy = timezone.localdate()
+    inicio_semana = hoy - timedelta(days=hoy.weekday())
+    fin_semana = inicio_semana + timedelta(days=6)
+
+    reservas = reservas_base.filter(
+        fecha__gte=inicio_semana,
+        fecha__lte=fin_semana
+    ).select_related(
+        "jugador",
+        "jugador__usuario",
+        "cancha",
+        "cancha__complejo"
+    ).order_by("fecha", "hora_inicio")
+
+    # Calcular estadísticas.
+    resumen = reservas.aggregate(
+        total=Count("id"),
+        pendientes=Count(
+            "id",
+            filter=Q(estado="PENDIENTE")
+        ),
+        confirmadas=Count(
+            "id",
+            filter=Q(estado="CONFIRMADA")
+        ),
+        canceladas=Count(
+            "id",
+            filter=Q(estado="CANCELADA")
+        ),
+        recaudacion=Sum(
+            "precio_total",
+            filter=Q(estado="CONFIRMADA")
         )
-        .prefetch_related(
-            Prefetch(
-                "pagos",
-                queryset=Pago.objects.all(),
-                to_attr="pagos_cargados",
-            )
-        )
-        .order_by("fecha", "hora_inicio")
     )
-
-    # Comprobar el estado de la seña y del saldo de cada reserva.
-    for reserva in reservas:
-        reserva.senia_aprobada = any(
-            pago.tipo == "SENIA" and pago.estado == "APROBADO"
-            for pago in reserva.pagos_cargados
-        )
-
-        reserva.saldo_pagado = any(
-            pago.tipo == "SALDO" and pago.estado == "APROBADO"
-            for pago in reserva.pagos_cargados
-        )
 
     return render(
         request,
-        "reservas/panel_reservas.html",
-        {"reservas": reservas},
+        "reservas/reportes.html",
+        {
+            "reservas": reservas,
+            "inicio_semana": inicio_semana,
+            "fin_semana": fin_semana,
+            "resumen": resumen,
+        }
     )
-
 
 
 @login_required
@@ -738,6 +752,8 @@ def cambiar_estado_cancha(request, cancha_id):
     return redirect("administrar_complejos")
 
 @login_required
+
+@login_required
 def registrar_pago(request, reserva_id):
     reserva = get_object_or_404(
         Reserva,
@@ -745,12 +761,10 @@ def registrar_pago(request, reserva_id):
         jugador__usuario=request.user
     )
 
-    # Solo se puede pagar una reserva pendiente.
     if reserva.estado != "PENDIENTE":
         messages.error(request, "Esta reserva no admite el registro de una seña.")
         return redirect("mis_reservas")
 
-    # Evitar registrar otra seña si ya existe una pendiente o aprobada.
     pago_existente = Pago.objects.filter(
         reserva=reserva,
         tipo="SENIA",
@@ -761,11 +775,9 @@ def registrar_pago(request, reserva_id):
         messages.warning(request, "Ya existe una seña registrada para esta reserva.")
         return redirect("mis_reservas")
 
-    from decimal import Decimal
-
-    importe_senia = (reserva.precio_total * Decimal("0.30")).quantize(
-        Decimal("0.01")
-    )
+    importe_senia = (
+        reserva.precio_total * Decimal("0.30")
+    ).quantize(Decimal("0.01"))
 
     if request.method == "POST":
         formulario = PagoForm(request.POST, request.FILES)
@@ -791,6 +803,7 @@ def registrar_pago(request, reserva_id):
         "reserva": reserva,
         "importe_senia": importe_senia,
     })
+
 
 @login_required
 def pagos_pendientes(request):
@@ -828,13 +841,13 @@ def pagos_pendientes(request):
         {"pagos": pagos}
     )
 
+
 @login_required
 @require_POST
 def actualizar_estado_pago(request, pago_id):
 
     pago = get_object_or_404(Pago, id=pago_id)
 
-    # Verificar permisos
     if not request.user.is_staff:
         try:
             perfil = request.user.perfil
@@ -849,7 +862,6 @@ def actualizar_estado_pago(request, pago_id):
             messages.error(request, "No tenés permiso para gestionar este pago.")
             return redirect("inicio")
 
-    # Solo se pueden procesar pagos pendientes
     if pago.estado != "PENDIENTE":
         messages.warning(request, "Este pago ya fue procesado.")
         return redirect("pagos_pendientes")
@@ -899,7 +911,6 @@ def registrar_saldo(request, reserva_id):
         id=reserva_id
     )
 
-    # Verificar permisos del dueño o administrador.
     if not request.user.is_staff:
         perfil = PerfilUsuario.objects.filter(
             usuario=request.user,
@@ -913,7 +924,6 @@ def registrar_saldo(request, reserva_id):
             )
             return redirect("inicio")
 
-    # La reserva debe estar confirmada.
     if reserva.estado != "CONFIRMADA":
         messages.error(
             request,
@@ -921,7 +931,6 @@ def registrar_saldo(request, reserva_id):
         )
         return redirect("panel_reservas")
 
-    # Verificar que la seña haya sido aprobada.
     senia_aprobada = Pago.objects.filter(
         reserva=reserva,
         tipo="SENIA",
@@ -935,7 +944,6 @@ def registrar_saldo(request, reserva_id):
         )
         return redirect("panel_reservas")
 
-    # Evitar registrar dos veces el saldo.
     saldo_existente = Pago.objects.filter(
         reserva=reserva,
         tipo="SALDO",
@@ -974,3 +982,57 @@ def registrar_saldo(request, reserva_id):
     )
 
     return redirect("panel_reservas")
+
+
+@login_required
+def panel_reservas(request):
+    perfil = PerfilUsuario.objects.filter(
+        usuario=request.user,
+        rol="DUENIO",
+    ).first()
+
+    if request.user.is_staff:
+        reservas = Reserva.objects.all()
+
+    elif perfil is not None:
+        reservas = Reserva.objects.filter(
+            cancha__complejo__dueno=perfil,
+        )
+
+    else:
+        return redirect("inicio")
+
+    reservas = (
+        reservas
+        .select_related(
+            "jugador",
+            "jugador__usuario",
+            "cancha",
+            "cancha__complejo",
+        )
+        .prefetch_related(
+            Prefetch(
+                "pagos",
+                queryset=Pago.objects.all(),
+                to_attr="pagos_cargados",
+            )
+        )
+        .order_by("fecha", "hora_inicio")
+    )
+
+    for reserva in reservas:
+        reserva.senia_aprobada = any(
+            pago.tipo == "SENIA" and pago.estado == "APROBADO"
+            for pago in reserva.pagos_cargados
+        )
+
+        reserva.saldo_pagado = any(
+            pago.tipo == "SALDO" and pago.estado == "APROBADO"
+            for pago in reserva.pagos_cargados
+        )
+
+    return render(
+        request,
+        "reservas/panel_reservas.html",
+        {"reservas": reservas},
+    )

@@ -114,6 +114,11 @@ urlpatterns = [
         name="registrar_saldo"
     ),
 
+    path(
+        "reportes/",
+        views.reportes,
+        name="reportes"
+    ),
 ]
 
 if settings.DEBUG:
