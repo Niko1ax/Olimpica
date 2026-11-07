@@ -1,0 +1,87 @@
+/* Estilos exclusivos de Mis reservas. No afectan a otras pantallas. */
+body.mis-reservas-nuevo { background: #f2f7f4; color: #103a2b; }
+.mis-reservas-nuevo *, .mis-reservas-nuevo *::before, .mis-reservas-nuevo *::after { box-sizing: border-box; }
+.mis-reservas-nuevo .mr-contenedor { max-width: 1120px; margin: 0 auto; padding: 48px 24px 86px; }
+.mis-reservas-nuevo .mr-encabezado { display: flex; align-items: end; justify-content: space-between; gap: 22px; margin: 0 0 26px; }
+.mis-reservas-nuevo .mr-kicker, .mis-reservas-nuevo .mr-sobretitulo { color: #16804d; font-size: 11px; font-weight: 800; letter-spacing: .11em; margin: 0 0 9px; }
+.mis-reservas-nuevo .mr-encabezado h1 { margin: 0 0 10px; font-size: clamp(30px, 4vw, 41px); color: #073d2b; line-height: 1.14; letter-spacing: -.03em; }
+.mis-reservas-nuevo .mr-subtitulo { color: #61766b; font-size: 14px; margin: 0; line-height: 1.5; }
+.mis-reservas-nuevo .mr-btn { display: inline-flex; align-items: center; justify-content: center; padding: 11px 18px; border-radius: 9px; font-size: 13px; font-weight: 750; text-decoration: none; border: 1px solid transparent; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.mis-reservas-nuevo .mr-btn-principal { background: #087b4e; color: #fff; }
+.mis-reservas-nuevo .mr-btn-principal:hover { background: #046741; }
+.mis-reservas-nuevo .mr-btn-peligro { background: #fff; border-color: #f0c9c4; color: #a43d32; }
+.mis-reservas-nuevo .mr-btn-peligro:hover { background: #fff1ef; }
+.mis-reservas-nuevo .mr-resumen { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding: 14px 18px; background: #e8f4ec; border: 1px solid #d8eade; border-radius: 14px; }
+.mis-reservas-nuevo .mr-resumen-icono { display: grid; place-items: center; border-radius: 10px; background: #d5eadc; color: #087b4e; width: 40px; height: 40px; font-size: 24px; }
+.mis-reservas-nuevo .mr-resumen strong { display: block; font-size: 14px; }
+.mis-reservas-nuevo .mr-resumen span { color: #61776a; display: block; font-size: 12px; margin-top: 4px; }
+.mis-reservas-nuevo .mr-lista { display: grid; gap: 18px; }
+.mis-reservas-nuevo .mr-tarjeta { padding: 24px 27px; margin: 0; background: #fff; border: 1px solid #dce8e0; border-radius: 17px; box-shadow: 0 9px 26px #123e2810; }
+.mis-reservas-nuevo .mr-tarjeta-superior { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
+.mis-reservas-nuevo .mr-identidad { display: flex; align-items: center; gap: 13px; }
+.mis-reservas-nuevo .mr-icono { flex: 0 0 48px; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: #e6f4e9; font-size: 25px; }
+.mis-reservas-nuevo .mr-identidad h2 { margin: 0 0 4px; font-size: 21px; color: #103e2d; }
+.mis-reservas-nuevo .mr-complejo { margin: 0; color: #5f7369; font-size: 13px; }
+.mis-reservas-nuevo .mr-estado, .mis-reservas-nuevo .mr-pago-etiqueta { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; padding: 7px 11px; font-weight: 750; font-size: 12px; white-space: nowrap; }
+.mis-reservas-nuevo .mr-estado-confirmado, .mis-reservas-nuevo .mr-pago-ok { color: #147444; background: #dff5e7; }
+.mis-reservas-nuevo .mr-estado-pendiente, .mis-reservas-nuevo .mr-pago-espera { color: #8e650e; background: #fff1cd; }
+.mis-reservas-nuevo .mr-estado-cancelado, .mis-reservas-nuevo .mr-pago-error { color: #a33737; background: #ffeded; }
+.mis-reservas-nuevo .mr-estado-neutro, .mis-reservas-nuevo .mr-pago-neutro { color: #66746c; background: #e8eeea; }
+.mis-reservas-nuevo .mr-estado > span { font-size: 9px; }
+.mis-reservas-nuevo .mr-detalles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 23px 0 18px; padding: 17px 18px; background: #f7faf8; border: 1px solid #e7eeea; border-radius: 11px; }
+.mis-reservas-nuevo .mr-detalle { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.mis-reservas-nuevo .mr-detalle-icono { font-size: 23px; line-height: 1; color: #0b8050; }
+.mis-reservas-nuevo .mr-detalle small, .mis-reservas-nuevo .mr-detalle strong { display: block; }
+.mis-reservas-nuevo .mr-detalle small { color: #6b8072; font-size: 11px; margin-bottom: 5px; }
+.mis-reservas-nuevo .mr-detalle strong { color: #193b2e; font-size: 14px; }
+.mis-reservas-nuevo .mr-detalle-total { justify-content: flex-end; text-align: right; }
+.mis-reservas-nuevo .mr-detalle-total strong { color: #087b4e; font-size: 22px; }
+.mis-reservas-nuevo .mr-pagos { padding: 16px 18px; background: #f5f8f6; border: 1px solid #e4ece6; border-radius: 11px; }
+.mis-reservas-nuevo .mr-pagos-titulo { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mis-reservas-nuevo .mr-pagos h3 { font-size: 14px; color: #153f2e; margin: 0; }
+.mis-reservas-nuevo .mr-pagos-cuerpo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 22px; margin-top: 9px; }
+.mis-reservas-nuevo .mr-pagos-cuerpo > p { margin: 0; }
+.mis-reservas-nuevo .mr-pagos-cuerpo > p:first-child { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.mis-reservas-nuevo .mr-pagos-cuerpo > p:first-child span { color: #667c6d; }
+.mis-reservas-nuevo .mr-pagos-cuerpo > p:first-child strong { color: #123e2c; }
+.mis-reservas-nuevo .mr-mensaje { font-size: 12px; font-weight: 650; }
+.mis-reservas-nuevo .mr-mensaje-ok { color: #0c874b; }
+.mis-reservas-nuevo .mr-mensaje-espera { color: #956b17; }
+.mis-reservas-nuevo .mr-mensaje-error { color: #ac3434; }
+.mis-reservas-nuevo .mr-sin-pago { margin: 10px 0 0; color: #6f7e74; font-size: 12px; }
+.mis-reservas-nuevo .mr-acciones { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+.mis-reservas-nuevo .mr-acciones form { margin: 0; }
+.mis-reservas-nuevo .mr-aviso { background: #fff; border: 1px solid #e5eae5; border-radius: 11px; padding: 22px; }
+.mis-reservas-nuevo .mr-aviso-error { background: #ffefef; border-color: #eac9c9; color: #a43838; }
+.mis-reservas-nuevo .mr-vacio { text-align: center; border: 1px dashed #c5dfce; border-radius: 18px; background: white; padding: 54px 20px; }
+.mis-reservas-nuevo .mr-vacio-icono { font-size: 40px; }
+.mis-reservas-nuevo .mr-vacio h2 { color: #123b2c; }
+.mis-reservas-nuevo .mr-vacio p { color: #62766b; margin-bottom: 22px; }
+@media (max-width: 760px) {
+  .mis-reservas-nuevo .mr-encabezado { flex-direction: column; align-items: flex-start; }
+  .mis-reservas-nuevo .mr-detalles { grid-template-columns: 1fr 1fr; }
+  .mis-reservas-nuevo .mr-detalle-total { justify-content: flex-start; text-align: left; }
+}
+@media (max-width: 520px) {
+  .mis-reservas-nuevo .mr-contenedor { padding: 30px 14px 65px; }
+  .mis-reservas-nuevo .mr-tarjeta { padding: 17px; }
+  .mis-reservas-nuevo .mr-tarjeta-superior { flex-direction: column; }
+  .mis-reservas-nuevo .mr-detalles { grid-template-columns: 1fr; }
+  .mis-reservas-nuevo .mr-acciones, .mis-reservas-nuevo .mr-acciones form, .mis-reservas-nuevo .mr-acciones .mr-btn { width: 100%; }
+  .mis-reservas-nuevo .mr-pagos-titulo { align-items: flex-start; }
+}
+
+/* Corrección: styles.css aplica un fondo oscuro a todos los header de esta página.
+   Este encabezado es contenido, no la barra de navegación. */
+body.page-mis-reservas.mis-reservas-nuevo header.mr-encabezado {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0 0 26px;
+  color: #103e2d;
+}
+body.page-mis-reservas.mis-reservas-nuevo header.mr-encabezado .mr-kicker { color: #16804d; }
+body.page-mis-reservas.mis-reservas-nuevo header.mr-encabezado h1 { color: #073d2b; }
+body.page-mis-reservas.mis-reservas-nuevo header.mr-encabezado .mr-subtitulo { color: #61766b; }
+body.page-mis-reservas.mis-reservas-nuevo header.mr-encabezado a.mr-btn-principal { color: #fff; }

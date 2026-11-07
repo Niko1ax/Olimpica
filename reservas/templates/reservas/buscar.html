@@ -1,178 +1,39 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar canchas | Olimpica</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            background: #f1f5f1;
-            color: #222;
-            font-family: Arial, sans-serif;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: 26px auto;
-            padding: 0 18px;
-        }
-
-        h1, h2, h3 {
-            color: #176b3a;
-        }
-
-        .descripcion {
-            margin-bottom: 14px;
-        }
-
-        .formulario-busqueda {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
-            padding: 20px;
-            background: white;
-            border: 1px solid #d9e5db;
-            border-radius: 10px;
-        }
-
-        .campo {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        label {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        input,
-        select {
-            width: 100%;
-            min-width: 0;
-            padding: 11px;
-            border: 1px solid #b8cbbd;
-            border-radius: 6px;
-            background: white;
-            font-size: 14px;
-        }
-
-        input:focus,
-        select:focus {
-            outline: 2px solid #80b995;
-            border-color: #176b3a;
-        }
-
-        .boton {
-            display: inline-block;
-            width: fit-content;
-            padding: 11px 17px;
-            border: none;
-            border-radius: 6px;
-            background: #176b3a;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .boton:hover {
-            background: #12532d;
-        }
-
-        .boton-buscar {
-            grid-column: 1 / -1;
-        }
-
-        .mensaje {
-            margin-top: 22px;
-            padding: 15px;
-            border-radius: 8px;
-            background: white;
-            line-height: 1.5;
-        }
-
-        .error {
-            color: #a32121;
-            background: #fff0f0;
-            border: 1px solid #f0caca;
-        }
-
-        .resultados {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .tarjeta-cancha {
-            padding: 20px;
-            background: white;
-            border: 1px solid #d9e5db;
-            border-radius: 10px;
-            box-shadow: 0 3px 12px #00000008;
-        }
-
-        .tarjeta-cancha h2 {
-            margin-top: 0;
-        }
-
-        .detalle {
-            margin: 9px 0;
-            line-height: 1.5;
-        }
-
-        .precio {
-            color: #176b3a;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .horario {
-            padding: 10px;
-            background: #edf6ef;
-            border-radius: 6px;
-        }
-
-        .volver {
-            display: inline-block;
-            margin-top: 18px;
-            color: #176b3a;
-        }
-
-        @media (max-width: 650px) {
-            .formulario-busqueda,
-            .resultados {
-                grid-template-columns: 1fr;
-            }
-
-            .boton-buscar {
-                grid-column: auto;
-                width: 100%;
-            }
-        }
-    </style>
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
 </head>
 
-<body>
+<body class="page-buscar">
     {% include 'reservas/navbar.html' %}
 
     <main>
-        <h1>Buscá tu cancha</h1>
+        <header class="buscar-encabezado">
+            <div>
+                <span class="section-kicker">ENCONTRÁ TU PRÓXIMO PARTIDO</span>
+                <h1>Buscá tu cancha</h1>
+                <p class="descripcion">
+                    Elegí la fecha y el horario de inicio. Encontrá tu turno disponible en segundos.
+                    Cada reserva dura una hora.
+                </p>
+            </div>
+            <div class="buscar-encabezado-icono" aria-hidden="true">⚽</div>
+        </header>
 
-        <p class="descripcion">
-            Elegí la fecha y el horario de inicio para consultar las canchas disponibles.
-            Cada turno dura exactamente una hora.
-        </p>
-
+        <section class="buscar-bloque" aria-label="Formulario de búsqueda de canchas">
+        <div class="buscar-bloque-titulo">
+            <div class="buscar-bloque-icono" aria-hidden="true">⌕</div>
+            <div>
+                <h2>Encontrá tu turno</h2>
+                <p>Seleccioná cuándo querés jugar.</p>
+            </div>
+        </div>
         <form method="get" action="{% url 'buscar_canchas' %}"
               class="formulario-busqueda">
 
@@ -209,6 +70,7 @@
                 Buscar disponibilidad
             </button>
         </form>
+        </section>
 
         {% if error %}
             <div class="mensaje error">
@@ -224,6 +86,7 @@
             <div class="resultados">
                 {% for cancha in canchas %}
                     <article class="tarjeta-cancha">
+                        <div class="search-card-banner" aria-hidden="true">⚽</div>
                         <h2>{{ cancha.nombre }}</h2>
 
                         <p class="detalle">
@@ -273,8 +136,10 @@
             </div>
 
         {% else %}
-            <div class="mensaje">
-                Ingresá una fecha y un horario para consultar la disponibilidad.
+            <div class="buscar-estado-inicial" role="status">
+                <div class="buscar-estado-icono" aria-hidden="true">▦</div>
+                <h2>Tu próximo partido empieza acá</h2>
+                <p>Seleccioná una fecha y un horario para descubrir las canchas disponibles.</p>
             </div>
         {% endif %}
 

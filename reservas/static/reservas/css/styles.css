@@ -1,0 +1,1497 @@
+/* Estilos centralizados de Olimpica. Las reglas por pantalla están aisladas mediante clases en body. */
+
+/* administrar_complejos.html */
+body.page-administrar-complejos * { box-sizing: border-box; }
+
+body.page-administrar-complejos {
+            margin: 0;
+            background: #f1f5f1;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+
+body.page-administrar-complejos main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 18px;
+        }
+
+body.page-administrar-complejos h1,
+body.page-administrar-complejos h2 { color: #176b3a; }
+
+body.page-administrar-complejos .complejo {
+            background: white;
+            padding: 22px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #0000000d;
+        }
+
+body.page-administrar-complejos .cancha {
+            padding: 14px;
+            margin-top: 12px;
+            background: #f7f9f7;
+            border-radius: 7px;
+        }
+
+body.page-administrar-complejos .sin-datos {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+body.page-administrar-complejos .enlace {
+            display: inline-block;
+            background: #176b3a;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+body.page-administrar-complejos .secundario {
+            color: #176b3a;
+        }
+
+/* buscar.html */
+body.page-buscar * {
+            box-sizing: border-box;
+        }
+
+body.page-buscar {
+            margin: 0;
+            background: #f1f5f1;
+            color: #222;
+            font-family: Arial, sans-serif;
+        }
+
+body.page-buscar main {
+            max-width: 1100px;
+            margin: 26px auto;
+            padding: 0 18px;
+        }
+
+body.page-buscar h1,
+body.page-buscar h2,
+body.page-buscar h3 {
+            color: #176b3a;
+        }
+
+body.page-buscar .descripcion {
+            margin-bottom: 14px;
+        }
+
+body.page-buscar .formulario-busqueda {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #d9e5db;
+            border-radius: 10px;
+        }
+
+body.page-buscar .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+body.page-buscar label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+body.page-buscar input,
+body.page-buscar select {
+            width: 100%;
+            min-width: 0;
+            padding: 11px;
+            border: 1px solid #b8cbbd;
+            border-radius: 6px;
+            background: white;
+            font-size: 14px;
+        }
+
+body.page-buscar input:focus,
+body.page-buscar select:focus {
+            outline: 2px solid #80b995;
+            border-color: #176b3a;
+        }
+
+body.page-buscar .boton {
+            display: inline-block;
+            width: fit-content;
+            padding: 11px 17px;
+            border: none;
+            border-radius: 6px;
+            background: #176b3a;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+body.page-buscar .boton:hover {
+            background: #12532d;
+        }
+
+body.page-buscar .boton-buscar {
+            grid-column: 1 / -1;
+        }
+
+body.page-buscar .mensaje {
+            margin-top: 22px;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+            line-height: 1.5;
+        }
+
+body.page-buscar .error {
+            color: #a32121;
+            background: #fff0f0;
+            border: 1px solid #f0caca;
+        }
+
+body.page-buscar .resultados {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+body.page-buscar .tarjeta-cancha {
+            padding: 20px;
+            background: white;
+            border: 1px solid #d9e5db;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #00000008;
+        }
+
+body.page-buscar .tarjeta-cancha h2 {
+            margin-top: 0;
+        }
+
+body.page-buscar .detalle {
+            margin: 9px 0;
+            line-height: 1.5;
+        }
+
+body.page-buscar .precio {
+            color: #176b3a;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+body.page-buscar .horario {
+            padding: 10px;
+            background: #edf6ef;
+            border-radius: 6px;
+        }
+
+body.page-buscar .volver {
+            display: inline-block;
+            margin-top: 18px;
+            color: #176b3a;
+        }
+
+@media (max-width: 650px) {
+body.page-buscar .formulario-busqueda,
+body.page-buscar .resultados {
+                grid-template-columns: 1fr;
+            }
+
+body.page-buscar .boton-buscar {
+                grid-column: auto;
+                width: 100%;
+            }
+}
+
+/* crear_cancha.html */
+body.page-crear-cancha * { box-sizing: border-box; }
+
+body.page-crear-cancha {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            color: #222;
+        }
+
+body.page-crear-cancha main {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0000000d;
+        }
+
+body.page-crear-cancha h1 { color: #176b3a; }
+
+body.page-crear-cancha .campo { margin-bottom: 20px; }
+
+body.page-crear-cancha label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+body.page-crear-cancha input,
+body.page-crear-cancha select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: white;
+            font-size: 15px;
+        }
+
+body.page-crear-cancha button {
+            padding: 12px 18px;
+            background: #176b3a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+body.page-crear-cancha button:hover { background: #12552e; }
+
+body.page-crear-cancha .error {
+            color: #a12622;
+            margin-top: 7px;
+        }
+
+body.page-crear-cancha .volver {
+            color: #176b3a;
+            margin-left: 12px;
+        }
+
+/* crear_complejo.html */
+body.page-crear-complejo * { box-sizing: border-box; }
+
+body.page-crear-complejo {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            color: #222;
+        }
+
+body.page-crear-complejo main {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0000000d;
+        }
+
+body.page-crear-complejo h1 { color: #176b3a; }
+
+body.page-crear-complejo .campo { margin-bottom: 18px; }
+
+body.page-crear-complejo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+body.page-crear-complejo input,
+body.page-crear-complejo textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+body.page-crear-complejo textarea { resize: vertical; }
+
+body.page-crear-complejo button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #176b3a;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+body.page-crear-complejo .error {
+            background: #fff1f0;
+            color: #a12622;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+body.page-crear-complejo .volver {
+            display: inline-block;
+            margin-left: 12px;
+            color: #176b3a;
+        }
+
+/* editar_cancha.html */
+body.page-editar-cancha { margin: 0; background: #f1f5f1; font-family: Arial, sans-serif; color: #222; }
+
+body.page-editar-cancha main { max-width: 700px; margin: 30px auto; padding: 24px; background: white; border-radius: 10px; }
+
+body.page-editar-cancha h1 { color: #176b3a; }
+
+body.page-editar-cancha label { display: block; margin-top: 15px; font-weight: bold; }
+
+body.page-editar-cancha input,
+body.page-editar-cancha textarea,
+body.page-editar-cancha select { width: 100%; box-sizing: border-box; padding: 11px; margin-top: 6px; }
+
+body.page-editar-cancha button,
+body.page-editar-cancha .enlace { display: inline-block; margin-top: 20px; padding: 11px 16px; border: 0; border-radius: 6px; background: #176b3a; color: white; text-decoration: none; cursor: pointer; }
+
+body.page-editar-cancha .errorlist { color: #b91c1c; }
+
+/* editar_complejo.html */
+body.page-editar-complejo { margin: 0; background: #f1f5f1; font-family: Arial, sans-serif; color: #222; }
+
+body.page-editar-complejo main { max-width: 700px; margin: 30px auto; padding: 24px; background: white; border-radius: 10px; }
+
+body.page-editar-complejo h1 { color: #176b3a; }
+
+body.page-editar-complejo label { display: block; margin-top: 15px; font-weight: bold; }
+
+body.page-editar-complejo input,
+body.page-editar-complejo textarea,
+body.page-editar-complejo select { width: 100%; box-sizing: border-box; padding: 11px; margin-top: 6px; }
+
+body.page-editar-complejo button,
+body.page-editar-complejo .enlace { display: inline-block; margin-top: 20px; padding: 11px 16px; border: 0; border-radius: 6px; background: #176b3a; color: white; text-decoration: none; cursor: pointer; }
+
+body.page-editar-complejo .errorlist { color: #b91c1c; }
+
+/* inicio.html */
+body.page-inicio * {
+            box-sizing: border-box;
+        }
+
+body.page-inicio {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #17251d;
+            background: #f4f7f4;
+        }
+
+body.page-inicio header {
+            background: #123d2b;
+            color: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+body.page-inicio .logo {
+            font-size: 27px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+body.page-inicio nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+body.page-inicio .hero {
+            padding: 75px 8%;
+            color: white;
+            background: linear-gradient(120deg, #123d2b, #26734d);
+        }
+
+body.page-inicio .hero h1 {
+            max-width: 700px;
+            font-size: clamp(32px, 5vw, 52px);
+            margin: 0 0 18px;
+        }
+
+body.page-inicio .hero p {
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 620px;
+        }
+
+body.page-inicio .boton {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 13px 22px;
+            background: #d9f36a;
+            color: #18321f;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+body.page-inicio main {
+            padding: 45px 8%;
+        }
+
+body.page-inicio .subtitulo {
+            font-size: 29px;
+            margin-bottom: 10px;
+        }
+
+body.page-inicio .introduccion {
+            color: #5b675f;
+            line-height: 1.6;
+        }
+
+body.page-inicio .complejos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+            margin-top: 28px;
+        }
+
+body.page-inicio .tarjeta {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #dfe7df;
+            box-shadow: 0 5px 15px #173b2910;
+        }
+
+body.page-inicio .tarjeta h3 {
+            color: #1b5a3b;
+            margin-top: 0;
+        }
+
+body.page-inicio .etiqueta {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #e6f5e9;
+            color: #205b37;
+            font-size: 13px;
+        }
+
+body.page-inicio .vacio {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+
+body.page-inicio footer {
+            background: #123d2b;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 35px;
+        }
+
+@media (max-width: 600px) {
+body.page-inicio header {
+                padding: 20px 5%;
+            }
+
+body.page-inicio nav a {
+                margin-left: 0;
+                margin-right: 12px;
+            }
+
+body.page-inicio .hero,
+body.page-inicio main {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+}
+
+/* login.html */
+body.page-login {
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            margin: 0;
+            padding: 40px 16px;
+        }
+
+body.page-login .contenedor {
+            max-width: 400px;
+            margin: 40px auto;
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #00000012;
+        }
+
+body.page-login h1 { color: #176b3a; text-align: center; }
+
+body.page-login label { display: block; margin-top: 16px; }
+
+body.page-login input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            margin-top: 6px;
+        }
+
+body.page-login button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 22px;
+            background: #176b3a;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+body.page-login a { color: #176b3a; }
+
+body.page-login .error { color: #b42318; }
+
+/* mis_reservas.html */
+body.page-mis-reservas {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f7f4;
+            color: #17251d;
+        }
+
+body.page-mis-reservas header {
+            background: #123d2b;
+            padding: 20px 8%;
+        }
+
+body.page-mis-reservas header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+body.page-mis-reservas main {
+            max-width: 900px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+body.page-mis-reservas article {
+            background: white;
+            border: 1px solid #dfe7df;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+body.page-mis-reservas .estado {
+            font-weight: bold;
+            color: #1b5a3b;
+        }
+
+body.page-mis-reservas .boton-pago,
+body.page-mis-reservas .boton-cancelar {
+            display: inline-block;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+body.page-mis-reservas .boton-pago {
+            background-color: #16834a;
+        }
+
+body.page-mis-reservas .boton-pago:hover {
+            background-color: #11683a;
+        }
+
+body.page-mis-reservas .boton-cancelar {
+            background-color: #b83232;
+        }
+
+body.page-mis-reservas .boton-cancelar:hover {
+            background-color: #922525;
+        }
+
+body.page-mis-reservas .acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+body.page-mis-reservas .informacion-pagos {
+            margin-top: 18px;
+            padding: 14px;
+            background: #f4f7f4;
+            border-radius: 8px;
+        }
+
+body.page-mis-reservas .informacion-pagos h3 {
+            margin-top: 0;
+        }
+
+body.page-mis-reservas .pago-pendiente {
+            color: #a87500;
+            font-weight: bold;
+        }
+
+body.page-mis-reservas .pago-aprobado {
+            color: #16834a;
+            font-weight: bold;
+        }
+
+body.page-mis-reservas .pago-rechazado {
+            color: #b83232;
+            font-weight: bold;
+        }
+
+/* navbar.html */
+.olimpica-nav {
+        background: #123f2d;
+        color: white;
+        padding: 16px 5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+.olimpica-nav .marca {
+        color: white;
+        font-size: 23px;
+        font-weight: bold;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+.olimpica-nav .enlaces {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+    }
+
+.olimpica-nav .enlaces > a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+.olimpica-nav .enlaces > a:hover {
+        text-decoration: underline;
+    }
+
+.olimpica-nav .usuario {
+        font-size: 14px;
+        color: #e0f2e5;
+    }
+
+.olimpica-nav .boton-registro,
+.olimpica-nav .boton-sesion {
+        background: white;
+        color: #176b3a !important;
+        padding: 10px 14px;
+        border-radius: 6px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+.olimpica-nav .logout-form {
+        margin: 0;
+    }
+
+.olimpica-nav .boton-sesion {
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+@media (max-width: 650px) {
+.olimpica-nav {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+.olimpica-nav .enlaces {
+            justify-content: flex-start;
+        }
+}
+
+/* pagos_pendientes.html */
+body.page-pagos-pendientes {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f7f4;
+            color: #17251d;
+        }
+
+body.page-pagos-pendientes main {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+body.page-pagos-pendientes article {
+            background: white;
+            border: 1px solid #dfe7df;
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+body.page-pagos-pendientes h1 {
+            color: #123d2b;
+        }
+
+body.page-pagos-pendientes h2 {
+            margin-top: 0;
+        }
+
+body.page-pagos-pendientes .estado {
+            color: #a87500;
+            font-weight: bold;
+        }
+
+body.page-pagos-pendientes .comprobante {
+            display: inline-block;
+            margin: 12px 0;
+            padding: 10px 15px;
+            background: #e8f2ec;
+            color: #123d2b;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+body.page-pagos-pendientes .comprobante:hover {
+            background: #d6e8dc;
+        }
+
+body.page-pagos-pendientes .vacio {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+body.page-pagos-pendientes .acciones {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+body.page-pagos-pendientes .acciones button {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+body.page-pagos-pendientes .boton-aprobar {
+            background: #16834a;
+        }
+
+body.page-pagos-pendientes .boton-aprobar:hover {
+            background: #11683a;
+        }
+
+body.page-pagos-pendientes .boton-rechazar {
+            background: #b83232;
+        }
+
+body.page-pagos-pendientes .boton-rechazar:hover {
+            background: #922525;
+        }
+
+/* panel_reservas.html */
+body.page-panel-reservas * { box-sizing: border-box; }
+
+body.page-panel-reservas {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            color: #222;
+        }
+
+body.page-panel-reservas header {
+            background: #176b3a;
+            color: white;
+            padding: 22px;
+        }
+
+body.page-panel-reservas header h1 {
+            margin: 0 0 8px;
+        }
+
+body.page-panel-reservas header a {
+            color: white;
+        }
+
+body.page-panel-reservas main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+body.page-panel-reservas .tabla-contenedor {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: 0 3px 12px #0000000d;
+        }
+
+body.page-panel-reservas table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+body.page-panel-reservas th,
+body.page-panel-reservas td {
+            text-align: left;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e5e5e5;
+            vertical-align: top;
+        }
+
+body.page-panel-reservas th {
+            background: #f7f9f7;
+        }
+
+body.page-panel-reservas select,
+body.page-panel-reservas button {
+            padding: 9px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            max-width: 100%;
+        }
+
+body.page-panel-reservas button {
+            background: #176b3a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+body.page-panel-reservas button:hover {
+            background: #12552e;
+        }
+
+body.page-panel-reservas .estado {
+            font-weight: bold;
+        }
+
+body.page-panel-reservas .vacio {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+body.page-panel-reservas .pago-saldo {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+body.page-panel-reservas .pago-saldo select {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+body.page-panel-reservas .pago-registrado {
+            color: #176b3a;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+body.page-panel-reservas .ayuda {
+            color: #666;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+/* registrar_pago.html */
+body.page-registrar-pago {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+body.page-registrar-pago .contenedor {
+            max-width: 550px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+body.page-registrar-pago h1 {
+            text-align: center;
+            color: #183b35;
+        }
+
+body.page-registrar-pago .detalle {
+            background: #edf5f1;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+body.page-registrar-pago .importe {
+            font-size: 25px;
+            font-weight: bold;
+            color: #16834a;
+        }
+
+body.page-registrar-pago label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: bold;
+        }
+
+body.page-registrar-pago input,
+body.page-registrar-pago select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+body.page-registrar-pago button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            background: #16834a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+body.page-registrar-pago button:hover {
+            background: #11683a;
+        }
+
+body.page-registrar-pago .volver {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #183b35;
+            text-decoration: none;
+        }
+
+body.page-registrar-pago .ayuda {
+            color: #666;
+            font-size: 13px;
+        }
+
+/* registro.html */
+body.page-registro * { box-sizing: border-box; }
+
+body.page-registro {
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            margin: 0;
+            padding: 35px 16px;
+            color: #222;
+        }
+
+body.page-registro .contenedor {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 32px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px #0000000d;
+        }
+
+body.page-registro h1 {
+            color: #176b3a;
+            font-size: 29px;
+            margin: 0 0 10px;
+        }
+
+body.page-registro .descripcion {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+body.page-registro .campo { margin-bottom: 19px; }
+
+body.page-registro label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+body.page-registro input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+body.page-registro input:focus {
+            outline: 2px solid #a6d8b8;
+            border-color: #176b3a;
+        }
+
+body.page-registro .ayuda {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 6px 0 0;
+        }
+
+body.page-registro .error-campo {
+            color: #b42318;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+body.page-registro .errores-generales {
+            background: #fff1f0;
+            color: #a12622;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 18px;
+        }
+
+body.page-registro .errores-generales ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+body.page-registro button {
+            width: 100%;
+            padding: 13px;
+            background: #176b3a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+body.page-registro button:hover { background: #12552e; }
+
+body.page-registro .enlace {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+body.page-registro a { color: #176b3a; }
+
+/* reportes.html */
+body.page-reportes .contenedor {
+        max-width: 1200px;
+        margin: 35px auto;
+        padding: 25px;
+    }
+
+body.page-reportes .resumen {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 16px;
+        margin: 25px 0 35px;
+    }
+
+body.page-reportes .tarjeta {
+        background: #123f2d;
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+body.page-reportes .tarjeta h3 {
+        font-size: 15px;
+        margin-top: 0;
+    }
+
+body.page-reportes .tarjeta p {
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 0;
+    }
+
+body.page-reportes .tabla-contenedor {
+        overflow-x: auto;
+    }
+
+body.page-reportes table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+body.page-reportes th,
+body.page-reportes td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+body.page-reportes th {
+        background: #123f2d;
+        color: white;
+    }
+
+body.page-reportes .boton-volver {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 18px;
+        background: #123f2d;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+
+@media (max-width: 600px) {
+body.page-reportes .contenedor {
+            padding: 12px;
+        }
+}
+
+/* reservar.html */
+body.page-reservar * {
+            box-sizing: border-box;
+        }
+
+body.page-reservar {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f1;
+            color: #17251d;
+        }
+
+body.page-reservar main {
+            max-width: 700px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+body.page-reservar .panel {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid #dfe7df;
+            box-shadow: 0 3px 12px #00000008;
+        }
+
+body.page-reservar h1,
+body.page-reservar h2 {
+            color: #176b3a;
+        }
+
+body.page-reservar .detalle {
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+body.page-reservar .precio {
+            background: #e6f5e9;
+            padding: 14px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+body.page-reservar .turno {
+            background: #f5f8f5;
+            border: 1px solid #dfe7df;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+body.page-reservar .turno p {
+            margin: 8px 0;
+        }
+
+body.page-reservar .error {
+            background: #fff0f0;
+            color: #a51d2d;
+            padding: 12px;
+            border-radius: 7px;
+            margin: 16px 0;
+        }
+
+body.page-reservar .aviso {
+            color: #526358;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+body.page-reservar button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            background: #1b5a3b;
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+body.page-reservar button:hover {
+            background: #14462e;
+        }
+
+body.page-reservar .volver {
+            display: inline-block;
+            margin-top: 20px;
+            color: #176b3a;
+        }
+
+@media (max-width: 500px) {
+body.page-reservar .panel {
+                padding: 20px;
+            }
+}
+
+
+/* ==============================================================
+   OLÍMPICA 2026 — REFRESCO VISUAL
+   Mantiene los estilos de cada plantilla como base y unifica UI.
+   ============================================================== */
+:root{--ol-forest:#073e2d;--ol-green:#087647;--ol-bright:#0f9658;--ol-mint:#e7f6ed;--ol-ink:#102b22;--ol-muted:#64766c;--ol-border:#dae8df;--ol-surface:#fff;--ol-bg:#f4f8f5;--ol-shadow:0 12px 40px rgba(11,54,32,.075)}
+html{scroll-behavior:smooth}
+body{font-family: 'Segoe UI',Arial,sans-serif!important;background:var(--ol-bg)!important;color:var(--ol-ink)!important}
+body *{box-sizing:border-box}
+a,button{transition:background-color .18s ease,box-shadow .18s ease,transform .18s ease}
+button,a{touch-action:manipulation}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #6ecfa0;outline-offset:2px}
+.olimpica-nav{background:var(--ol-forest);color:#fff;padding:0 5%;box-shadow:0 2px 12px #002b1d18;position:relative;z-index:20}
+.olimpica-nav .nav-container{display:flex;align-items:center;justify-content:space-between;max-width:1280px;min-height:72px;gap:24px;margin:auto}
+.olimpica-nav .marca{font-family:'Segoe UI',Arial,sans-serif;font-size:24px;color:#fff;font-weight:800;letter-spacing:-.6px;text-decoration:none;white-space:nowrap}
+.olimpica-nav .marca-icono{font-size:25px;vertical-align:middle}
+.olimpica-nav .enlaces{display:flex;flex-wrap:wrap;align-items:center;gap:7px 24px;justify-content:flex-end}
+.olimpica-nav .enlaces>a{color:#e9fff1;text-decoration:none;font-size:14px;font-weight:600;margin:0;padding:10px 0}
+.olimpica-nav .enlaces>a:hover{color:#b1efc7;text-decoration:none}
+.olimpica-nav .usuario{font-size:13px;color:#d3e8dd;white-space:nowrap}
+.olimpica-nav .logout-form{margin:0}
+.olimpica-nav .boton-sesion,.olimpica-nav .enlaces>a.boton-registro{background:#0c8050!important;color:#fff!important;border:1px solid #4ca47c;border-radius:9px;padding:10px 15px;font-size:13px;font-weight:700;white-space:nowrap;text-decoration:none;margin:0;cursor:pointer;box-shadow:none}
+.olimpica-nav .boton-sesion:hover,.olimpica-nav .enlaces>a.boton-registro:hover{background:#14955f!important}
+.section-kicker{display:block;color:var(--ol-green);letter-spacing:2px;font-size:12px;font-weight:800;margin-bottom:9px}
+body:not(.page-login):not(.page-registro) h1{letter-spacing:-.9px}
+body:not(.page-login):not(.page-registro) h1,body:not(.page-login):not(.page-registro) h2{color:var(--ol-forest)}
+body.page-inicio .hero{background:linear-gradient(105deg,rgba(3,44,32,.96),rgba(10,86,54,.85)),radial-gradient(ellipse at 78% 95%,#379c62 0%,#164b34 50%,#092f26 100%);padding:0;position:relative;overflow:hidden}
+body.page-inicio .hero-inner{max-width:1280px;margin:auto;min-height:390px;padding:75px 28px;position:relative;display:flex;align-items:center}
+body.page-inicio .hero-content{max-width:710px;position:relative;z-index:2}
+body.page-inicio .hero-eyebrow{display:inline-block;color:#a3e3b9;font-size:12px;font-weight:800;letter-spacing:2.5px;margin-bottom:18px}
+body.page-inicio .hero h1{color:white!important;font-size:clamp(36px,5vw,62px);line-height:1.07;letter-spacing:-2px;margin-bottom:22px;max-width:770px}
+body.page-inicio .hero p{color:#e0f2e8;font-size:17px;max-width:570px;margin-bottom:25px}
+body.page-inicio .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+body.page-inicio .hero .boton{display:inline-flex;align-items:center;justify-content:center;margin:0;min-height:46px;padding:12px 20px;background:#14a665;color:#fff;border-radius:9px;font-size:14px;box-shadow:0 7px 22px #001b112b}
+body.page-inicio .hero .boton:hover{background:#20bd77;transform:translateY(-2px)}
+body.page-inicio .hero .boton-outline{background:transparent;border:1px solid #a1d8b6;color:white;box-shadow:none}
+body.page-inicio .hero-decoration{position:absolute;right:-40px;bottom:-135px;width:510px;height:440px;border:2px solid #b4e4c428;border-radius:50%;transform:rotate(-20deg)}
+body.page-inicio .hero-decoration:before{content:'';position:absolute;inset:75px;border:2px solid #b4e4c42c;border-radius:50%}
+body.page-inicio .hero-decoration:after{content:'⚽';position:absolute;top:85px;left:165px;font-size:140px;opacity:.16;transform:rotate(20deg)}
+body.page-inicio .beneficios{max-width:1220px;margin:-23px auto 0;position:relative;z-index:3;background:#fff;border-radius:14px;box-shadow:var(--ol-shadow);display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--ol-border);overflow:hidden}
+body.page-inicio .beneficio{padding:23px 26px;display:flex;align-items:center;gap:16px;border-right:1px solid var(--ol-border)}
+body.page-inicio .beneficio:last-child{border:0}
+body.page-inicio .beneficio-icono{font-size:29px;color:var(--ol-green);font-weight:700}
+body.page-inicio .beneficio strong{display:block;font-size:14px}
+body.page-inicio .beneficio small{display:block;color:var(--ol-muted);font-size:12px;margin-top:3px}
+body.page-inicio main{max-width:1270px;margin:auto;padding:60px 28px}
+body.page-inicio .section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:25px}
+body.page-inicio .section-heading .subtitulo{font-size:30px;letter-spacing:-.7px;margin:0 0 7px}
+body.page-inicio .introduccion{margin:0;color:var(--ol-muted)}
+body.page-inicio .section-link{font-weight:700;color:var(--ol-green);text-decoration:none;font-size:14px}
+body.page-inicio .complejos{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:23px;margin-top:0}
+body.page-inicio .tarjeta{padding:0;border:1px solid var(--ol-border);background:white;overflow:hidden;border-radius:14px;box-shadow:var(--ol-shadow)}
+body.page-inicio .card-cover{height:120px;background:linear-gradient(140deg,#0a4832,#2e8759);display:flex;justify-content:center;align-items:center;color:#c5f6d6;font-size:56px;position:relative;overflow:hidden}
+body.page-inicio .card-cover:before{content:'';position:absolute;inset:14px 20px;border:2px solid #ffffff35;border-radius:4px}
+body.page-inicio .card-body{padding:23px}
+body.page-inicio .tarjeta h3{font-size:21px;color:var(--ol-forest);margin:12px 0 8px}
+body.page-inicio .tarjeta p{color:#536b5d;line-height:1.5;font-size:14px;margin:8px 0}
+body.page-inicio .card-action{display:inline-block;margin-top:13px;text-decoration:none;color:var(--ol-green);font-weight:750}
+body.page-inicio footer{background:var(--ol-forest);padding:25px;text-align:center;margin:0}
+/* Search */
+body.page-buscar main{max-width:1150px;padding:20px 24px;margin:40px auto 65px}
+body.page-buscar h1{font-size:clamp(30px,4vw,42px);margin:0 0 8px}
+body.page-buscar .descripcion{color:var(--ol-muted);max-width:720px;line-height:1.65;margin:0 0 22px}
+body.page-buscar .formulario-busqueda{background:#fff;grid-template-columns:1fr 1fr auto;align-items:end;padding:24px;border-radius:15px;box-shadow:var(--ol-shadow);border-color:var(--ol-border);gap:18px}
+body.page-buscar .boton-buscar{grid-column:auto;width:auto;min-height:46px;white-space:nowrap}
+body.page-buscar input,body.page-buscar select{min-height:46px;border-color:#cedfd4;border-radius:8px}
+body.page-buscar .boton{background:var(--ol-green);border-radius:8px;min-height:43px;padding:12px 18px}
+body.page-buscar .boton:hover{background:#055a37}
+body.page-buscar .resultados{gap:20px}
+body.page-buscar .tarjeta-cancha{padding:0;overflow:hidden;border-radius:14px;box-shadow:var(--ol-shadow)}
+body.page-buscar .search-card-banner{height:78px;display:flex;align-items:center;justify-content:center;color:#c5f0d5;background:linear-gradient(110deg,#0c4b32,#32895a);font-size:35px}
+body.page-buscar .tarjeta-cancha> :not(.search-card-banner){margin-left:22px;margin-right:22px}
+body.page-buscar .tarjeta-cancha h2{margin-top:20px}
+body.page-buscar .tarjeta-cancha .boton{margin-bottom:22px}
+body.page-buscar .precio{font-size:23px;color:var(--ol-forest)}
+body.page-buscar .mensaje{border:1px solid var(--ol-border);border-radius:10px}
+/* Reservation */
+body.page-reservar main{max-width:790px;margin:45px auto;padding:0 22px}
+body.page-reservar .panel{border-radius:17px;box-shadow:var(--ol-shadow);padding:34px}
+body.page-reservar h1{font-size:34px;margin-top:4px}
+body.page-reservar .precio,body.page-reservar .turno{border:1px solid #d1e9da;border-radius:10px}
+body.page-reservar button{background:var(--ol-green);border-radius:9px}
+body.page-reservar button:hover{background:#065e3b}
+/* Login and register */
+body.page-login,body.page-registro{padding:0!important;min-height:100vh}
+.auth-layout{display:grid;grid-template-columns:minmax(270px,41%) minmax(0,1fr);min-height:100vh}
+.auth-brand{padding:48px clamp(26px,5vw,80px);color:#fff;background:radial-gradient(circle at 80% 85%,#24865d55,transparent 45%),linear-gradient(155deg,#03402d,#0b6744 80%,#04392a);display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}
+.auth-brand>a{text-decoration:none;font-size:25px;font-weight:800;color:#fff}
+.auth-brand span{letter-spacing:2px;color:#b2e9c7;font-size:12px;font-weight:800}
+.auth-brand h2{font-size:clamp(32px,4vw,51px);line-height:1.12;letter-spacing:-1px;margin:18px 0;color:#fff}
+.auth-brand p{line-height:1.6;color:#d4ebdd;max-width:380px;font-size:16px}
+.auth-brand small{color:#b9ddc7}
+body.page-login .contenedor,body.page-registro .contenedor{width:min(100% - 32px,460px);max-width:460px;margin:auto;padding:40px 24px;box-shadow:none;background:transparent;border-radius:0}
+body.page-registro .contenedor{width:min(100% - 28px,540px);max-width:540px;padding:38px 20px}
+body.page-login h1,body.page-registro h1{font-size:32px;letter-spacing:-1px;text-align:left;color:var(--ol-forest);margin-bottom:10px}
+body.page-login h2{color:var(--ol-muted);font-size:16px;font-weight:500;margin-bottom:25px}
+body.page-login label,body.page-registro label{font-weight:650;color:var(--ol-ink);font-size:14px}
+body.page-login input,body.page-registro input{background:#fff;border:1px solid #c9dbd0;border-radius:9px;min-height:46px;padding:12px;font-size:15px}
+body.page-login button,body.page-registro button{background:var(--ol-green);border-radius:9px;min-height:47px;font-weight:750}
+body.page-login button:hover,body.page-registro button:hover{background:#075e3e}
+body.page-login a,body.page-registro a{color:var(--ol-green)}
+/* Reports */
+body.page-reportes .contenedor{max-width:1260px;margin:38px auto;padding:24px}
+body.page-reportes .report-heading{display:flex;justify-content:space-between;align-items:center}
+body.page-reportes .report-heading h1{font-size:37px;margin:0 0 12px}
+body.page-reportes .report-heading-icon{font-size:35px;color:var(--ol-green)}
+body.page-reportes .resumen{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+body.page-reportes .resumen .tarjeta{color:var(--ol-ink);background:#e8f4fd;border:1px solid #d7eafa;box-shadow:none;border-radius:12px;min-width:0}
+body.page-reportes .resumen .tarjeta:nth-child(2){background:#fff5dd;border-color:#fae9b6}
+body.page-reportes .resumen .tarjeta:nth-child(3){background:#e3f8ed;border-color:#c9efdc}
+body.page-reportes .resumen .tarjeta:nth-child(4){background:#ffeded;border-color:#fbd9d9}
+body.page-reportes .resumen .tarjeta:nth-child(5){background:#f3edff;border-color:#e6dcff}
+body.page-reportes .resumen .tarjeta h3{color:#52655b;font-weight:650;font-size:13px}
+body.page-reportes .resumen .tarjeta p{font-size:clamp(20px,2vw,27px);color:#123e2b;overflow-wrap:anywhere}
+body.page-reportes .tabla-contenedor,body.page-panel-reservas .tabla-contenedor{background:#fff;border-radius:12px;border:1px solid var(--ol-border);box-shadow:var(--ol-shadow);overflow:auto}
+body.page-reportes table,body.page-panel-reservas table{min-width:660px}
+body.page-reportes th,body.page-panel-reservas th{background:var(--ol-forest);color:#fff;text-align:left}
+body.page-reportes td,body.page-panel-reservas td{border-bottom:1px solid #eaf0eb}
+/* Consistent administrative and reservation cards */
+body.page-mis-reservas article,body.page-pagos-pendientes article,body.page-administrar-complejos .complejo,body.page-administrar-complejos .sin-datos,body.page-panel-reservas .tabla-contenedor,body.page-crear-cancha main,body.page-crear-complejo main,body.page-editar-cancha main,body.page-editar-complejo main,body.page-registrar-pago .contenedor{background:#fff;border:1px solid var(--ol-border);border-radius:14px;box-shadow:var(--ol-shadow)}
+body.page-mis-reservas main,body.page-pagos-pendientes main,body.page-administrar-complejos main,body.page-panel-reservas main{margin-top:35px;margin-bottom:65px}
+body.page-mis-reservas h1,body.page-pagos-pendientes h1,body.page-administrar-complejos h1,body.page-panel-reservas h1{font-size:clamp(28px,3.4vw,38px)}
+body.page-crear-cancha button,body.page-crear-complejo button,body.page-editar-cancha button,body.page-editar-complejo button,body.page-panel-reservas button,body.page-administrar-complejos .enlace,body.page-registrar-pago button{background:var(--ol-green);border-radius:8px}
+body.page-crear-cancha button:hover,body.page-crear-complejo button:hover,body.page-panel-reservas button:hover{background:#065b38}
+@media(max-width:1000px){.olimpica-nav .nav-container{flex-wrap:wrap;padding:15px 0}.olimpica-nav .enlaces{justify-content:flex-start}.auth-layout{grid-template-columns:minmax(240px,35%) 1fr}body.page-reportes .resumen{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.olimpica-nav{padding:0 18px}.olimpica-nav .nav-container{min-height:0;gap:12px}.olimpica-nav .marca{font-size:22px}.olimpica-nav .enlaces{gap:5px 15px;width:100%}.olimpica-nav .enlaces>a{font-size:13px}body.page-inicio .hero-inner{padding:65px 24px;min-height:345px}body.page-inicio .hero-decoration{opacity:.25;right:-280px}body.page-inicio .beneficios{grid-template-columns:1fr;margin:0 15px}body.page-inicio .beneficio{border-right:0;border-bottom:1px solid var(--ol-border);padding:15px 22px}body.page-inicio main{padding:45px 20px}body.page-buscar .formulario-busqueda{grid-template-columns:1fr}body.page-buscar .boton-buscar{width:100%}body.page-buscar .resultados{grid-template-columns:1fr}.auth-layout{display:block}.auth-brand{min-height:0;padding:20px 24px}.auth-brand>div,.auth-brand small{display:none}body.page-login .contenedor,body.page-registro .contenedor{padding:44px 24px}body.page-reportes .resumen{grid-template-columns:repeat(2,minmax(0,1fr))}body.page-reportes .resumen .tarjeta{padding:16px}body.page-reservar .panel{padding:24px}}
+@media(max-width:430px){body.page-reportes .resumen{grid-template-columns:1fr}body.page-inicio .hero h1{font-size:37px}body.page-inicio .hero-actions{flex-direction:column}body.page-inicio .hero-actions .boton{width:100%}}
+
+
+/* ========================================
+   OLÍMPICA — CORRECCIÓN VISUAL NOV 2026
+   Estilos consistentes, sin modificar lógica Django.
+   ======================================== */
+:root {--ui-deep:#073b2b;--ui-green:#007e49;--ui-lime:#c8fc82;--ui-ink:#142c23;--ui-muted:#64756d;--ui-line:#dce7e1;--ui-bg:#f3f8f5;--ui-shadow:0 15px 40px rgba(4,45,29,.12)}
+html {font-size:16px;scroll-behavior:smooth}
+body {font-size:16px;line-height:1.5}
+.olimpica-nav {padding:0 30px!important;background:#073b2b!important;position:relative;z-index:30;}
+.olimpica-nav .nav-container {max-width:1320px;min-height:76px;display:flex;justify-content:space-between;align-items:center;gap:24px;margin:auto;}
+.olimpica-nav .marca {font-size:26px!important;font-weight:800!important;color:#fff!important;letter-spacing:-.8px!important;}
+.olimpica-nav .marca-icono{font-size:27px}
+.olimpica-nav .enlaces {display:flex;align-items:center;justify-content:flex-end;gap:14px 26px;flex-wrap:wrap;}
+.olimpica-nav .enlaces>a{color:#fff!important;font-size:14px!important;font-weight:650!important;padding:9px 2px!important;margin:0!important;text-decoration:none!important;}
+.olimpica-nav .enlaces>a:hover{color:var(--ui-lime)!important}
+.olimpica-nav .enlaces>a.boton-registro{background:#f3fff4!important;color:#073b2b!important;border:0!important;padding:11px 19px!important;border-radius:9px!important;font-size:14px!important;}
+.olimpica-nav .enlaces>a.boton-registro:hover{background:var(--ui-lime)!important}
+.olimpica-nav .usuario {color:#ddf5e7;font-size:13px}
+.olimpica-nav .boton-sesion {background:#087d51!important;border:1px solid #219869!important;border-radius:8px!important;padding:10px 16px!important;color:white!important;}
+/* Homepage styles deliberately use explicit selectors and isolated element classes. */
+body.page-inicio {margin:0!important;font-family: 'Segoe UI',Arial,sans-serif!important;background:var(--ui-bg)!important;color:var(--ui-ink)!important;font-size:16px!important;}
+body.page-inicio .hero {padding:0!important;background:linear-gradient(90deg, rgba(0,43,29,.99) 0%, rgba(0,45,31,.91) 31%, rgba(0,58,33,.50) 61%,rgba(0,35,23,.10) 100%),url('../img/cancha-hero.jpg') center center/cover no-repeat!important;min-height:455px;display:block;overflow:visible;}
+body.page-inicio .hero-inner {max-width:1320px;margin:0 auto;min-height:455px;display:flex;align-items:center;padding:54px 30px 90px!important;}
+body.page-inicio .hero-content {max-width:720px!important;position:relative;z-index:1}
+body.page-inicio .hero-eyebrow {font-size:13px!important;letter-spacing:1.4px!important;color:#c8fc82!important;font-weight:750!important;display:block;margin:0 0 13px!important;}
+body.page-inicio .hero h1 {font-size:clamp(39px,4.3vw,62px)!important;letter-spacing:-1.8px!important;line-height:1.10!important;font-weight:800!important;margin:0 0 21px!important;color:white!important;max-width:720px;}
+body.page-inicio .hero p {color:#e4f4e9!important;font-size:18px!important;line-height:1.6!important;max-width:590px!important;margin:0 0 27px!important;}
+body.page-inicio .hero-actions{display:flex!important;gap:14px!important;flex-wrap:wrap;}
+body.page-inicio .hero .boton {min-height:52px!important;display:inline-flex!important;align-items:center;justify-content:center;margin:0!important;padding:14px 24px!important;font-size:15px!important;font-weight:760!important;background:var(--ui-lime)!important;border:1px solid var(--ui-lime)!important;color:#093422!important;border-radius:10px!important;text-decoration:none!important;box-shadow:0 6px 22px rgba(0,0,0,.15)}
+body.page-inicio .hero .boton:hover{background:#b3f363!important;transform:translateY(-2px)}
+body.page-inicio .hero .boton-outline {color:white!important;background:rgba(4,50,36,.20)!important;border:1.5px solid rgba(255,255,255,.85)!important;box-shadow:none!important;}
+body.page-inicio .hero .boton-outline:hover{background:rgba(255,255,255,.13)!important;}
+body.page-inicio .hero-decoration{display:none!important}
+body.page-inicio .beneficios{width:calc(100% - 60px)!important;max-width:1260px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;position:relative!important;z-index:5!important;margin:-49px auto 0!important;padding:0!important;background:#fff!important;box-shadow:var(--ui-shadow)!important;border:1px solid var(--ui-line)!important;border-radius:15px!important;overflow:hidden!important;}
+body.page-inicio .beneficio {display:flex!important;flex-direction:row!important;align-items:center!important;gap:20px!important;padding:25px 29px!important;min-width:0!important;border-right:1px solid var(--ui-line)!important;background:#fff!important;}
+body.page-inicio .beneficio:last-child{border-right:0!important}
+body.page-inicio .beneficio-icono{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 50px;width:50px;height:50px;font-size:27px!important;font-weight:650;color:var(--ui-green)!important;border-radius:12px;background:#eaf8ef}
+body.page-inicio .beneficio strong{display:block!important;color:#0b2d20!important;font-weight:750!important;font-size:16px!important;margin:0!important;}
+body.page-inicio .beneficio small{display:block!important;color:#5f6f69!important;font-size:13px!important;margin-top:4px!important;line-height:1.45!important;}
+body.page-inicio main {max-width:1320px!important;margin:auto!important;padding:72px 30px 92px!important;}
+body.page-inicio .section-heading {display:flex!important;justify-content:space-between!important;align-items:end!important;flex-wrap:wrap!important;gap:18px!important;margin-bottom:28px!important;}
+body.page-inicio .section-kicker{font-size:13px!important;font-weight:800!important;letter-spacing:1.4px!important;color:#0a854b!important;margin-bottom:8px!important;}
+body.page-inicio .section-heading .subtitulo{color:#0b3828!important;font-size:clamp(28px,3vw,39px)!important;letter-spacing:-1.2px!important;margin:0 0 8px!important;line-height:1.15!important;}
+body.page-inicio .introduccion{font-size:16px!important;color:#586a60!important;line-height:1.6!important;margin:0!important;}
+body.page-inicio .section-link{color:#087644!important;font-size:15px!important;font-weight:750!important;text-decoration:underline!important;text-underline-offset:3px;}
+body.page-inicio .vacio {display:flex!important;align-items:center!important;gap:30px!important;background:#fff!important;padding:30px 34px!important;margin:0!important;border:1px solid var(--ui-line)!important;border-radius:15px!important;box-shadow:0 12px 32px rgba(4,44,27,.055)!important;min-height:135px;}
+body.page-inicio .vacio::before{content:'⚽';display:flex;align-items:center;justify-content:center;font-size:48px;flex:0 0 110px;align-self:stretch;border-right:1px solid var(--ui-line);padding-right:24px;opacity:.7;}
+body.page-inicio .vacio h3 {font-size:19px!important;margin:0 0 7px!important;color:#172d24!important;font-weight:750!important;}
+body.page-inicio .vacio p{font-size:15px!important;color:#617369!important;margin:0!important;line-height:1.55!important}
+body.page-inicio .complejos {margin-top:0!important;display:grid!important;grid-template-columns:repeat(auto-fit,minmax(275px,1fr))!important;gap:22px!important;}
+body.page-inicio .tarjeta{background:#fff!important;border-radius:14px!important;overflow:hidden!important;border:1px solid var(--ui-line)!important;box-shadow:0 10px 30px rgba(7,54,32,.08)!important;padding:0!important;}
+body.page-inicio .card-cover {height:155px!important;background:linear-gradient(135deg,#0a4530,#188453)!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:54px!important;}
+body.page-inicio .card-body{padding:23px!important}
+body.page-inicio .card-action{display:inline-block;margin-top:10px;color:#087644!important;font-weight:750;text-decoration:none}
+body.page-inicio footer {margin:0!important;padding:29px!important;background:#073b2b!important;text-align:center!important;color:#fff!important;}
+body.page-inicio footer p{margin:0!important;color:#fff!important;font-size:14px!important}
+@media(max-width:900px){.olimpica-nav{padding:12px 20px!important}.olimpica-nav .nav-container{min-height:55px;flex-wrap:wrap;gap:10px}.olimpica-nav .enlaces{justify-content:flex-start;gap:8px 18px}body.page-inicio .beneficios{grid-template-columns:1fr!important;width:calc(100% - 40px)!important;margin:-30px auto 0!important}body.page-inicio .beneficio{padding:18px 24px!important;border-right:0!important;border-bottom:1px solid var(--ui-line)!important}body.page-inicio .beneficio:last-child{border-bottom:0!important}body.page-inicio .hero{min-height:430px}body.page-inicio .hero-inner{min-height:430px;padding:55px 25px 75px!important}body.page-inicio main{padding:50px 22px 65px!important}}
+@media(max-width:520px){.olimpica-nav .marca{font-size:22px!important}.olimpica-nav .enlaces>a{font-size:12px!important}.olimpica-nav .enlaces>a.boton-registro{padding:8px 11px!important;font-size:12px!important}body.page-inicio .hero{background-position:60% center!important}body.page-inicio .hero-inner{padding:48px 20px 70px!important}body.page-inicio .hero h1{font-size:37px!important}body.page-inicio .hero p{font-size:15px!important}body.page-inicio .hero-actions{flex-direction:column!important}body.page-inicio .hero .boton{width:100%!important}body.page-inicio .vacio{padding:23px!important;gap:16px!important}body.page-inicio .vacio::before{flex-basis:52px;font-size:31px;padding-right:12px}body.page-inicio .vacio h3{font-size:16px!important}}
+
+
+/* =====================================================
+   Buscar canchas — refinamiento visual aislado (2026)
+   ===================================================== */
+body.page-buscar { background: #f4f8f5; }
+body.page-buscar main { max-width: 1040px; padding: 24px 24px 64px; margin: 48px auto 72px; }
+body.page-buscar .buscar-encabezado { display:flex; align-items:center; justify-content:space-between; gap:28px; margin: 0 0 28px; }
+body.page-buscar .buscar-encabezado h1 { font-size: clamp(34px, 4.8vw, 49px); letter-spacing:-.035em; line-height:1.1; margin: 13px 0 12px; }
+body.page-buscar .buscar-encabezado .descripcion { margin-bottom:0; }
+body.page-buscar .buscar-encabezado-icono { display:grid; place-items:center; flex:0 0 84px; height:84px; border-radius:24px; font-size:39px; background:linear-gradient(145deg,#e0f9e8,#b9efd0); box-shadow:0 10px 30px #063d2220; }
+body.page-buscar .buscar-bloque { padding:26px; border-radius:19px; background:#fff; border:1px solid #dce8df; box-shadow:0 16px 40px #123d2b0f; }
+body.page-buscar .buscar-bloque-titulo { display:flex; gap:13px; align-items:center; margin-bottom:21px; }
+body.page-buscar .buscar-bloque-icono { width:46px; height:46px; border-radius:12px; display:grid; place-items:center; background:#e5f7ed; color:#08683d; font-size:29px; font-weight:bold; }
+body.page-buscar .buscar-bloque-titulo h2 { color:#093e2a; font-size:19px; margin:0 0 4px; }
+body.page-buscar .buscar-bloque-titulo p { color:#63786a; font-size:14px; margin:0; }
+body.page-buscar .buscar-bloque .formulario-busqueda { border:0; box-shadow:none; padding:0; background:transparent; grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto; gap:15px; }
+body.page-buscar .buscar-bloque .campo label { font-weight:700; color:#16452e; margin-bottom:3px; }
+body.page-buscar .buscar-bloque input, body.page-buscar .buscar-bloque select { background:#fbfdfb; min-height:50px; border:1px solid #cddfd2; border-radius:10px; }
+body.page-buscar .buscar-bloque .boton-buscar { background:#c5f36c; color:#103621; min-height:50px; font-weight:800; border-radius:10px; }
+body.page-buscar .buscar-bloque .boton-buscar:hover { background:#b0e750; }
+body.page-buscar .buscar-estado-inicial { text-align:center; padding:43px 20px 46px; margin:22px 0 20px; background:#fff; border:1px dashed #b5d4c0; border-radius:17px; }
+body.page-buscar .buscar-estado-icono { display:grid; place-items:center; height:64px; width:64px; border-radius:18px; background:#e8f7eb; color:#167344; font-size:38px; margin:0 auto 15px; }
+body.page-buscar .buscar-estado-inicial h2 { font-size:21px; color:#0b422d; margin:0 0 9px; }
+body.page-buscar .buscar-estado-inicial p { color:#66796c; font-size:15px; margin:0; }
+body.page-buscar .tarjeta-cancha { transition:transform .2s ease, box-shadow .2s ease; }
+body.page-buscar .tarjeta-cancha:hover { transform:translateY(-3px); box-shadow:0 18px 35px #123d2b16; }
+body.page-buscar .volver { display:inline-block; margin-top:18px; }
+@media (max-width:760px) {
+  body.page-buscar main { padding:18px 17px 45px; margin:27px auto 45px; }
+  body.page-buscar .buscar-encabezado-icono { display:none; }
+  body.page-buscar .buscar-bloque { padding:19px; }
+  body.page-buscar .buscar-bloque .formulario-busqueda { grid-template-columns:1fr; }
+  body.page-buscar .buscar-bloque .boton-buscar { width:100%; }
+  body.page-buscar .buscar-estado-inicial { padding:32px 16px; }
+}

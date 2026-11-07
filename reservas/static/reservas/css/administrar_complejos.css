@@ -1,0 +1,64 @@
+/* Estilos exclusivos de Administrar complejos: no alteran otras páginas. */
+body.admin-complejos-nuevo{margin:0;background:#f3f8f5;color:#0d3729;font-family:Arial,sans-serif}
+.admin-complejos-nuevo *{box-sizing:border-box}
+.admin-complejos-nuevo .ac-contenedor{max-width:1140px;margin:auto;padding:40px 24px 80px}
+.admin-complejos-nuevo .ac-encabezado{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:25px}
+.admin-complejos-nuevo .ac-kicker,.admin-complejos-nuevo .ac-eyebrow{margin:0 0 8px;color:#087c47;font-weight:800;font-size:11px;letter-spacing:.12em}
+.admin-complejos-nuevo h1{font-size:clamp(28px,3vw,38px);letter-spacing:-.04em;color:#083f2f;margin:0 0 9px;line-height:1.15}
+.admin-complejos-nuevo .ac-descripcion{font-size:14px;color:#607568;line-height:1.5;margin:0;max-width:620px}
+.admin-complejos-nuevo .ac-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;border-radius:8px;border:1px solid transparent;text-decoration:none;font:700 12px/1.35 Arial,sans-serif;cursor:pointer;white-space:nowrap;transition:background .15s,transform .15s}
+.admin-complejos-nuevo .ac-btn:hover{transform:translateY(-1px)}
+.admin-complejos-nuevo .ac-btn-primario{background:#087b4e;color:#fff}
+.admin-complejos-nuevo .ac-btn-primario:hover{background:#06633e}
+.admin-complejos-nuevo .ac-btn-secundario{background:#c8fa7d;color:#103d24}
+.admin-complejos-nuevo .ac-btn-secundario:hover{background:#b6ee66}
+.admin-complejos-nuevo .ac-btn-contorno{background:#fff;border-color:#ceded3;color:#105739}
+.admin-complejos-nuevo .ac-btn-advertencia{background:#fff;border-color:#edcfc2;color:#b04b2c}
+.admin-complejos-nuevo .ac-acciones-principales,.admin-complejos-nuevo .ac-acciones-complejo,.admin-complejos-nuevo .ac-acciones-cancha{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.admin-complejos-nuevo .ac-acciones-complejo form,.admin-complejos-nuevo .ac-acciones-cancha form{margin:0}
+.admin-complejos-nuevo .ac-resumen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.admin-complejos-nuevo .ac-metrica{background:#fff;border:1px solid #dfeae1;border-radius:13px;padding:17px 19px;display:flex;gap:14px;align-items:center;box-shadow:0 6px 20px #0c37200a}
+.admin-complejos-nuevo .ac-metrica-icono{width:42px;height:42px;display:grid;place-items:center;background:#e8f7ec;border-radius:11px;color:#087d4b;font-size:23px;flex-shrink:0}
+.admin-complejos-nuevo .ac-metrica strong{display:block;color:#083f2e;font-size:27px;line-height:1.1;margin-bottom:4px}
+.admin-complejos-nuevo .ac-metrica span:last-child{font-size:12px;color:#637669}
+.admin-complejos-nuevo .ac-listado{display:grid;gap:15px}
+.admin-complejos-nuevo .ac-complejo{border:1px solid #dbe8df;background:white;border-radius:15px;padding:22px 24px;box-shadow:0 9px 26px #133d230d}
+.admin-complejos-nuevo .ac-complejo-cabecera{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-bottom:16px;border-bottom:1px solid #e5eee8}
+.admin-complejos-nuevo .ac-complejo-identidad{display:flex;align-items:center;gap:12px;min-width:0}
+.admin-complejos-nuevo .ac-icono-complejo{width:48px;height:48px;display:grid;place-items:center;flex-shrink:0;border-radius:11px;background:#e7f6eb;color:#0b8350;font-size:25px}
+.admin-complejos-nuevo .ac-complejo h2{font-size:21px;line-height:1.2;margin:0 0 6px;color:#0b402e;letter-spacing:-.025em}
+.admin-complejos-nuevo .ac-identidad-texto{min-width:0}
+.admin-complejos-nuevo .ac-sublinea{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.admin-complejos-nuevo .ac-contador{font-size:12px;color:#68786c}
+.admin-complejos-nuevo .ac-estado{display:inline-flex;align-items:center;background:#e4f7ea;color:#126d43;padding:5px 10px;border-radius:99px;font-size:11px;font-weight:750;white-space:nowrap}
+.admin-complejos-nuevo .ac-estado-inactivo{background:#fff0e8;color:#a05331}
+.admin-complejos-nuevo .ac-datos-complejo{display:flex;align-items:center;flex-wrap:wrap;gap:14px 32px;padding:15px 0 3px}
+.admin-complejos-nuevo .ac-dato{display:flex;align-items:center;gap:9px}
+.admin-complejos-nuevo .ac-dato>span{color:#118252;font-size:20px}
+.admin-complejos-nuevo .ac-dato small{display:block;color:#738277;font-size:11px;margin-bottom:3px}
+.admin-complejos-nuevo .ac-dato strong{font-size:12px;color:#203d30}
+.admin-complejos-nuevo .ac-descripcion-complejo{margin:10px 0 0;font-size:12px;color:#63776a;line-height:1.5}
+.admin-complejos-nuevo .ac-canchas-encabezado{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:22px 0 12px}
+.admin-complejos-nuevo .ac-canchas-encabezado h3{font-size:17px;color:#0d402e;margin:0}
+.admin-complejos-nuevo .ac-canchas-encabezado .ac-eyebrow{margin-bottom:4px}
+.admin-complejos-nuevo .ac-enlace-agregar{color:#087b4e;text-decoration:none;font-size:12px;font-weight:800}
+.admin-complejos-nuevo .ac-enlace-agregar:hover{text-decoration:underline}
+.admin-complejos-nuevo .ac-canchas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:10px}
+.admin-complejos-nuevo .ac-cancha{border:1px solid #dfe9e2;background:#f7faf8;border-radius:11px;padding:14px 16px}
+.admin-complejos-nuevo .ac-cancha-main,.admin-complejos-nuevo .ac-cancha-pie{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.admin-complejos-nuevo .ac-cancha-titulo{display:flex;gap:10px;align-items:center;min-width:0}
+.admin-complejos-nuevo .ac-cancha-icono{width:40px;height:40px;border-radius:10px;background:#e7f4ea;display:grid;place-items:center;flex-shrink:0;font-size:21px}
+.admin-complejos-nuevo .ac-cancha h4{font-size:14px;margin:0 0 4px;color:#123d2e}
+.admin-complejos-nuevo .ac-cancha-superficie{font-size:11px;color:#6d7c71}
+.admin-complejos-nuevo .ac-cancha-precio{text-align:right;flex-shrink:0}
+.admin-complejos-nuevo .ac-precio{font-size:19px;color:#087847;display:block}
+.admin-complejos-nuevo .ac-cancha-precio small{color:#6b7e71;font-size:11px}
+.admin-complejos-nuevo .ac-cancha-pie{border-top:1px solid #e0eae2;margin-top:13px;padding-top:12px}
+.admin-complejos-nuevo .ac-acciones-cancha .ac-btn{min-height:34px;padding:7px 11px}
+.admin-complejos-nuevo .ac-sin-canchas,.admin-complejos-nuevo .ac-sin-complejos{border:1px dashed #bcd9c6;background:#fafdfa;border-radius:12px;padding:25px;text-align:center;grid-column:1/-1}
+.admin-complejos-nuevo .ac-sin-canchas strong{color:#15412f}
+.admin-complejos-nuevo .ac-sin-canchas p,.admin-complejos-nuevo .ac-sin-complejos p{font-size:13px;color:#63796b}
+.admin-complejos-nuevo .ac-sin-complejos>span{font-size:34px;color:#087b4e}
+.admin-complejos-nuevo .ac-sin-complejos h2{font-size:21px;margin:10px 0}
+@media(max-width:900px){.admin-complejos-nuevo .ac-encabezado,.admin-complejos-nuevo .ac-complejo-cabecera{align-items:flex-start;flex-direction:column}.admin-complejos-nuevo .ac-resumen{gap:8px}}
+@media(max-width:620px){.admin-complejos-nuevo .ac-contenedor{padding:26px 14px 60px}.admin-complejos-nuevo .ac-resumen{grid-template-columns:1fr}.admin-complejos-nuevo .ac-metrica{padding:12px 15px}.admin-complejos-nuevo .ac-complejo{padding:16px}.admin-complejos-nuevo .ac-acciones-principales>a{flex:1 1 auto}.admin-complejos-nuevo .ac-cancha-main,.admin-complejos-nuevo .ac-cancha-pie{align-items:flex-start}.admin-complejos-nuevo .ac-cancha-pie{flex-wrap:wrap}.admin-complejos-nuevo .ac-acciones-cancha{width:100%}}

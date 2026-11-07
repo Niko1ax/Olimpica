@@ -1,255 +1,119 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mis reservas | Olimpica</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f7f4;
-            color: #17251d;
-        }
-
-        header {
-            background: #123d2b;
-            padding: 20px 8%;
-        }
-
-        header a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        main {
-            max-width: 900px;
-            margin: 35px auto;
-            padding: 0 20px;
-        }
-
-        article {
-            background: white;
-            border: 1px solid #dfe7df;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .estado {
-            font-weight: bold;
-            color: #1b5a3b;
-        }
-
-        .boton-pago,
-        .boton-cancelar {
-            display: inline-block;
-            padding: 10px 16px;
-            color: white;
-            text-decoration: none;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            margin-top: 10px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .boton-pago {
-            background-color: #16834a;
-        }
-
-        .boton-pago:hover {
-            background-color: #11683a;
-        }
-
-        .boton-cancelar {
-            background-color: #b83232;
-        }
-
-        .boton-cancelar:hover {
-            background-color: #922525;
-        }
-
-        .acciones {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-
-        .informacion-pagos {
-            margin-top: 18px;
-            padding: 14px;
-            background: #f4f7f4;
-            border-radius: 8px;
-        }
-
-        .informacion-pagos h3 {
-            margin-top: 0;
-        }
-
-        .pago-pendiente {
-            color: #a87500;
-            font-weight: bold;
-        }
-
-        .pago-aprobado {
-            color: #16834a;
-            font-weight: bold;
-        }
-
-        .pago-rechazado {
-            color: #b83232;
-            font-weight: bold;
-        }
-    </style>
+    <title>Mis reservas | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/mis_reservas.css' %}">
 </head>
-
-<body>
-
+<body class="page-mis-reservas mis-reservas-nuevo">
     {% include 'reservas/navbar.html' %}
 
-    <main>
-        <h1>Mis reservas</h1>
+    <main class="mr-contenedor">
+        <header class="mr-encabezado">
+            <div>
+                <p class="mr-kicker">MI ACTIVIDAD</p>
+                <h1>Mis reservas</h1>
+                <p class="mr-subtitulo">Consultá tus próximos partidos, pagos y comprobantes desde un mismo lugar.</p>
+            </div>
+            <a class="mr-btn mr-btn-principal" href="{% url 'buscar_canchas' %}">＋ Nueva reserva</a>
+        </header>
 
         {% if error %}
-
-            <p>{{ error }}</p>
-
+            <div class="mr-aviso mr-aviso-error" role="alert">{{ error }}</div>
         {% elif reservas %}
+            <section class="mr-resumen" aria-label="Resumen de reservas">
+                <div class="mr-resumen-icono" aria-hidden="true">▦</div>
+                <div>
+                    <strong>{{ reservas|length }} reserva{{ reservas|length|pluralize }} en tu historial</strong>
+                    <span>Revisá la información del turno y el estado de tu seña.</span>
+                </div>
+            </section>
 
-            {% for reserva in reservas %}
+            <div class="mr-lista">
+                {% for reserva in reservas %}
+                    <article class="mr-tarjeta">
+                        <div class="mr-tarjeta-superior">
+                            <div class="mr-identidad">
+                                <span class="mr-icono" aria-hidden="true">⚽</span>
+                                <div>
+                                    <span class="mr-sobretitulo">RESERVA #{{ reserva.id }}</span>
+                                    <h2>{{ reserva.cancha.nombre }}</h2>
+                                    <p class="mr-complejo">{{ reserva.cancha.complejo.nombre }}</p>
+                                </div>
+                            </div>
+                            <span class="mr-estado {% if reserva.estado == 'CONFIRMADA' %}mr-estado-confirmado{% elif reserva.estado == 'PENDIENTE' %}mr-estado-pendiente{% elif reserva.estado == 'CANCELADA' %}mr-estado-cancelado{% else %}mr-estado-neutro{% endif %}">
+                                <span aria-hidden="true">●</span> {{ reserva.get_estado_display }}
+                            </span>
+                        </div>
 
-                <article>
+                        <div class="mr-detalles">
+                            <div class="mr-detalle">
+                                <span class="mr-detalle-icono" aria-hidden="true">▦</span>
+                                <div><small>Fecha del partido</small><strong>{{ reserva.fecha|date:"d/m/Y" }}</strong></div>
+                            </div>
+                            <div class="mr-detalle">
+                                <span class="mr-detalle-icono" aria-hidden="true">◷</span>
+                                <div><small>Horario</small><strong>{{ reserva.hora_inicio|time:"H:i" }} a {{ reserva.hora_fin|time:"H:i" }}</strong></div>
+                            </div>
+                            <div class="mr-detalle mr-detalle-total">
+                                <div><small>Precio total</small><strong>${{ reserva.precio_total|floatformat:0 }}</strong></div>
+                            </div>
+                        </div>
 
-                    <h2>{{ reserva.cancha.nombre }}</h2>
-
-                    <p>
-                        <strong>Complejo:</strong>
-                        {{ reserva.cancha.complejo.nombre }}
-                    </p>
-
-                    <p>
-                        <strong>Fecha:</strong>
-                        {{ reserva.fecha }}
-                    </p>
-
-                    <p>
-                        <strong>Horario:</strong>
-                        {{ reserva.hora_inicio }} a {{ reserva.hora_fin }}
-                    </p>
-
-                    <p>
-                        <strong>Total:</strong>
-                        ${{ reserva.precio_total }}
-                    </p>
-
-                    <p class="estado">
-                        Estado: {{ reserva.get_estado_display }}
-                    </p>
-
-                    <div class="informacion-pagos">
-
-                        <h3>Información de pagos</h3>
-
-                        {% if reserva.pago_senia %}
-
-                            <p>
-                                <strong>Seña:</strong>
-                                ${{ reserva.pago_senia.importe }}
-                            </p>
-
-                            <p>
-                                <strong>Estado del pago:</strong>
-                                {{ reserva.pago_senia.get_estado_display }}
-                            </p>
-
-                            {% if reserva.pago_senia.estado == "PENDIENTE" %}
-
-                                <p class="pago-pendiente">
-                                    Tu comprobante fue recibido y está pendiente de revisión.
-                                </p>
-
-                            {% elif reserva.pago_senia.estado == "APROBADO" %}
-
-                                <p class="pago-aprobado">
-                                    Tu seña fue aprobada correctamente.
-                                </p>
-
-                            {% elif reserva.pago_senia.estado == "RECHAZADO" %}
-
-                                <p class="pago-rechazado">
-                                    Tu comprobante fue rechazado. Podés presentar uno nuevo.
-                                </p>
-
+                        <div class="mr-pagos">
+                            <div class="mr-pagos-titulo">
+                                <h3>Información de la seña</h3>
+                                {% if reserva.pago_senia %}
+                                    <span class="mr-pago-etiqueta {% if reserva.pago_senia.estado == 'APROBADO' %}mr-pago-ok{% elif reserva.pago_senia.estado == 'PENDIENTE' %}mr-pago-espera{% elif reserva.pago_senia.estado == 'RECHAZADO' %}mr-pago-error{% endif %}">
+                                        {{ reserva.pago_senia.get_estado_display }}
+                                    </span>
+                                {% else %}
+                                    <span class="mr-pago-etiqueta mr-pago-neutro">Sin registrar</span>
+                                {% endif %}
+                            </div>
+                            {% if reserva.pago_senia %}
+                                <div class="mr-pagos-cuerpo">
+                                    <p><span>Importe de la seña</span><strong>${{ reserva.pago_senia.importe|floatformat:0 }}</strong></p>
+                                    {% if reserva.pago_senia.estado == 'PENDIENTE' %}
+                                        <p class="mr-mensaje mr-mensaje-espera">Recibimos tu comprobante. Está pendiente de revisión.</p>
+                                    {% elif reserva.pago_senia.estado == 'APROBADO' %}
+                                        <p class="mr-mensaje mr-mensaje-ok">Tu seña fue aprobada correctamente.</p>
+                                    {% elif reserva.pago_senia.estado == 'RECHAZADO' %}
+                                        <p class="mr-mensaje mr-mensaje-error">Tu comprobante fue rechazado. Podés presentar uno nuevo.</p>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <p class="mr-sin-pago">Todavía no registraste la seña de esta reserva.</p>
                             {% endif %}
+                        </div>
 
-                        {% else %}
-
-                            <p>Todavía no registraste la seña.</p>
-
+                        {% if reserva.estado == 'PENDIENTE' or reserva.estado == 'CONFIRMADA' %}
+                            <div class="mr-acciones">
+                                {% if reserva.estado == 'PENDIENTE' %}
+                                    {% if not reserva.pago_senia or reserva.pago_senia.estado == 'RECHAZADO' %}
+                                        <a class="mr-btn mr-btn-principal" href="{% url 'registrar_pago' reserva.id %}">Registrar seña (30%)</a>
+                                    {% endif %}
+                                {% endif %}
+                                <form method="post" action="{% url 'cancelar_reserva' reserva.id %}" onsubmit="return confirm('¿Seguro que querés cancelar esta reserva?');">
+                                    {% csrf_token %}
+                                    <button class="mr-btn mr-btn-peligro" type="submit">Cancelar reserva</button>
+                                </form>
+                            </div>
                         {% endif %}
-
-                    </div>
-
-                    <div class="acciones">
-
-                        {% if reserva.estado == "PENDIENTE" %}
-
-                            {% if not reserva.pago_senia or reserva.pago_senia.estado == "RECHAZADO" %}
-
-                                <a
-                                    href="{% url 'registrar_pago' reserva.id %}"
-                                    class="boton-pago">
-                                    Registrar seña (30%)
-                                </a>
-
-                            {% endif %}
-
-                        {% endif %}
-
-                        {% if reserva.estado == "PENDIENTE" or reserva.estado == "CONFIRMADA" %}
-
-                            <form
-                                method="post"
-                                action="{% url 'cancelar_reserva' reserva.id %}"
-                                onsubmit="return confirm('¿Seguro que querés cancelar esta reserva?');">
-
-                                {% csrf_token %}
-
-                                <button
-                                    type="submit"
-                                    class="boton-cancelar">
-                                    Cancelar reserva
-                                </button>
-
-                            </form>
-
-                        {% endif %}
-
-                    </div>
-
-                </article>
-
-            {% endfor %}
-
+                    </article>
+                {% endfor %}
+            </div>
         {% else %}
-
-            <p>Todavía no tenés reservas registradas.</p>
-
+            <section class="mr-vacio">
+                <div class="mr-vacio-icono" aria-hidden="true">⚽</div>
+                <h2>Todavía no tenés reservas</h2>
+                <p>Elegí una cancha, seleccioná un horario y organizá tu próximo partido.</p>
+                <a class="mr-btn mr-btn-principal" href="{% url 'buscar_canchas' %}">Buscar canchas disponibles</a>
+            </section>
         {% endif %}
-
-        <p>
-            <a href="{% url 'buscar_canchas' %}">
-                Buscar otra cancha
-            </a>
-        </p>
-
     </main>
-
 </body>
 </html>

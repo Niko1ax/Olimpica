@@ -1,172 +1,97 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar complejos | Olimpica</title>
-
-    <style>
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            background: #f1f5f1;
-            font-family: Arial, sans-serif;
-            color: #222;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 18px;
-        }
-
-        h1, h2 { color: #176b3a; }
-
-        .complejo {
-            background: white;
-            padding: 22px;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 3px 12px #0000000d;
-        }
-
-        .cancha {
-            padding: 14px;
-            margin-top: 12px;
-            background: #f7f9f7;
-            border-radius: 7px;
-        }
-
-        .sin-datos {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .enlace {
-            display: inline-block;
-            background: #176b3a;
-            color: white;
-            padding: 11px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-        }
-
-        .secundario {
-            color: #176b3a;
-        }
-    </style>
+    <title>Mis complejos y canchas | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/administrar_complejos.css' %}">
+    <script src="{% static 'reservas/js/administrar_complejos.js' %}" defer></script>
 </head>
-
-<body>
+<body class="page-administrar-complejos admin-complejos-nuevo">
     {% include 'reservas/navbar.html' %}
-
-    <main>
-        <h1>Administrar complejos y canchas</h1>
-        
-        <p>
-            <a class="enlace" href="{% url 'crear_complejo' %}">
-                + Registrar nuevo complejo
-            </a>
-        </p>
-
-        
-        <p>
-            <a class="enlace" href="{% url 'crear_cancha' %}">
-                + Registrar nueva cancha
-            </a>
-        </p>
-
-
-        <p>Consultá los complejos registrados y las canchas de cada uno.</p>
-
-            
-        {% if user.is_staff %}
-            <p>
-                <a class="enlace" href="{% url 'panel_reservas' %}">
-                    Gestionar reservas
-                </a>
-            </p>
-        {% endif %}
-
-
-        {% for complejo in complejos %}
-            <section class="complejo">
-                <h2>{{ complejo.nombre }}</h2>
-                                    
-                    <p>
-                        <a class="enlace"
-                        href="{% url 'editar_complejo' complejo.id %}">
-                            Editar complejo
-                        </a>
-                    </p>
-
-                    <form method="post"
-                        action="{% url 'cambiar_estado_complejo' complejo.id %}">
-                        {% csrf_token %}
-                        <button class="enlace" type="submit">
-                            {% if complejo.activo %}Desactivar complejo{% else %}Reactivar complejo{% endif %}
-                        </button>
-                    </form>
-
-                    <p>
-                        Estado del complejo:
-                        {% if complejo.activo %}Activo{% else %}Inactivo{% endif %}
-                    </p>
-
-                <p><strong>Dirección:</strong> {{ complejo.direccion }}</p>
-
-                {% if complejo.telefono %}
-                    <p><strong>Teléfono:</strong> {{ complejo.telefono }}</p>
-                {% endif %}
-
-                {% if complejo.descripcion %}
-                    <p>{{ complejo.descripcion }}</p>
-                {% endif %}
-
-                <h3>Canchas</h3>
-
-                {% for cancha in complejo.canchas.all %}
-                    <div class="cancha">
-                        <strong>{{ cancha.nombre }}</strong>
-                        
-                            <p>
-                                <a class="enlace"
-                                href="{% url 'editar_cancha' cancha.id %}">
-                                    Editar cancha
-                                </a>
-                            </p>
-
-                            <form method="post"
-                                action="{% url 'cambiar_estado_cancha' cancha.id %}">
-                                {% csrf_token %}
-                                <button class="enlace" type="submit">
-                                    {% if cancha.activa %}Desactivar cancha{% else %}Reactivar cancha{% endif %}
-                                </button>
-                            </form>
-
-                        <p>Superficie: {{ cancha.get_superficie_display }}</p>
-                        <p>Precio por hora: ${{ cancha.precio_por_hora }}</p>
-                        <p>
-                            Estado:
-                            {% if cancha.activa %}
-                                Activa
-                            {% else %}
-                                Inactiva
-                            {% endif %}
-                        </p>
-                    </div>
-                {% empty %}
-                    <p>Este complejo todavía no tiene canchas.</p>
-                {% endfor %}
-            </section>
-        {% empty %}
-            <div class="sin-datos">
-                Todavía no hay complejos registrados.
+    <main class="ac-contenedor">
+        <header class="ac-encabezado">
+            <div>
+                <p class="ac-kicker">PANEL DEL PROPIETARIO</p>
+                <h1>Mis complejos y canchas</h1>
+                <p class="ac-descripcion">Administrá tus espacios deportivos, sus precios y disponibilidad desde un solo lugar.</p>
             </div>
-        {% endfor %}
+            <div class="ac-acciones-principales">
+                <a class="ac-btn ac-btn-primario" href="{% url 'crear_complejo' %}">＋ Nuevo complejo</a>
+                <a class="ac-btn ac-btn-secundario" href="{% url 'crear_cancha' %}">＋ Nueva cancha</a>
+            </div>
+        </header>
+
+        <section class="ac-resumen" aria-label="Resumen de tus espacios">
+            <div class="ac-metrica"><span class="ac-metrica-icono" aria-hidden="true">▦</span><div><strong id="ac-total-complejos">{{ complejos|length }}</strong><span>Complejos registrados</span></div></div>
+            <div class="ac-metrica"><span class="ac-metrica-icono" aria-hidden="true">▤</span><div><strong id="ac-total-canchas">—</strong><span>Canchas registradas</span></div></div>
+            <div class="ac-metrica"><span class="ac-metrica-icono" aria-hidden="true">✓</span><div><strong id="ac-canchas-activas">—</strong><span>Canchas activas</span></div></div>
+        </section>
+
+        <div class="ac-listado">
+            {% for complejo in complejos %}
+                <section class="ac-complejo" aria-labelledby="ac-complejo-{{ complejo.id }}">
+                    <div class="ac-complejo-cabecera">
+                        <div class="ac-complejo-identidad">
+                            <span class="ac-icono-complejo" aria-hidden="true">▦</span>
+                            <div class="ac-identidad-texto">
+                                <p class="ac-eyebrow">COMPLEJO DEPORTIVO</p>
+                                <h2 id="ac-complejo-{{ complejo.id }}">{{ complejo.nombre }}</h2>
+                                <div class="ac-sublinea">
+                                    <span class="ac-estado {% if complejo.activo %}ac-estado-activo{% else %}ac-estado-inactivo{% endif %}">{% if complejo.activo %}● Activo{% else %}● Inactivo{% endif %}</span>
+                                    <span class="ac-contador">{{ complejo.canchas.count }} cancha{{ complejo.canchas.count|pluralize }} registrada{{ complejo.canchas.count|pluralize }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ac-acciones-complejo">
+                            <a class="ac-btn ac-btn-contorno" href="{% url 'editar_complejo' complejo.id %}">Editar complejo</a>
+                            <form method="post" action="{% url 'cambiar_estado_complejo' complejo.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="ac-btn {% if complejo.activo %}ac-btn-advertencia{% else %}ac-btn-primario{% endif %}">{% if complejo.activo %}Desactivar complejo{% else %}Reactivar complejo{% endif %}</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="ac-datos-complejo">
+                        <div class="ac-dato"><span aria-hidden="true">⌖</span><div><small>Dirección</small><strong>{{ complejo.direccion }}</strong></div></div>
+                        {% if complejo.telefono %}<div class="ac-dato"><span aria-hidden="true">☎</span><div><small>Teléfono</small><strong>{{ complejo.telefono }}</strong></div></div>{% endif %}
+                    </div>
+                    {% if complejo.descripcion %}<p class="ac-descripcion-complejo">{{ complejo.descripcion }}</p>{% endif %}
+                    <div class="ac-canchas-encabezado">
+                        <div><p class="ac-eyebrow">ESPACIOS DEL COMPLEJO</p><h3>Canchas</h3></div>
+                        <a href="{% url 'crear_cancha' %}" class="ac-enlace-agregar">＋ Agregar cancha</a>
+                    </div>
+                    <div class="ac-canchas-grid">
+                        {% for cancha in complejo.canchas.all %}
+                            <article class="ac-cancha" data-activa="{% if cancha.activa %}true{% else %}false{% endif %}">
+                                <div class="ac-cancha-main">
+                                    <div class="ac-cancha-titulo">
+                                        <span class="ac-cancha-icono" aria-hidden="true">⚽</span>
+                                        <div><h4>{{ cancha.nombre }}</h4><span class="ac-cancha-superficie">{{ cancha.get_superficie_display }}</span></div>
+                                    </div>
+                                    <div class="ac-cancha-precio"><strong class="ac-precio" data-importe="{{ cancha.precio_por_hora }}">${{ cancha.precio_por_hora }}</strong><small>por hora</small></div>
+                                </div>
+                                <div class="ac-cancha-pie">
+                                    <span class="ac-estado {% if cancha.activa %}ac-estado-activo{% else %}ac-estado-inactivo{% endif %}">{% if cancha.activa %}● Activa{% else %}● Inactiva{% endif %}</span>
+                                    <div class="ac-acciones-cancha">
+                                        <a class="ac-btn ac-btn-contorno" href="{% url 'editar_cancha' cancha.id %}">Editar</a>
+                                        <form method="post" action="{% url 'cambiar_estado_cancha' cancha.id %}">
+                                            {% csrf_token %}
+                                            <button class="ac-btn {% if cancha.activa %}ac-btn-advertencia{% else %}ac-btn-primario{% endif %}" type="submit">{% if cancha.activa %}Desactivar{% else %}Reactivar{% endif %}</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </article>
+                        {% empty %}
+                            <div class="ac-sin-canchas"><strong>Este complejo todavía no tiene canchas</strong><p>Registrá una cancha para empezar a recibir reservas.</p><a class="ac-btn ac-btn-primario" href="{% url 'crear_cancha' %}">＋ Registrar cancha</a></div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% empty %}
+                <section class="ac-sin-complejos"><span aria-hidden="true">▦</span><h2>Tu primer complejo empieza acá</h2><p>Registrá un complejo deportivo y después agregá las canchas para que los jugadores puedan reservar.</p><a class="ac-btn ac-btn-primario" href="{% url 'crear_complejo' %}">＋ Registrar mi primer complejo</a></section>
+            {% endfor %}
+        </div>
     </main>
 </body>
 </html>

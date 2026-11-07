@@ -1,132 +1,103 @@
-```html
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar pago</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 30px 15px;
-        }
-
-        .contenedor {
-            max-width: 550px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        h1 {
-            text-align: center;
-            color: #183b35;
-        }
-
-        .detalle {
-            background: #edf5f1;
-            padding: 18px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        .importe {
-            font-size: 25px;
-            font-weight: bold;
-            color: #16834a;
-        }
-
-        label {
-            display: block;
-            margin: 15px 0 7px;
-            font-weight: bold;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 13px;
-            margin-top: 22px;
-            background: #16834a;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background: #11683a;
-        }
-
-        .volver {
-            display: block;
-            text-align: center;
-            margin-top: 18px;
-            color: #183b35;
-            text-decoration: none;
-        }
-
-        .ayuda {
-            color: #666;
-            font-size: 13px;
-        }
-    </style>
+    <title>Registrar seña | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/registrar_pago.css' %}">
+    <script src="{% static 'reservas/js/registrar_pago.js' %}" defer></script>
 </head>
-<body>
+<body class="page-registrar-pago rp-pagina">
+    {% include 'reservas/navbar.html' %}
 
-<div class="contenedor">
-    <h1>Registrar seña</h1>
+    <main class="rp-contenedor">
+        <!-- <div class="rp-superior">
+            <a class="rp-volver" href="{% url 'mis_reservas' %}">← Volver a mis reservas</a>
+            <span class="rp-paso">PASO FINAL · SEÑA</span>
+        </div>-->
+        <header class="rp-encabezado">
+            <p class="rp-kicker">CONFIRMÁ TU PARTIDO</p>
+            <h1>Registrar seña</h1>
+            <p>Elegí cómo pagar tu seña y adjuntá el comprobante para que el propietario pueda verificarla.</p>
+        </header>
 
-    <div class="detalle">
-        <p><strong>Reserva:</strong> #{{ reserva.id }}</p>
-        <p><strong>Fecha:</strong> {{ reserva.fecha }}</p>
-        <p><strong>Hora:</strong> {{ reserva.hora_inicio }}</p>
-        <p><strong>Precio total:</strong> ${{ reserva.precio_total }}</p>
+        <div class="rp-columnas">
+            <section class="rp-tarjeta rp-resumen" aria-labelledby="rp-resumen-titulo">
+                <div class="rp-tarjeta-cabecera">
+                    <span class="rp-icono" aria-hidden="true">▦</span>
+                    <div>
+                        <p class="rp-eyebrow">DATOS DE LA RESERVA</p>
+                        <h2 id="rp-resumen-titulo">Resumen del turno</h2>
+                    </div>
+                    <span class="rp-numero">#{{ reserva.id }}</span>
+                </div>
+                <div class="rp-datos">
+                    <div class="rp-dato"><span>Cancha</span><strong>{{ reserva.cancha.nombre }}</strong></div>
+                    <div class="rp-dato"><span>Complejo</span><strong>{{ reserva.cancha.complejo.nombre }}</strong></div>
+                    <div class="rp-dato"><span>Fecha</span><strong>{{ reserva.fecha|date:"d/m/Y" }}</strong></div>
+                    <div class="rp-dato"><span>Horario</span><strong>{{ reserva.hora_inicio|time:"H:i" }} a {{ reserva.hora_fin|time:"H:i" }}</strong></div>
+                    <div class="rp-dato"><span>Precio total</span><strong>$<span class="rp-monto" data-monto="{{ reserva.precio_total }}">{{ reserva.precio_total }}</span></strong></div>
+                </div>
+                <div class="rp-destacado">
+                    <span>Seña a abonar <strong>30%</strong></span>
+                    <div class="rp-importe">$<span class="rp-monto" data-monto="{{ importe_senia }}">{{ importe_senia }}</span></div>
+                    <p>El 70% restante se abona en el complejo.</p>
+                </div>
+                <p class="rp-nota">La seña queda pendiente de aprobación hasta que el propietario revise el comprobante.</p>
+                <div class="rp-superior">
+                    <a class="rp-volver" href="{% url 'mis_reservas' %}">← Volver a mis reservas</a>
+                    <span class="rp-paso">PASO FINAL · SEÑA</span>
+                </div>
+            </section>
 
-        <p>Seña correspondiente al 30%:</p>
-        <div class="importe">${{ importe_senia }}</div>
+            <section class="rp-tarjeta rp-formulario-tarjeta" aria-labelledby="rp-form-titulo">
+                <p class="rp-eyebrow">ELEGÍ CÓMO PAGAR</p>
+                <h2 id="rp-form-titulo">Datos del pago</h2>
+                <form method="post" enctype="multipart/form-data" id="rp-formulario">
+                    {% csrf_token %}
+                    {% if formulario.non_field_errors %}
+                        <div class="rp-error" role="alert">{{ formulario.non_field_errors }}</div>
+                    {% endif %}
 
-        <p class="ayuda">
-            El 70% restante se abona en el complejo.
-        </p>
-    </div>
+                    <div class="rp-campo">
+                        <label for="{{ formulario.metodo.id_for_label }}">Método de pago</label>
+                        {{ formulario.metodo }}
+                        {{ formulario.metodo.errors }}
+                    </div>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+                    <div id="rp-mercadopago" class="rp-mercadopago" hidden data-qr-src="{% static 'reservas/img/mercadopago-qr.png' %}">
+                        <div class="rp-mp-cabecera"><strong>Escaneá el QR de Mercado Pago</strong><span>Seña 30%</span></div>
+                        <div class="rp-mp-contenido">
+                            <img id="rp-codigo-qr" alt="QR de cobro de Mercado Pago del propietario" width="224" height="224" hidden>
+                            <div id="rp-qr-faltante" class="rp-qr-faltante" hidden role="status">
+                                El código QR todavía no está configurado. Solicitá al propietario sus datos de cobro antes de realizar el pago.
+                            </div>
+                            <div class="rp-mp-instrucciones">
+                                <strong>Cómo pagar</strong>
+                                <ol>
+                                    <li>Abrí Mercado Pago desde tu teléfono.</li>
+                                    <li>Escaneá el QR y verificá el destinatario y el importe.</li>
+                                    <li>Pagá la seña y descargá o capturá el comprobante.</li>
+                                    <li>Adjuntalo en el campo de abajo.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <p class="rp-mp-aviso">El QR no confirma automáticamente tu pago: el dueño revisará el comprobante. Nunca pagues si los datos del destinatario no coinciden con los informados por el complejo.</p>
+                    </div>
 
-        {{ formulario.non_field_errors }}
-
-        <label for="{{ formulario.metodo.id_for_label }}">
-            Método de pago
-        </label>
-        {{ formulario.metodo }}
-        {{ formulario.metodo.errors }}
-
-        <label for="{{ formulario.comprobante.id_for_label }}">
-            Comprobante de pago
-        </label>
-        {{ formulario.comprobante }}
-        {{ formulario.comprobante.errors }}
-
-        <button type="submit">Enviar comprobante</button>
-    </form>
-
-    <a href="{% url 'mis_reservas' %}" class="volver">
-        Volver a mis reservas
-    </a>
-</div>
-
+                    <div class="rp-campo">
+                        <label for="{{ formulario.comprobante.id_for_label }}">Comprobante de pago</label>
+                        {{ formulario.comprobante }}
+                        {{ formulario.comprobante.errors }}
+                        <p class="rp-ayuda">Adjuntá el archivo o captura de la operación realizada.</p>
+                    </div>
+                    <button class="rp-boton" type="submit">Enviar comprobante <span aria-hidden="true">→</span></button>
+                </form>
+                <p class="rp-seguridad">El envío del comprobante no acredita el pago hasta su revisión.</p>
+            </section>
+        </div>
+    </main>
 </body>
 </html>

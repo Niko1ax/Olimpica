@@ -1,192 +1,108 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reservar cancha | Olimpica</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f1f5f1;
-            color: #17251d;
-        }
-
-        main {
-            max-width: 700px;
-            margin: 35px auto;
-            padding: 0 20px;
-        }
-
-        .panel {
-            background: white;
-            padding: 28px;
-            border-radius: 12px;
-            border: 1px solid #dfe7df;
-            box-shadow: 0 3px 12px #00000008;
-        }
-
-        h1, h2 {
-            color: #176b3a;
-        }
-
-        .detalle {
-            margin: 12px 0;
-            line-height: 1.5;
-        }
-
-        .precio {
-            background: #e6f5e9;
-            padding: 14px;
-            border-radius: 7px;
-            font-weight: bold;
-        }
-
-        .turno {
-            background: #f5f8f5;
-            border: 1px solid #dfe7df;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 18px;
-        }
-
-        .turno p {
-            margin: 8px 0;
-        }
-
-        .error {
-            background: #fff0f0;
-            color: #a51d2d;
-            padding: 12px;
-            border-radius: 7px;
-            margin: 16px 0;
-        }
-
-        .aviso {
-            color: #526358;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        button {
-            width: 100%;
-            margin-top: 22px;
-            padding: 14px;
-            background: #1b5a3b;
-            color: white;
-            border: 0;
-            border-radius: 7px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #14462e;
-        }
-
-        .volver {
-            display: inline-block;
-            margin-top: 20px;
-            color: #176b3a;
-        }
-
-        @media (max-width: 500px) {
-            .panel {
-                padding: 20px;
-            }
-        }
-    </style>
+    <title>Reservar cancha | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/reservar.css' %}">
 </head>
-
-<body>
+<body class="page-reservar">
     {% include 'reservas/navbar.html' %}
 
-    <main>
-        <div class="panel">
-            <h1>Reservar cancha</h1>
+    <main class="reserva-layout">
+        <a class="reserva-regresar" href="{% url 'buscar_canchas' %}">← Volver a buscar canchas</a>
 
-            <h2>{{ cancha.nombre }}</h2>
-
-            <p class="detalle">
-                <strong>Complejo:</strong>
-                {{ cancha.complejo.nombre }}
-            </p>
-
-            <p class="detalle">
-                <strong>Dirección:</strong>
-                {{ cancha.complejo.direccion }}
-            </p>
-
-            <p class="detalle">
-                <strong>Superficie:</strong>
-                {{ cancha.get_superficie_display }}
-            </p>
-
-            {% if cancha.complejo.telefono %}
-                <p class="detalle">
-                    <strong>Teléfono:</strong>
-                    {{ cancha.complejo.telefono }}
-                </p>
-            {% endif %}
-
-            <p class="precio">
-                Precio por hora: ${{ cancha.precio_por_hora }}
-            </p>
-
-            {% if error %}
-                <p class="error">{{ error }}</p>
-            {% endif %}
-
-            <div class="turno">
-                <h3>Detalles del turno</h3>
-
-                <p>
-                    <strong>Fecha:</strong>
-                    {{ fecha }}
-                </p>
-
-                <p>
-                    <strong>Hora de inicio:</strong>
-                    {{ hora_inicio }}
-                </p>
-
-                <p>
-                    <strong>Hora de finalización:</strong>
-                    {{ hora_fin }}
-                </p>
-
-                <p>
-                    <strong>Duración:</strong>
-                    1 hora
-                </p>
+        <div class="reserva-heading">
+            <div>
+                <span class="reserva-kicker">ÚLTIMO PASO · CONFIRMÁ TU TURNO</span>
+                <h1>Reservá tu cancha</h1>
+                <p>Revisá los datos antes de confirmar tu próximo partido.</p>
             </div>
+            <span class="reserva-heading-icon" aria-hidden="true">⚽</span>
+        </div>
 
-            <p class="aviso">
-                Revisá los datos antes de confirmar. El horario se calcula
-                automáticamente y no se puede modificar desde esta pantalla.
-            </p>
+        {% if error %}
+            <div class="reserva-error" role="alert">{{ error }}</div>
+        {% endif %}
 
-            <form method="post">
-                {% csrf_token %}
+        <div class="reserva-grid">
+            <section class="reserva-card reserva-info" aria-labelledby="titulo-cancha">
+                <div class="reserva-foto" role="img" aria-label="Cancha de fútbol de césped sintético">
+                    <span class="reserva-foto-etiqueta">Tu próxima cancha</span>
+                </div>
+                <div class="reserva-info-contenido">
+                    <span class="reserva-card-kicker">DATOS DE LA CANCHA</span>
+                    <h2 id="titulo-cancha">{{ cancha.nombre }}</h2>
+                    <p class="reserva-complejo">{{ cancha.complejo.nombre }}</p>
 
-                <input type="hidden" name="fecha" value="{{ fecha }}">
-                <input type="hidden" name="hora_inicio" value="{{ hora_inicio }}">
+                    <dl class="reserva-datos">
+                        <div class="reserva-dato">
+                            <dt><span aria-hidden="true">⌖</span> Dirección</dt>
+                            <dd>{{ cancha.complejo.direccion }}</dd>
+                        </div>
+                        <div class="reserva-dato">
+                            <dt><span aria-hidden="true">▤</span> Superficie</dt>
+                            <dd>{{ cancha.get_superficie_display }}</dd>
+                        </div>
+                        {% if cancha.complejo.telefono %}
+                        <div class="reserva-dato">
+                            <dt><span aria-hidden="true">☎</span> Teléfono</dt>
+                            <dd>{{ cancha.complejo.telefono }}</dd>
+                        </div>
+                        {% endif %}
+                    </dl>
+                </div>
+            </section>
 
-                <button type="submit">
-                    Confirmar reserva
-                </button>
-            </form>
+            <section class="reserva-card reserva-resumen" aria-labelledby="titulo-resumen">
+                <div class="reserva-resumen-cabecera">
+                    <span class="reserva-card-kicker">RESUMEN DE TU RESERVA</span>
+                    <h2 id="titulo-resumen">Detalles del turno</h2>
+                    <p>Estos son los datos del horario seleccionado.</p>
+                </div>
 
-            <a class="volver" href="{% url 'buscar_canchas' %}">
-                Volver al buscador
-            </a>
+                <dl class="reserva-turno-grid">
+                    <div class="reserva-turno-dato">
+                        <dt><span aria-hidden="true">▦</span> Fecha</dt>
+                        <dd>{{ fecha }}</dd>
+                    </div>
+                    <div class="reserva-turno-dato">
+                        <dt><span aria-hidden="true">◷</span> Hora de inicio</dt>
+                        <dd>{{ hora_inicio }}</dd>
+                    </div>
+                    <div class="reserva-turno-dato">
+                        <dt><span aria-hidden="true">◷</span> Hora de finalización</dt>
+                        <dd>{{ hora_fin }}</dd>
+                    </div>
+                    <div class="reserva-turno-dato">
+                        <dt><span aria-hidden="true">✓</span> Duración</dt>
+                        <dd>1 hora</dd>
+                    </div>
+                </dl>
+
+                <div class="reserva-total">
+                    <div>
+                        <span>Precio por hora</span>
+                        <strong>${{ cancha.precio_por_hora }}</strong>
+                    </div>
+                    <span class="reserva-total-detalle">Importe del turno</span>
+                </div>
+
+                <p class="reserva-aviso">
+                    <span aria-hidden="true">ⓘ</span>
+                    El horario se calcula automáticamente y no se puede modificar desde esta pantalla.
+                </p>
+
+                <form method="post" class="reserva-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="fecha" value="{{ fecha }}">
+                    <input type="hidden" name="hora_inicio" value="{{ hora_inicio }}">
+                    <button class="reserva-confirmar" type="submit">✓ &nbsp; Confirmar reserva</button>
+                </form>
+                <a class="reserva-cancelar" href="{% url 'buscar_canchas' %}">Cambiar fecha u horario</a>
+            </section>
         </div>
     </main>
 </body>

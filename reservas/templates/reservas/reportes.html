@@ -1,163 +1,121 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte | Olímpica</title>
+    <title>Reportes | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/reportes.css' %}">
 </head>
-<body>
-<div class="contenedor">
-    <h1>Reportes</h1>
+<body class="page-reportes">
+    {% include 'reservas/navbar.html' %}
 
-    <p>
-        Período:
-        <strong>{{ inicio_semana|date:"d/m/Y" }}</strong>
-        al
-        <strong>{{ fin_semana|date:"d/m/Y" }}</strong>
-    </p>
-
-    <div class="resumen">
-        <div class="tarjeta">
-            <h3>Total de reservas</h3>
-            <p>{{ resumen.total|default:0 }}</p>
+    <main class="reportes-layout">
+        <div class="reportes-cabecera">
+            <div>
+                <span class="reportes-kicker">PANEL DE CONTROL <span class="reportes-kicker-punto">●</span> RESUMEN SEMANAL</span>
+                <h1>Reportes de reservas</h1>
+                <p>Consultá el movimiento de tus canchas y el estado de las reservas durante la semana.</p>
+            </div>
+            <div class="reportes-periodo">
+                <span class="reportes-periodo-icono" aria-hidden="true">▦</span>
+                <div>
+                    <small>PERÍODO ANALIZADO</small>
+                    <strong>{{ inicio_semana|date:"d/m/Y" }} – {{ fin_semana|date:"d/m/Y" }}</strong>
+                </div>
+            </div>
         </div>
 
-        <div class="tarjeta">
-            <h3>Pendientes</h3>
-            <p>{{ resumen.pendientes|default:0 }}</p>
-        </div>
+        <section class="reportes-metricas" aria-label="Resumen de reservas">
+            <article class="reportes-metrica reportes-metrica-total">
+                <div class="reportes-metrica-superior"><span>Total de reservas</span><span class="reportes-metrica-icono" aria-hidden="true">▦</span></div>
+                <strong class="reportes-valor">{{ resumen.total|default:0 }}</strong>
+                <small>Reservas en la semana</small>
+            </article>
+            <article class="reportes-metrica reportes-metrica-pendientes">
+                <div class="reportes-metrica-superior"><span>Pendientes</span><span class="reportes-metrica-icono" aria-hidden="true">◷</span></div>
+                <strong class="reportes-valor">{{ resumen.pendientes|default:0 }}</strong>
+                <small>Aguardan confirmación</small>
+            </article>
+            <article class="reportes-metrica reportes-metrica-confirmadas">
+                <div class="reportes-metrica-superior"><span>Confirmadas</span><span class="reportes-metrica-icono" aria-hidden="true">✓</span></div>
+                <strong class="reportes-valor">{{ resumen.confirmadas|default:0 }}</strong>
+                <small>Reservas confirmadas</small>
+            </article>
+            <article class="reportes-metrica reportes-metrica-canceladas">
+                <div class="reportes-metrica-superior"><span>Canceladas</span><span class="reportes-metrica-icono" aria-hidden="true">×</span></div>
+                <strong class="reportes-valor">{{ resumen.canceladas|default:0 }}</strong>
+                <small>Reservas canceladas</small>
+            </article>
+            <article class="reportes-metrica reportes-metrica-recaudacion">
+                <div class="reportes-metrica-superior"><span>Recaudación estimada</span><span class="reportes-metrica-icono" aria-hidden="true">$</span></div>
+                <strong class="reportes-valor reportes-valor-dinero">${{ resumen.recaudacion|default:0|floatformat:2 }}</strong>
+                <small>Importe de reservas confirmadas</small>
+            </article>
+        </section>
 
-        <div class="tarjeta">
-            <h3>Confirmadas</h3>
-            <p>{{ resumen.confirmadas|default:0 }}</p>
-        </div>
-
-        <div class="tarjeta">
-            <h3>Canceladas</h3>
-            <p>{{ resumen.canceladas|default:0 }}</p>
-        </div>
-
-        <div class="tarjeta">
-            <h3>Recaudación estimada</h3>
-            <p>
-                ${{ resumen.recaudacion|default:0|floatformat:2 }}
-            </p>
-        </div>
-    </div>
-
-    <h2>Detalle de reservas</h2>
-
-    {% if reservas %}
-        <div class="tabla-contenedor">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Horario</th>
-                        <th>Complejo</th>
-                        <th>Cancha</th>
-                        <th>Jugador</th>
-                        <th>Estado</th>
-                        <th>Importe</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for reserva in reservas %}
+        <section class="reportes-detalle" aria-labelledby="reportes-detalle-titulo">
+            <header class="reportes-detalle-cabecera">
+                <div>
+                    <span class="reportes-kicker">ACTIVIDAD DE LA SEMANA</span>
+                    <h2 id="reportes-detalle-titulo">Detalle de reservas</h2>
+                    <p>Listado de turnos registrados entre las fechas seleccionadas.</p>
+                </div>
+                <span class="reportes-contador">{{ resumen.total|default:0 }} reserva{{ resumen.total|pluralize }}</span>
+            </header>
+            {% if reservas %}
+            <div class="reportes-tabla-scroll">
+                <table class="reportes-tabla">
+                    <thead>
                         <tr>
-                            <td>{{ reserva.fecha|date:"d/m/Y" }}</td>
-                            <td>
-                                {{ reserva.hora_inicio|time:"H:i" }}
-                                -
-                                {{ reserva.hora_fin|time:"H:i" }}
-                            </td>
-                            <td>{{ reserva.cancha.complejo.nombre }}</td>
-                            <td>{{ reserva.cancha.nombre }}</td>
-                            <td>{{ reserva.jugador.usuario.username }}</td>
-                            <td>{{ reserva.get_estado_display }}</td>
-                            <td>${{ reserva.precio_total|floatformat:2 }}</td>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Horario</th>
+                            <th scope="col">Complejo / Cancha</th>
+                            <th scope="col">Jugador</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col" class="reportes-importe">Importe</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <p>No hay reservas registradas para esta semana.</p>
-    {% endif %}
-
-    <a href="{% url 'panel_reservas' %}" class="boton-volver">
-        Volver al panel de reservas
-    </a>
-</div>
-
-<style>
-    .contenedor {
-        max-width: 1200px;
-        margin: 35px auto;
-        padding: 25px;
-    }
-
-    .resumen {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-        gap: 16px;
-        margin: 25px 0 35px;
-    }
-
-    .tarjeta {
-        background: #123f2d;
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-    }
-
-    .tarjeta h3 {
-        font-size: 15px;
-        margin-top: 0;
-    }
-
-    .tarjeta p {
-        font-size: 25px;
-        font-weight: bold;
-        margin-bottom: 0;
-    }
-
-    .tabla-contenedor {
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-    }
-
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    th {
-        background: #123f2d;
-        color: white;
-    }
-
-    .boton-volver {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 12px 18px;
-        background: #123f2d;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-    }
-
-    @media (max-width: 600px) {
-        .contenedor {
-            padding: 12px;
-        }
-    }
-</style>
+                    </thead>
+                    <tbody>
+                        {% for reserva in reservas %}
+                        <tr>
+                            <td class="reportes-fecha">{{ reserva.fecha|date:"d/m/Y" }}</td>
+                            <td>{{ reserva.hora_inicio|time:"H:i" }} – {{ reserva.hora_fin|time:"H:i" }}</td>
+                            <td>
+                                <span class="reportes-cancha-nombre">{{ reserva.cancha.nombre }}</span>
+                                <span class="reportes-complejo-nombre">{{ reserva.cancha.complejo.nombre }}</span>
+                            </td>
+                            <td>{{ reserva.jugador.usuario.username }}</td>
+                            <td>
+                                {% if reserva.estado == "CONFIRMADA" %}
+                                <span class="reportes-estado reportes-estado-confirmada">● {{ reserva.get_estado_display }}</span>
+                                {% elif reserva.estado == "PENDIENTE" %}
+                                <span class="reportes-estado reportes-estado-pendiente">● {{ reserva.get_estado_display }}</span>
+                                {% elif reserva.estado == "CANCELADA" %}
+                                <span class="reportes-estado reportes-estado-cancelada">● {{ reserva.get_estado_display }}</span>
+                                {% else %}
+                                <span class="reportes-estado reportes-estado-otro">{{ reserva.get_estado_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="reportes-importe reportes-precio">${{ reserva.precio_total|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="reportes-sin-reservas">
+                <div class="reportes-sin-icono" aria-hidden="true">▦</div>
+                <strong>No hay reservas para mostrar</strong>
+                <p>Todavía no hay reservas registradas para esta semana.</p>
+            </div>
+            {% endif %}
+            <footer class="reportes-detalle-pie">
+                <span>Los importes corresponden a las reservas registradas en el período.</span>
+                <a class="reportes-volver" href="{% url 'panel_reservas' %}">← Volver a gestión de reservas</a>
+            </footer>
+        </section>
+    </main>
 </body>
 </html>

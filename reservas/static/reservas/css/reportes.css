@@ -1,0 +1,58 @@
+/* Reportes de Olímpica: todas las reglas están aisladas de las otras pantallas. */
+body.page-reportes { margin:0; background:#f3f8f5; color:#103c2c; font-family:Arial, sans-serif; }
+body.page-reportes *, body.page-reportes *::before, body.page-reportes *::after { box-sizing:border-box; }
+body.page-reportes .reportes-layout { max-width:1240px; width:calc(100% - 48px); margin:0 auto; padding:52px 0 86px; }
+body.page-reportes .reportes-cabecera { display:flex; gap:24px; align-items:flex-end; justify-content:space-between; margin-bottom:30px; }
+body.page-reportes .reportes-kicker { display:inline-block; color:#087f4b; letter-spacing:1.5px; font-size:11px; font-weight:800; }
+body.page-reportes .reportes-kicker-punto { margin:0 5px; font-size:9px; vertical-align:1px; }
+body.page-reportes .reportes-cabecera h1 { margin:11px 0 10px; color:#093d2b; font-size:clamp(29px,3.2vw,42px); font-weight:800; letter-spacing:-1.2px; line-height:1.15; }
+body.page-reportes .reportes-cabecera p { margin:0; color:#63756b; font-size:15px; line-height:1.6; max-width:580px; }
+body.page-reportes .reportes-periodo { display:flex; align-items:center; gap:13px; background:white; border:1px solid #d9e8de; border-radius:12px; padding:14px 18px; white-space:nowrap; box-shadow:0 5px 15px rgba(5,49,29,.035); }
+body.page-reportes .reportes-periodo-icono { display:grid; place-items:center; width:40px; height:40px; background:#eaf7ee; border-radius:10px; color:#057845; font-size:27px; }
+body.page-reportes .reportes-periodo small { display:block; color:#718176; font-size:10px; font-weight:800; letter-spacing:1px; margin-bottom:5px; }
+body.page-reportes .reportes-periodo strong { color:#113e2e; font-size:14px; }
+body.page-reportes .reportes-metricas { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:34px; }
+body.page-reportes .reportes-metrica { min-height:156px; padding:20px 21px; background:white; border:1px solid #dbe8de; border-radius:15px; box-shadow:0 8px 24px rgba(10,51,33,.045); }
+body.page-reportes .reportes-metrica-superior { display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:14px; color:#415a4e; font-size:13px; font-weight:700; }
+body.page-reportes .reportes-metrica-icono { flex:0 0 34px; display:grid; place-items:center; width:34px; height:34px; background:#eaf5ee; border-radius:9px; color:#167b4e; font-size:20px; }
+body.page-reportes .reportes-valor { display:block; margin:0 0 7px; color:#103c2c; font-size:35px; font-weight:800; letter-spacing:-1px; line-height:1.1; }
+body.page-reportes .reportes-metrica small { color:#738479; font-size:12px; line-height:1.4; }
+body.page-reportes .reportes-metrica-pendientes .reportes-metrica-icono { background:#fff4d8; color:#a56f0b; }
+body.page-reportes .reportes-metrica-confirmadas .reportes-metrica-icono { background:#ddf7e8; color:#138450; }
+body.page-reportes .reportes-metrica-canceladas .reportes-metrica-icono { background:#ffeded; color:#be4747; }
+body.page-reportes .reportes-metrica-recaudacion { grid-column:1 / -1; min-height:126px; padding:22px 26px; display:grid; grid-template-columns:1fr auto; align-content:center; background:linear-gradient(120deg,#083d2b,#116442); border-color:#0d5b3d; }
+body.page-reportes .reportes-metrica-recaudacion .reportes-metrica-superior { grid-column:1; color:#d8f1e3; margin:0 0 7px; }
+body.page-reportes .reportes-metrica-recaudacion .reportes-metrica-icono { background:rgba(255,255,255,.13); color:#c9f59d; }
+body.page-reportes .reportes-metrica-recaudacion .reportes-valor { color:#fff; font-size:clamp(28px,3vw,38px); grid-column:1; margin:0 0 5px; overflow-wrap:anywhere; }
+body.page-reportes .reportes-metrica-recaudacion small { color:#c7e3d3; grid-column:1; }
+body.page-reportes .reportes-detalle { background:#fff; border:1px solid #dbe7df; border-radius:16px; overflow:hidden; box-shadow:0 10px 34px rgba(6,54,30,.06); }
+body.page-reportes .reportes-detalle-cabecera { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:27px 29px 24px; }
+body.page-reportes .reportes-detalle-cabecera h2 { color:#0c3e2d; font-size:24px; letter-spacing:-.6px; margin:7px 0; }
+body.page-reportes .reportes-detalle-cabecera p { margin:0; font-size:13px; color:#66786d; }
+body.page-reportes .reportes-contador { color:#147447; background:#eaf7ee; border-radius:100px; font-weight:800; font-size:12px; white-space:nowrap; padding:9px 14px; }
+body.page-reportes .reportes-tabla-scroll { width:100%; overflow-x:auto; }
+body.page-reportes .reportes-tabla { width:100%; border-collapse:collapse; margin:0; min-width:820px; font-size:13px; }
+body.page-reportes .reportes-tabla thead { background:#0b4934; }
+body.page-reportes .reportes-tabla th { color:#fff; background:transparent; border:0; text-align:left; padding:16px 22px; font-size:12px; font-weight:750; white-space:nowrap; }
+body.page-reportes .reportes-tabla td { border:0; border-bottom:1px solid #edf2ee; padding:19px 22px; vertical-align:middle; color:#304b3b; }
+body.page-reportes .reportes-tabla tbody tr:last-child td { border-bottom:0; }
+body.page-reportes .reportes-tabla tbody tr:hover { background:#f7fbf8; }
+body.page-reportes .reportes-fecha, body.page-reportes .reportes-precio { font-weight:750; color:#123b2a!important; }
+body.page-reportes .reportes-cancha-nombre { font-weight:750; display:block; color:#123b2a; }
+body.page-reportes .reportes-complejo-nombre { display:block; margin-top:3px; color:#819287; font-size:12px; }
+body.page-reportes .reportes-importe { text-align:right!important; white-space:nowrap; }
+body.page-reportes .reportes-estado { display:inline-block; border-radius:100px; padding:7px 11px; font-size:11px; font-weight:800; white-space:nowrap; }
+body.page-reportes .reportes-estado-confirmada { color:#0b7845; background:#e2f7e9; }
+body.page-reportes .reportes-estado-pendiente { color:#956500; background:#fff2d4; }
+body.page-reportes .reportes-estado-cancelada { color:#b03d3d; background:#ffebeb; }
+body.page-reportes .reportes-estado-otro { color:#526457; background:#edf2ee; }
+body.page-reportes .reportes-sin-reservas { display:flex; flex-direction:column; align-items:center; text-align:center; gap:9px; padding:50px 20px; }
+body.page-reportes .reportes-sin-icono { display:grid; place-items:center; font-size:34px; width:68px; height:68px; border-radius:18px; background:#ecf8ef; color:#19804c; margin-bottom:8px; }
+body.page-reportes .reportes-sin-reservas strong { font-size:18px; color:#173b2a; }
+body.page-reportes .reportes-sin-reservas p { font-size:14px; margin:0; color:#708074; }
+body.page-reportes .reportes-detalle-pie { display:flex; align-items:center; justify-content:space-between; gap:15px; padding:21px 29px; border-top:1px solid #eaf0eb; background:#fbfdfb; }
+body.page-reportes .reportes-detalle-pie>span { color:#758579; font-size:12px; }
+body.page-reportes .reportes-volver { display:inline-block; background:#0c6742; border-radius:8px; padding:12px 16px; color:#fff!important; text-decoration:none; font-size:13px; font-weight:750; white-space:nowrap; }
+body.page-reportes .reportes-volver:hover { background:#095035; }
+@media (max-width:900px) { body.page-reportes .reportes-cabecera { align-items:flex-start; flex-direction:column; } body.page-reportes .reportes-metricas { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:560px) { body.page-reportes .reportes-layout { width:calc(100% - 28px); padding:31px 0 55px; } body.page-reportes .reportes-metricas { gap:10px; } body.page-reportes .reportes-metrica { min-height:132px; padding:16px; } body.page-reportes .reportes-metrica-superior { font-size:12px; } body.page-reportes .reportes-valor { font-size:30px; } body.page-reportes .reportes-metrica-recaudacion { padding:21px; } body.page-reportes .reportes-periodo { width:100%; } body.page-reportes .reportes-detalle-cabecera { padding:22px 17px; align-items:flex-start; flex-direction:column; } body.page-reportes .reportes-detalle-pie { padding:18px; flex-direction:column; align-items:flex-start; } body.page-reportes .reportes-volver { width:100%; text-align:center; } }

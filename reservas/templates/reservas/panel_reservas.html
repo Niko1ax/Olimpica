@@ -1,245 +1,134 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de reservas | Olimpica</title>
-
-    <style>
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f1f5f1;
-            color: #222;
-        }
-
-        header {
-            background: #176b3a;
-            color: white;
-            padding: 22px;
-        }
-
-        header h1 {
-            margin: 0 0 8px;
-        }
-
-        header a {
-            color: white;
-        }
-
-        main {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 16px;
-        }
-
-        .tabla-contenedor {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            overflow-x: auto;
-            box-shadow: 0 3px 12px #0000000d;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 13px 10px;
-            border-bottom: 1px solid #e5e5e5;
-            vertical-align: top;
-        }
-
-        th {
-            background: #f7f9f7;
-        }
-
-        select, button {
-            padding: 9px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            max-width: 100%;
-        }
-
-        button {
-            background: #176b3a;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 6px;
-        }
-
-        button:hover {
-            background: #12552e;
-        }
-
-        .estado {
-            font-weight: bold;
-        }
-
-        .vacio {
-            padding: 20px;
-            text-align: center;
-            color: #666;
-        }
-
-        .pago-saldo {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #e5e5e5;
-        }
-
-        .pago-saldo select {
-            display: block;
-            width: 100%;
-            margin-top: 6px;
-        }
-
-        .pago-registrado {
-            color: #176b3a;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .ayuda {
-            color: #666;
-            font-size: 13px;
-            margin: 5px 0;
-        }
-    </style>
+    <title>Gestión de reservas | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/panel_reservas.css' %}">
 </head>
-
-<body>
+<body class="page-panel-reservas panel-renovado">
     {% include 'reservas/navbar.html' %}
 
-    <header>
-        <h1>Olimpica | Gestión de reservas</h1>
-        <p>Panel interno para administrar las solicitudes de reserva.</p>
-        <a href="{% url 'inicio' %}">Volver al inicio</a>
-    </header>
+    <main class="gestion-main">
+        <section class="gestion-encabezado">
+            <div>
+                <span class="gestion-etiqueta">PANEL DE GESTIÓN</span>
+                <h1>Gestión de reservas</h1>
+                <p>Administrá los turnos de tus canchas, confirmá solicitudes y registrá pagos.</p>
+            </div>
+            <a class="gestion-volver" href="{% url 'inicio' %}">← Volver al inicio</a>
+        </section>
 
-    <main>
-        <div class="tabla-contenedor">
-            <h2>Todas las reservas</h2>
+        <section class="gestion-indicadores" aria-label="Resumen de reservas">
+            <div class="gestion-indicador">
+                <span class="gestion-indicador-icono" aria-hidden="true">▦</span>
+                <div><span class="gestion-indicador-titulo">Reservas listadas</span>
+                    <strong>{{ reservas|length }}</strong></div>
+            </div>
+            <div class="gestion-indicador gestion-indicador-info">
+                <span class="gestion-indicador-icono" aria-hidden="true">✓</span>
+                <div><span class="gestion-indicador-titulo">Gestión de estados</span>
+                    <strong>En línea</strong></div>
+            </div>
+            <div class="gestion-indicador gestion-indicador-info">
+                <span class="gestion-indicador-icono" aria-hidden="true">$</span>
+                <div><span class="gestion-indicador-titulo">Pagos</span>
+                    <strong>Seguimiento</strong></div>
+            </div>
+        </section>
+
+        <section class="gestion-seccion" aria-labelledby="titulo-listado">
+            <div class="gestion-seccion-cabecera">
+                <div>
+                    <span class="gestion-etiqueta">SOLICITUDES</span>
+                    <h2 id="titulo-listado">Todas las reservas</h2>
+                    <p>Revisá cada turno y actualizá su estado desde esta tabla.</p>
+                </div>
+                <span class="gestion-contador">{{ reservas|length }} reserva{{ reservas|length|pluralize }}</span>
+            </div>
 
             {% if reservas %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>N.º</th>
-                            <th>Jugador</th>
-                            <th>Cancha</th>
-                            <th>Fecha</th>
-                            <th>Horario</th>
-                            <th>Precio</th>
-                            <th>Estado actual</th>
-                            <th>Gestionar</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
+                <div class="gestion-tabla-scroll">
+                    <table class="gestion-tabla">
+                        <thead><tr>
+                            <th scope="col">Reserva</th>
+                            <th scope="col">Jugador</th>
+                            <th scope="col">Cancha y complejo</th>
+                            <th scope="col">Fecha y horario</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr></thead>
+                        <tbody>
                         {% for reserva in reservas %}
-                            <tr>
-                                <td>{{ reserva.id }}</td>
+                        <tr>
+                            <td><span class="gestion-numero">#{{ reserva.id }}</span></td>
+                            <td><strong class="gestion-jugador">{{ reserva.jugador.usuario.username }}</strong></td>
+                            <td>
+                                <strong class="gestion-cancha">{{ reserva.cancha.nombre }}</strong>
+                                <small class="gestion-muted">{{ reserva.cancha.complejo.nombre }}</small>
+                            </td>
+                            <td>
+                                <strong class="gestion-fecha">{{ reserva.fecha|date:"d/m/Y" }}</strong>
+                                <small class="gestion-muted">{{ reserva.hora_inicio|time:"H:i" }} a {{ reserva.hora_fin|time:"H:i" }}</small>
+                            </td>
+                            <td><strong class="gestion-precio">${{ reserva.precio_total }}</strong></td>
+                            <td>
+                                {% if reserva.estado == "CONFIRMADA" %}
+                                    <span class="gestion-estado gestion-confirmada">● Confirmada</span>
+                                {% elif reserva.estado == "CANCELADA" %}
+                                    <span class="gestion-estado gestion-cancelada">● Cancelada</span>
+                                {% else %}
+                                    <span class="gestion-estado gestion-pendiente">● Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td class="gestion-acciones">
+                                <form class="gestion-form" method="post" action="{% url 'actualizar_estado_reserva' reserva.id %}">
+                                    {% csrf_token %}
+                                    <label class="gestion-label" for="estado-{{ reserva.id }}">Cambiar estado</label>
+                                    <select id="estado-{{ reserva.id }}" name="estado" aria-label="Nuevo estado de la reserva {{ reserva.id }}">
+                                        <option value="PENDIENTE" {% if reserva.estado == "PENDIENTE" %}selected{% endif %}>Pendiente</option>
+                                        <option value="CONFIRMADA" {% if reserva.estado == "CONFIRMADA" %}selected{% endif %}>Confirmada</option>
+                                        <option value="CANCELADA" {% if reserva.estado == "CANCELADA" %}selected{% endif %}>Cancelada</option>
+                                    </select>
+                                    <button type="submit" class="gestion-boton">Guardar estado</button>
+                                </form>
 
-                                <td>
-                                    {{ reserva.jugador.usuario.username }}
-                                </td>
-
-                                <td>
-                                    {{ reserva.cancha.complejo.nombre }}
-                                    - {{ reserva.cancha.nombre }}
-                                </td>
-
-                                <td>{{ reserva.fecha|date:"d/m/Y" }}</td>
-
-                                <td>
-                                    {{ reserva.hora_inicio|time:"H:i" }}
-                                    a {{ reserva.hora_fin|time:"H:i" }}
-                                </td>
-
-                                <td>${{ reserva.precio_total }}</td>
-
-                                <td class="estado">
-                                    {{ reserva.get_estado_display }}
-                                </td>
-
-                                <td>
-                                    <form method="post"
-                                          action="{% url 'actualizar_estado_reserva' reserva.id %}">
+                                {% if reserva.estado == "CONFIRMADA" and reserva.senia_aprobada and not reserva.saldo_pagado %}
+                                <div class="gestion-pago">
+                                    <strong>Saldo restante (70%)</strong>
+                                    <p>Confirmá el medio de pago recibido.</p>
+                                    <form class="gestion-form" method="post" action="{% url 'registrar_saldo' reserva.id %}">
                                         {% csrf_token %}
-
-                                        <select name="estado" aria-label="Nuevo estado">
-                                            <option value="PENDIENTE"
-                                                {% if reserva.estado == "PENDIENTE" %}selected{% endif %}>
-                                                Pendiente
-                                            </option>
-
-                                            <option value="CONFIRMADA"
-                                                {% if reserva.estado == "CONFIRMADA" %}selected{% endif %}>
-                                                Confirmada
-                                            </option>
-
-                                            <option value="CANCELADA"
-                                                {% if reserva.estado == "CANCELADA" %}selected{% endif %}>
-                                                Cancelada
-                                            </option>
+                                        <label class="gestion-label" for="metodo-{{ reserva.id }}">Método de pago</label>
+                                        <select name="metodo" id="metodo-{{ reserva.id }}" required>
+                                            <option value="">Seleccionar método</option>
+                                            <option value="EFECTIVO">Efectivo</option>
+                                            <option value="TRANSFERENCIA">Transferencia</option>
+                                            <option value="MERCADO_PAGO">Mercado Pago</option>
                                         </select>
-
-                                        <button type="submit">
-                                            Guardar estado
-                                        </button>
+                                        <button type="submit" class="gestion-boton gestion-boton-saldo" onclick="return confirm('¿Confirmás que recibiste el saldo restante de esta reserva?')">Registrar saldo</button>
                                     </form>
-
-                                    {% if reserva.estado == "CONFIRMADA" and reserva.senia_aprobada and not reserva.saldo_pagado %}
-                                        <div class="pago-saldo">
-                                            <strong>Registrar saldo restante (70%)</strong>
-
-                                            <p class="ayuda">
-                                                Confirmá el medio de pago con el que el jugador abonó el saldo.
-                                            </p>
-
-                                            <form method="post"
-                                                  action="{% url 'registrar_saldo' reserva.id %}">
-                                                {% csrf_token %}
-
-                                                <select name="metodo" required>
-                                                    <option value="">Seleccionar método</option>
-                                                    <option value="EFECTIVO">Efectivo</option>
-                                                    <option value="TRANSFERENCIA">Transferencia</option>
-                                                    <option value="MERCADO_PAGO">Mercado Pago</option>
-                                                </select>
-
-                                                <button type="submit"
-                                                        onclick="return confirm('¿Confirmás que recibiste el saldo restante de esta reserva?')">
-                                                    Registrar saldo
-                                                </button>
-                                            </form>
-                                        </div>
-
-                                    {% elif reserva.saldo_pagado %}
-                                        <p class="pago-registrado">
-                                            Saldo restante registrado.
-                                        </p>
-                                    {% endif %}
-                                </td>
-                            </tr>
+                                </div>
+                                {% elif reserva.saldo_pagado %}
+                                    <p class="gestion-pago-ok">✓ Saldo restante registrado</p>
+                                {% endif %}
+                            </td>
+                        </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
-
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
-                <p class="vacio">
-                    Todavía no hay reservas registradas.
-                </p>
+                <div class="gestion-vacio">
+                    <span class="gestion-vacio-icono" aria-hidden="true">▦</span>
+                    <h3>Todavía no hay reservas registradas</h3>
+                    <p>Cuando un jugador reserve una cancha, su solicitud aparecerá acá para que puedas administrarla.</p>
+                </div>
             {% endif %}
-        </div>
+        </section>
     </main>
 </body>
 </html>

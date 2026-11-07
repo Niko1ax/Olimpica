@@ -1,21 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar complejo | Olimpica</title>
-    <style>
-        body { margin: 0; background: #f1f5f1; font-family: Arial, sans-serif; color: #222; }
-        main { max-width: 700px; margin: 30px auto; padding: 24px; background: white; border-radius: 10px; }
-        h1 { color: #176b3a; }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input, textarea, select { width: 100%; box-sizing: border-box; padding: 11px; margin-top: 6px; }
-        button, .enlace { display: inline-block; margin-top: 20px; padding: 11px 16px; border: 0; border-radius: 6px; background: #176b3a; color: white; text-decoration: none; cursor: pointer; }
-        .errorlist { color: #b91c1c; }
-    </style>
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
 </head>
-<body>
+<body class="page-editar-complejo">
     {% include 'reservas/navbar.html' %}
     <main>
         <h1>Editar complejo</h1>

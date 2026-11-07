@@ -1,117 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Creá tu cuenta en Olimpica para reservar canchas.">
     <title>Crear cuenta | Olimpica</title>
 
-    <style>
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f1;
-            margin: 0;
-            padding: 35px 16px;
-            color: #222;
-        }
-
-        .contenedor {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            padding: 32px;
-            border-radius: 14px;
-            box-shadow: 0 5px 20px #0000000d;
-        }
-
-        h1 {
-            color: #176b3a;
-            font-size: 29px;
-            margin: 0 0 10px;
-        }
-
-        .descripcion {
-            color: #555;
-            line-height: 1.5;
-            margin-bottom: 25px;
-        }
-
-        .campo { margin-bottom: 19px; }
-
-        label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font-size: 15px;
-        }
-
-        input:focus {
-            outline: 2px solid #a6d8b8;
-            border-color: #176b3a;
-        }
-
-        .ayuda {
-            color: #666;
-            font-size: 13px;
-            line-height: 1.5;
-            margin: 6px 0 0;
-        }
-
-        .error-campo {
-            color: #b42318;
-            font-size: 13px;
-            margin-top: 6px;
-        }
-
-        .errores-generales {
-            background: #fff1f0;
-            color: #a12622;
-            padding: 12px;
-            border-radius: 7px;
-            margin-bottom: 18px;
-        }
-
-        .errores-generales ul {
-            padding-left: 20px;
-            margin-bottom: 0;
-        }
-
-        button {
-            width: 100%;
-            padding: 13px;
-            background: #176b3a;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:hover { background: #12552e; }
-
-        .enlace {
-            text-align: center;
-            margin-top: 22px;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        a { color: #176b3a; }
-    </style>
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
 </head>
 
-<body>
+<body class="page-registro">
+    <div class="auth-layout">
+      <aside class="auth-brand"><a href="{% url 'inicio' %}">⚽ Olímpica</a><div><span>SUMATE A LA CANCHA</span><h2>Un partido más cerca.</h2><p>Creá tu cuenta para encontrar y reservar tu cancha.</p></div><small>Jugá más. Organizá menos.</small></aside>
     <main class="contenedor">
         <h1>Crear cuenta en Olimpica</h1>
         <p class="descripcion">
@@ -190,5 +92,6 @@
             <a href="{% url 'inicio' %}">Volver al inicio</a>
         </div>
     </main>
+    </div>
 </body>
 </html>
