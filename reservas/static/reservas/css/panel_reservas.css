@@ -1,0 +1,51 @@
+/* Estilos exclusivos de Gestión de reservas. Se cargan después de styles.css. */
+body.panel-renovado { background:#f3f7f3; color:#162c20; font-family:Arial,sans-serif; }
+body.panel-renovado .gestion-main { max-width:1320px; margin:0 auto; padding:42px 24px 90px; }
+body.panel-renovado .gestion-encabezado { display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; margin-bottom:28px; }
+body.panel-renovado .gestion-etiqueta { color:#21814d; font-size:11px; font-weight:800; letter-spacing:1.9px; }
+body.panel-renovado .gestion-encabezado h1 { font-size:clamp(31px,4vw,45px); color:#153e2a; letter-spacing:-1.1px; margin:9px 0 10px; line-height:1.1; }
+body.panel-renovado .gestion-encabezado p, body.panel-renovado .gestion-seccion-cabecera p { margin:0; color:#637468; font-size:15px; line-height:1.6; }
+body.panel-renovado .gestion-volver { display:inline-flex; align-items:center; background:white; border:1px solid #dbe5dc; padding:11px 17px; border-radius:10px; text-decoration:none; color:#1e6540; font-weight:700; white-space:nowrap; }
+body.panel-renovado .gestion-volver:hover { background:#eaf3eb; }
+body.panel-renovado .gestion-indicadores { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:0 0 28px; }
+body.panel-renovado .gestion-indicador { background:white; border:1px solid #dfebe1; border-radius:16px; padding:22px; display:flex; align-items:center; gap:16px; box-shadow:0 5px 20px rgba(15,62,35,.04); }
+body.panel-renovado .gestion-indicador-icono { width:50px; height:50px; display:grid; place-items:center; border-radius:14px; background:#e6f6e7; color:#176b3a; font-size:27px; font-weight:bold; flex-shrink:0; }
+body.panel-renovado .gestion-indicador-titulo { display:block; font-size:13px; color:#627568; margin-bottom:5px; }
+body.panel-renovado .gestion-indicador strong { font-size:25px; color:#153e2a; }
+body.panel-renovado .gestion-indicador-info strong { font-size:19px; }
+body.panel-renovado .gestion-seccion { border:1px solid #dce8df; border-radius:18px; background:white; box-shadow:0 10px 30px rgba(13,56,31,.04); overflow:hidden; }
+body.panel-renovado .gestion-seccion-cabecera { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:15px; padding:26px 28px; border-bottom:1px solid #e8eee9; }
+body.panel-renovado .gestion-seccion-cabecera h2 { font-size:25px; color:#173f2b; letter-spacing:-.5px; margin:7px 0; }
+body.panel-renovado .gestion-contador { display:inline-flex; padding:9px 14px; border-radius:30px; background:#edf5ee; color:#23603b; font-size:13px; font-weight:700; }
+body.panel-renovado .gestion-tabla-scroll { overflow-x:auto; width:100%; }
+body.panel-renovado .gestion-tabla { width:100%; border-collapse:collapse; min-width:1040px; margin:0; }
+body.panel-renovado .gestion-tabla thead { background:#f7faf7; }
+body.panel-renovado .gestion-tabla th { padding:16px; color:#56715e; font-size:11px; font-weight:800; text-align:left; text-transform:uppercase; letter-spacing:.65px; white-space:nowrap; background:#f7faf7; }
+body.panel-renovado .gestion-tabla td { padding:20px 16px; border-top:1px solid #ebefec; vertical-align:top; font-size:14px; }
+body.panel-renovado .gestion-tabla tbody tr:hover { background:#fcfefc; }
+body.panel-renovado .gestion-numero { font-weight:800; color:#276a46; }
+body.panel-renovado .gestion-jugador, body.panel-renovado .gestion-cancha, body.panel-renovado .gestion-fecha { display:block; font-size:14px; color:#213b29; }
+body.panel-renovado .gestion-muted { display:block; margin-top:6px; font-size:12px; color:#758478; line-height:1.5; }
+body.panel-renovado .gestion-precio { font-size:16px; color:#173c29; white-space:nowrap; }
+body.panel-renovado .gestion-estado { display:inline-block; border-radius:30px; padding:7px 11px; font-size:12px; font-weight:700; white-space:nowrap; }
+body.panel-renovado .gestion-confirmada { color:#116b3e; background:#e4f6e9; }
+body.panel-renovado .gestion-pendiente { color:#956000; background:#fff4d9; }
+body.panel-renovado .gestion-cancelada { color:#a63737; background:#ffeded; }
+body.panel-renovado .gestion-acciones { min-width:198px; }
+body.panel-renovado .gestion-form { display:flex; flex-direction:column; align-items:stretch; gap:9px; }
+body.panel-renovado .gestion-label { font-size:11px; font-weight:700; color:#6b796d; }
+body.panel-renovado .gestion-form select { margin:0; width:100%; max-width:none; padding:10px 12px; border:1px solid #cdded0; border-radius:9px; background:white; color:#25442e; font:inherit; font-size:13px; }
+body.panel-renovado .gestion-boton { display:block; width:100%; margin:0; padding:11px 13px; border:0; border-radius:9px; background:#1b6b43; color:white; font-size:13px; font-weight:700; cursor:pointer; }
+body.panel-renovado .gestion-boton:hover { background:#134c31; }
+body.panel-renovado .gestion-pago { margin-top:18px; padding:15px; background:#f2f8f2; border:1px solid #e1eee3; border-radius:12px; }
+body.panel-renovado .gestion-pago strong { font-size:12px; color:#23462d; }
+body.panel-renovado .gestion-pago p { margin:8px 0 12px; font-size:12px; line-height:1.5; color:#647567; }
+body.panel-renovado .gestion-boton-saldo { background:#a7e65e; color:#183a25; }
+body.panel-renovado .gestion-boton-saldo:hover { background:#91d84e; }
+body.panel-renovado .gestion-pago-ok { margin:12px 0 0; font-size:12px; font-weight:700; color:#18834b; }
+body.panel-renovado .gestion-vacio { padding:65px 20px; text-align:center; }
+body.panel-renovado .gestion-vacio-icono { display:inline-grid; place-items:center; height:66px; width:66px; background:#eff6ed; color:#267a4d; border-radius:18px; font-size:38px; }
+body.panel-renovado .gestion-vacio h3 { color:#1b422a; font-size:22px; margin:20px 0 8px; }
+body.panel-renovado .gestion-vacio p { max-width:440px; margin:0 auto; color:#708074; line-height:1.65; }
+@media(max-width:850px) { body.panel-renovado .gestion-indicadores {grid-template-columns:1fr;} body.panel-renovado .gestion-main {padding:25px 14px 60px;} }
+@media(max-width:520px) { body.panel-renovado .gestion-seccion-cabecera {padding:22px 18px;} body.panel-renovado .gestion-encabezado h1 {font-size:31px;} }

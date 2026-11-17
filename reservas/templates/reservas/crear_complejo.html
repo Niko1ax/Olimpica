@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar complejo | Olimpica</title>
+
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+</head>
+
+<body class="page-crear-complejo">
+    {% include 'reservas/navbar.html' %}
+
+    <main>
+        <h1>Registrar complejo</h1>
+        <p>Ingresá los datos del nuevo complejo deportivo.</p>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if formulario.errors %}
+            <div class="error">
+                Revisá los campos ingresados:
+                {{ formulario.errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for campo in formulario %}
+                <div class="campo">
+                    <label for="{{ campo.id_for_label }}">
+                        {{ campo.label }}
+                    </label>
+                    {{ campo }}
+
+                    {% for error_campo in campo.errors %}
+                        <p class="error">{{ error_campo }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Guardar complejo</button>
+            <a class="volver" href="{% url 'administrar_complejos' %}">
+                Volver
+            </a>
+        </form>
+    </main>
+</body>
+</html>

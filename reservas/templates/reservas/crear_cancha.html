@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar cancha | Olimpica</title>
+
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+</head>
+
+<body class="page-crear-cancha">
+    {% include 'reservas/navbar.html' %}
+
+    <main>
+        <h1>Registrar cancha</h1>
+        <p>Completá los datos de la cancha que querés incorporar.</p>
+
+        {% if formulario.non_field_errors %}
+            <div class="error">{{ formulario.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for campo in formulario %}
+                <div class="campo">
+                    <label for="{{ campo.id_for_label }}">
+                        {{ campo.label }}
+                    </label>
+
+                    {{ campo }}
+
+                    {% for error in campo.errors %}
+                        <div class="error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Guardar cancha</button>
+            <a class="volver" href="{% url 'administrar_complejos' %}">
+                Volver
+            </a>
+        </form>
+    </main>
+</body>
+</html>

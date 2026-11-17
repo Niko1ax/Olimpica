@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar canchas | Olimpica</title>
+
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+</head>
+
+<body class="page-buscar">
+    {% include 'reservas/navbar.html' %}
+
+    <main>
+        <header class="buscar-encabezado">
+            <div>
+                <span class="section-kicker">ENCONTRÁ TU PRÓXIMO PARTIDO</span>
+                <h1>Buscá tu cancha</h1>
+                <p class="descripcion">
+                    Elegí la fecha y el horario de inicio. Encontrá tu turno disponible en segundos.
+                    Cada reserva dura una hora.
+                </p>
+            </div>
+            <div class="buscar-encabezado-icono" aria-hidden="true">⚽</div>
+        </header>
+
+        <section class="buscar-bloque" aria-label="Formulario de búsqueda de canchas">
+        <div class="buscar-bloque-titulo">
+            <div class="buscar-bloque-icono" aria-hidden="true">⌕</div>
+            <div>
+                <h2>Encontrá tu turno</h2>
+                <p>Seleccioná cuándo querés jugar.</p>
+            </div>
+        </div>
+        <form method="get" action="{% url 'buscar_canchas' %}"
+              class="formulario-busqueda">
+
+            <div class="campo">
+                <label for="fecha">Fecha</label>
+                <input
+                    type="date"
+                    id="fecha"
+                    name="fecha"
+                    value="{{ fecha }}"
+                    min="{{ fecha_minima }}"
+                    max="{{ fecha_maxima }}"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="hora_inicio">Hora de inicio</label>
+                <select id="hora_inicio" name="hora_inicio" required>
+                    <option value="">Elegí un horario</option>
+
+                    {% for horario in horarios %}
+                        <option
+                            value="{{ horario }}"
+                            {% if hora_inicio == horario %}selected{% endif %}
+                        >
+                            {{ horario }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="boton boton-buscar">
+                Buscar disponibilidad
+            </button>
+        </form>
+        </section>
+
+        {% if error %}
+            <div class="mensaje error">
+                {{ error }}
+            </div>
+        {% elif busqueda_realizada %}
+            <div class="mensaje">
+                Resultados para el {{ fecha }} a las {{ hora_inicio }}.
+                Duración: una hora
+                (hasta las {{ hora_fin }}).
+            </div>
+
+            <div class="resultados">
+                {% for cancha in canchas %}
+                    <article class="tarjeta-cancha">
+                        <div class="search-card-banner" aria-hidden="true">⚽</div>
+                        <h2>{{ cancha.nombre }}</h2>
+
+                        <p class="detalle">
+                            <strong>Complejo:</strong>
+                            {{ cancha.complejo.nombre }}
+                        </p>
+
+                        <p class="detalle">
+                            <strong>Dirección:</strong>
+                            {{ cancha.complejo.direccion }}
+                        </p>
+
+                        {% if cancha.complejo.telefono %}
+                            <p class="detalle">
+                                <strong>Teléfono:</strong>
+                                {{ cancha.complejo.telefono }}
+                            </p>
+                        {% endif %}
+
+                        <p class="detalle">
+                            <strong>Superficie:</strong>
+                            {{ cancha.get_superficie_display }}
+                        </p>
+
+                        <p class="precio">
+                            ${{ cancha.precio_por_hora }} por hora
+                        </p>
+
+                        <p class="horario">
+                            <strong>Turno:</strong>
+                            {{ hora_inicio }} a {{ hora_fin }}
+                        </p>
+
+                        <a
+                            class="boton"
+                            href="{% url 'reservar_cancha' cancha.id %}?fecha={{ fecha }}&hora_inicio={{ hora_inicio }}"
+                        >
+                            Reservar esta cancha
+                        </a>
+                    </article>
+                {% empty %}
+                    <div class="mensaje">
+                        No hay canchas disponibles para ese día y horario.
+                        Probá con otro turno.
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="buscar-estado-inicial" role="status">
+                <div class="buscar-estado-icono" aria-hidden="true">▦</div>
+                <h2>Tu próximo partido empieza acá</h2>
+                <p>Seleccioná una fecha y un horario para descubrir las canchas disponibles.</p>
+            </div>
+        {% endif %}
+
+        <a class="volver" href="{% url 'inicio' %}">Volver al inicio</a>
+    </main>
+</body>
+</html>

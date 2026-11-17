@@ -1,0 +1,55 @@
+/* Sección: revisión de pagos. Aislada para no afectar otras vistas. */
+body.page-pagos-revision{margin:0;background:#f3f8f5;color:#113c2c;font-family:Arial,sans-serif}
+body.page-pagos-revision *,body.page-pagos-revision *::before,body.page-pagos-revision *::after{box-sizing:border-box}
+body.page-pagos-revision .pagos-layout{max-width:1160px;width:calc(100% - 48px);margin:0 auto;padding:51px 0 90px}
+body.page-pagos-revision .pagos-cabecera{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-bottom:29px}
+body.page-pagos-revision .pagos-kicker{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#07804d}
+body.page-pagos-revision .pagos-kicker span{margin:0 7px;font-size:8px;vertical-align:1px}
+body.page-pagos-revision .pagos-cabecera h1{font-size:clamp(30px,3.3vw,42px);color:#093d2b;letter-spacing:-1px;margin:10px 0 10px;line-height:1.18}
+body.page-pagos-revision .pagos-cabecera p{font-size:15px;color:#677b70;line-height:1.6;margin:0}
+body.page-pagos-revision .pagos-cabecera-icono{width:62px;height:62px;flex-shrink:0;border-radius:16px;background:#e2f5e9;color:#12824f;display:grid;place-items:center;font-size:32px;font-weight:800}
+body.page-pagos-revision .pagos-resumen{display:flex;align-items:center;gap:18px;background:linear-gradient(115deg,#073e2b,#176747);color:white;border-radius:17px;padding:24px 28px;margin-bottom:27px;box-shadow:0 12px 32px rgba(7,63,42,.12)}
+body.page-pagos-revision .pagos-resumen-icono{width:59px;height:59px;display:grid;place-items:center;background:rgba(255,255,255,.12);border-radius:14px;font-size:35px;color:#c4f39a;flex-shrink:0}
+body.page-pagos-revision .pagos-resumen small{display:block;color:#c7e7d5;font-size:11px;font-weight:800;letter-spacing:1.2px}
+body.page-pagos-revision .pagos-resumen strong{display:inline-block;font-size:36px;line-height:1.25;margin:3px 11px 0 0;vertical-align:middle}
+body.page-pagos-revision .pagos-resumen span{font-size:13px;color:#e0f4e7}
+body.page-pagos-revision .pagos-listado{display:grid;gap:23px}
+body.page-pagos-revision .pago-tarjeta{background:#fff;border:1px solid #d9e8de;border-radius:17px;overflow:hidden;box-shadow:0 10px 30px rgba(8,55,33,.05)}
+body.page-pagos-revision .pago-tarjeta-cabecera{padding:23px 27px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #e8f0ea}
+body.page-pagos-revision .pago-identificacion{display:flex;align-items:center;gap:13px}
+body.page-pagos-revision .pago-icono{height:47px;width:47px;display:grid;place-items:center;background:#e9f7ee;color:#12834e;border-radius:12px;font-size:25px;font-weight:800}
+body.page-pagos-revision .pago-referencia{display:block;font-size:10px;letter-spacing:1.2px;font-weight:800;color:#7b9082;margin-bottom:5px}
+body.page-pagos-revision .pago-tarjeta h2{font-size:21px;line-height:1.2;color:#0b3e2b;margin:0}
+body.page-pagos-revision .pago-estado{display:inline-flex;align-items:center;border-radius:99px;background:#fff2d7;color:#986300;font-size:12px;font-weight:800;white-space:nowrap;padding:9px 14px}
+body.page-pagos-revision .pago-cuerpo{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr);gap:27px;padding:28px}
+body.page-pagos-revision .pago-informacion h3{font-size:16px;color:#103e2c;margin:0 0 20px}
+body.page-pagos-revision .pago-datos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 20px;margin:0}
+body.page-pagos-revision .pago-datos div{min-width:0}
+body.page-pagos-revision .pago-datos dt{font-size:12px;color:#7a8b80;margin-bottom:7px}
+body.page-pagos-revision .pago-datos dd{font-size:14px;font-weight:750;line-height:1.45;color:#153b2b;margin:0;overflow-wrap:anywhere}
+body.page-pagos-revision .pago-panel-comprobante{border-radius:14px;border:1px solid #daecdf;background:#f3faf5;padding:23px}
+body.page-pagos-revision .pago-panel-etiqueta{display:block;font-size:10px;color:#718778;font-weight:800;letter-spacing:1.1px;margin-bottom:8px}
+body.page-pagos-revision .pago-importe{display:block;color:#0a5737;font-size:clamp(27px,3vw,36px);font-weight:800;line-height:1.2;overflow-wrap:anywhere}
+body.page-pagos-revision .pago-separador{border-top:1px solid #dce9de;margin:20px 0}
+body.page-pagos-revision .pago-ver-comprobante{display:inline-block;background:#fff;color:#087344;border:1px solid #b9dec5;padding:12px 15px;border-radius:9px;font-size:13px;font-weight:800;text-decoration:none}
+body.page-pagos-revision .pago-ver-comprobante:hover{background:#e4f6e9}
+body.page-pagos-revision .pago-ayuda{font-size:12px;line-height:1.5;color:#7b8a7e;margin:12px 0 0}
+body.page-pagos-revision .pago-sin-comprobante{font-size:13px;color:#995c28;line-height:1.5;margin:0}
+body.page-pagos-revision .pago-acciones{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid #e8efea;background:#fbfdfb;padding:21px 27px}
+body.page-pagos-revision .pago-acciones strong{font-size:13px;color:#153e2b}
+body.page-pagos-revision .pago-acciones p{font-size:12px;color:#718478;margin:5px 0 0;line-height:1.5}
+body.page-pagos-revision .pago-botones{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+body.page-pagos-revision .pago-botones form{margin:0}
+body.page-pagos-revision .pago-botones button{font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;border-radius:9px;padding:13px 17px;border:1px solid transparent;white-space:nowrap;margin:0;min-height:43px}
+body.page-pagos-revision .pago-boton-aprobar{background:#087748;color:#fff}
+body.page-pagos-revision .pago-boton-aprobar:hover{background:#065d38}
+body.page-pagos-revision .pago-boton-rechazar{background:#fff0ef;color:#b13737;border-color:#f5d0ce!important}
+body.page-pagos-revision .pago-boton-rechazar:hover{background:#ffe4e1}
+body.page-pagos-revision .pagos-vacio{display:flex;align-items:center;flex-direction:column;text-align:center;border:1px solid #dbeadd;border-radius:17px;background:#fff;padding:60px 20px;box-shadow:0 10px 30px rgba(7,56,34,.04)}
+body.page-pagos-revision .pagos-vacio-icono{width:76px;height:76px;display:grid;place-items:center;background:#e4f7e9;color:#0a854e;border-radius:22px;font-size:39px;font-weight:800;margin-bottom:17px}
+body.page-pagos-revision .pagos-vacio h2{font-size:26px;color:#103f2b;margin:0 0 9px}
+body.page-pagos-revision .pagos-vacio p{color:#73867a;font-size:14px;line-height:1.6;margin:0 0 22px}
+body.page-pagos-revision .pagos-volver{background:#0c6e45;color:white!important;text-decoration:none;border-radius:9px;padding:12px 19px;font-weight:800;font-size:13px}
+body.page-pagos-revision .pagos-volver:hover{background:#095336}
+@media(max-width:850px){body.page-pagos-revision .pago-cuerpo{grid-template-columns:1fr}body.page-pagos-revision .pago-acciones{align-items:flex-start;flex-direction:column}}
+@media(max-width:560px){body.page-pagos-revision .pagos-layout{width:calc(100% - 28px);padding:31px 0 55px}body.page-pagos-revision .pagos-cabecera-icono{display:none}body.page-pagos-revision .pagos-resumen{padding:20px}body.page-pagos-revision .pago-tarjeta-cabecera{padding:19px;align-items:flex-start;flex-direction:column}body.page-pagos-revision .pago-cuerpo{padding:20px;gap:22px}body.page-pagos-revision .pago-datos{grid-template-columns:1fr 1fr;gap:20px 13px}body.page-pagos-revision .pago-acciones{padding:19px}body.page-pagos-revision .pago-botones{width:100%;flex-direction:column}body.page-pagos-revision .pago-botones form,body.page-pagos-revision .pago-botones button{width:100%}}

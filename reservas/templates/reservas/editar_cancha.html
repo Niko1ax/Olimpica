@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar cancha | Olimpica</title>
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+</head>
+<body class="page-editar-cancha">
+    {% include 'reservas/navbar.html' %}
+    <main>
+        <h1>Editar cancha</h1>
+        <p>Actualizá los datos de {{ cancha.nombre }}.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ formulario.as_p }}
+            <button type="submit">Guardar cambios</button>
+            <a class="enlace" href="{% url 'administrar_complejos' %}">Volver</a>
+        </form>
+    </main>
+</body>
+</html>

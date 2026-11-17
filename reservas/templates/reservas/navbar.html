@@ -1,0 +1,30 @@
+<nav class="olimpica-nav" aria-label="Navegación principal">
+    <div class="nav-container">
+        <a class="marca" href="{% url 'inicio' %}"><span class="marca-icono">⚽</span> Olímpica</a>
+        <div class="enlaces">
+            <a href="{% url 'buscar_canchas' %}">Buscar canchas</a>
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <a href="{% url 'panel_reservas' %}">Administrar reservas</a>
+                    <a href="{% url 'administrar_complejos' %}">Complejos y canchas</a>
+                    <a href="{% url 'reportes' %}">Reportes</a>
+                {% elif user.perfil.rol == "DUENIO" %}
+                    <a href="{% url 'panel_reservas' %}">Administrar reservas</a>
+                    <a href="{% url 'administrar_complejos' %}">Mis complejos</a>
+                    <a href="{% url 'pagos_pendientes' %}">Revisar pagos</a>
+                    <a href="{% url 'reportes' %}">Reportes</a>
+                {% else %}
+                    <a href="{% url 'mis_reservas' %}">Mis reservas</a>
+                {% endif %}
+                <span class="usuario">Hola, {{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="boton-sesion">Cerrar sesión</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Iniciar sesión</a>
+                <a class="boton-registro" href="{% url 'registro' %}">Registrarse</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

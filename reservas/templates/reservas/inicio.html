@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olimpica | Reservá tu cancha</title>
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+</head>
+<body class="page-inicio">
+    {% include 'reservas/navbar.html' %}
+
+    <section class="hero" id="inicio">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <span class="hero-eyebrow">TU CANCHA, TU PARTIDO</span>
+                <h1>Reservá tu cancha<br>de forma rápida y simple.</h1>
+                <p>Encontrá complejos, elegí un horario disponible y organizá tu próximo partido en pocos pasos.</p>
+                <div class="hero-actions">
+                    <a class="boton" href="{% url 'buscar_canchas' %}">⌕ &nbsp; Buscar canchas</a>
+                    <a class="boton boton-outline" href="#complejos">Explorar complejos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="beneficios" aria-label="Beneficios de Olímpica">
+        <div class="beneficio"><span class="beneficio-icono">▦</span><div><strong>Reservas online</strong><small>Elegí día y horario en pocos pasos.</small></div></div>
+        <div class="beneficio"><span class="beneficio-icono">◎</span><div><strong>Múltiples complejos</strong><small>Encontrá una cancha para tu partido.</small></div></div>
+        <div class="beneficio"><span class="beneficio-icono">✓</span><div><strong>Gestión simple</strong><small>Controlá tus reservas y pagos.</small></div></div>
+    </div>
+
+    <main id="complejos">
+        <div class="section-heading">
+            <div><span class="section-kicker">EXPLORÁ</span><h2 class="subtitulo">Complejos deportivos</h2><p class="introduccion">Descubrí los complejos publicados en Olímpica.</p></div>
+            <a class="section-link" href="{% url 'buscar_canchas' %}">Consultar disponibilidad →</a>
+        </div>
+        {% if complejos %}
+            <div class="complejos">
+                {% for complejo in complejos %}
+                    <article class="tarjeta">
+                        <div class="card-cover" aria-hidden="true"><span>⚽</span></div>
+                        <div class="card-body">
+                            <span class="etiqueta">Complejo deportivo</span>
+                            <h3>{{ complejo.nombre }}</h3>
+                            <p class="card-location">⌖ &nbsp; {{ complejo.direccion }}</p>
+                            {% if complejo.descripcion %}<p>{{ complejo.descripcion }}</p>{% endif %}
+                            <p><strong>Canchas registradas:</strong> {{ complejo.canchas.count }}</p>
+                            {% if complejo.telefono %}<p><strong>Teléfono:</strong> {{ complejo.telefono }}</p>{% endif %}
+                            <a class="card-action" href="{% url 'buscar_canchas' %}">Buscar turnos →</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="vacio"><h3>Todavía no hay complejos publicados.</h3><p>Próximamente vas a poder encontrar canchas disponibles para organizar tu partido.</p></div>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>Olimpica — Encontrá tu cancha, organizá tu partido.</p>
+    </footer>
+</body>
+</html>

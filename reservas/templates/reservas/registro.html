@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creá tu cuenta en Olimpica para reservar canchas.">
+    <title>Crear cuenta | Olimpica</title>
+
+    
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+</head>
+
+<body class="page-registro">
+    <div class="auth-layout">
+      <aside class="auth-brand"><a href="{% url 'inicio' %}">⚽ Olímpica</a><div><span>SUMATE A LA CANCHA</span><h2>Un partido más cerca.</h2><p>Creá tu cuenta para encontrar y reservar tu cancha.</p></div><small>Jugá más. Organizá menos.</small></aside>
+    <main class="contenedor">
+        <h1>Crear cuenta en Olimpica</h1>
+        <p class="descripcion">
+            Registrate para buscar canchas y reservar tu próximo partido.
+        </p>
+
+        {% if formulario.non_field_errors %}
+            <div class="errores-generales">
+                {{ formulario.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label for="{{ formulario.username.id_for_label }}">
+                    Nombre de usuario
+                </label>
+                {{ formulario.username }}
+                {% for error in formulario.username.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.email.id_for_label }}">
+                    Correo electrónico
+                </label>
+                {{ formulario.email }}
+                {% for error in formulario.email.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.telefono.id_for_label }}">
+                    Número de teléfono
+                </label>
+                {{ formulario.telefono }}
+                {% for error in formulario.telefono.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.password1.id_for_label }}">
+                    Contraseña
+                </label>
+                {{ formulario.password1 }}
+                <p class="ayuda">
+                    Evitá usar tu nombre o una contraseña fácil de adivinar.
+                </p>
+                {% for error in formulario.password1.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ formulario.password2.id_for_label }}">
+                    Confirmar contraseña
+                </label>
+                {{ formulario.password2 }}
+                {% for error in formulario.password2.errors %}
+                    <div class="error-campo">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <button type="submit">Crear cuenta</button>
+        </form>
+
+        <div class="enlace">
+            ¿Ya tenés cuenta?
+            <a href="{% url 'login' %}">Iniciá sesión</a>
+            <br>
+            <a href="{% url 'inicio' %}">Volver al inicio</a>
+        </div>
+    </main>
+    </div>
+</body>
+</html>

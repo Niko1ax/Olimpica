@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisar pagos | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/pagos_pendientes.css' %}">
+</head>
+<body class="page-pagos-revision">
+    {% include 'reservas/navbar.html' %}
+
+    <main class="pagos-layout">
+        <header class="pagos-cabecera">
+            <div>
+                <span class="pagos-kicker">PANEL DEL PROPIETARIO <span aria-hidden="true">●</span> PAGOS</span>
+                <h1>Revisión de pagos</h1>
+                <p>Revisá los comprobantes recibidos y confirmá o rechazá cada pago.</p>
+            </div>
+            <div class="pagos-cabecera-icono" aria-hidden="true">$</div>
+        </header>
+
+        <section class="pagos-resumen" aria-label="Pagos por revisar">
+            <div class="pagos-resumen-icono" aria-hidden="true">◷</div>
+            <div>
+                <small>COMPROBANTES POR REVISAR</small>
+                <strong>{{ pagos|length }}</strong>
+                <span>Pago{{ pagos|length|pluralize }} pendiente{{ pagos|length|pluralize }} de revisión</span>
+            </div>
+        </section>
+
+        {% if pagos %}
+            <section class="pagos-listado" aria-label="Comprobantes pendientes">
+                {% for pago in pagos %}
+                <article class="pago-tarjeta">
+                    <header class="pago-tarjeta-cabecera">
+                        <div class="pago-identificacion">
+                            <span class="pago-icono" aria-hidden="true">$</span>
+                            <div>
+                                <span class="pago-referencia">SOLICITUD DE PAGO</span>
+                                <h2>Pago #{{ pago.id }}</h2>
+                            </div>
+                        </div>
+                        <span class="pago-estado">● {{ pago.get_estado_display }}</span>
+                    </header>
+
+                    <div class="pago-cuerpo">
+                        <div class="pago-informacion">
+                            <h3>Datos de la reserva</h3>
+                            <dl class="pago-datos">
+                                <div><dt>Jugador</dt><dd>{{ pago.reserva.jugador.usuario.username }}</dd></div>
+                                <div><dt>Complejo</dt><dd>{{ pago.reserva.cancha.complejo.nombre }}</dd></div>
+                                <div><dt>Cancha</dt><dd>{{ pago.reserva.cancha.nombre }}</dd></div>
+                                <div><dt>Fecha de reserva</dt><dd>{{ pago.reserva.fecha|date:"d/m/Y" }}</dd></div>
+                                <div><dt>Tipo de pago</dt><dd>{{ pago.get_tipo_display }}</dd></div>
+                                <div><dt>Método</dt><dd>{{ pago.get_metodo_display }}</dd></div>
+                            </dl>
+                        </div>
+
+                        <aside class="pago-panel-comprobante" aria-label="Importe y comprobante">
+                            <span class="pago-panel-etiqueta">IMPORTE A REVISAR</span>
+                            <strong class="pago-importe">${{ pago.importe|floatformat:2 }}</strong>
+                            <div class="pago-separador"></div>
+                            <span class="pago-panel-etiqueta">COMPROBANTE</span>
+                            {% if pago.comprobante %}
+                                <a class="pago-ver-comprobante" href="{{ pago.comprobante.url }}" target="_blank" rel="noopener noreferrer">↗ Ver comprobante</a>
+                                <p class="pago-ayuda">Abrí el archivo para verificar la información antes de decidir.</p>
+                            {% else %}
+                                <p class="pago-sin-comprobante">No se adjuntó ningún comprobante.</p>
+                            {% endif %}
+                        </aside>
+                    </div>
+
+                    <footer class="pago-acciones">
+                        <div>
+                            <strong>¿El pago es correcto?</strong>
+                            <p>Verificá el comprobante antes de aprobar o rechazar.</p>
+                        </div>
+                        <div class="pago-botones">
+                            <form method="POST" action="{% url 'actualizar_estado_pago' pago.id %}" onsubmit="return confirm('¿Confirmás el rechazo de este pago?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="accion" value="rechazar">
+                                <button type="submit" class="pago-boton-rechazar">✕ Rechazar pago</button>
+                            </form>
+                            <form method="POST" action="{% url 'actualizar_estado_pago' pago.id %}" onsubmit="return confirm('¿Confirmás la aprobación de este pago?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="accion" value="aprobar">
+                                <button type="submit" class="pago-boton-aprobar">✓ Aprobar pago</button>
+                            </form>
+                        </div>
+                    </footer>
+                </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <section class="pagos-vacio">
+                <div class="pagos-vacio-icono" aria-hidden="true">✓</div>
+                <h2>¡Todo al día!</h2>
+                <p>No hay pagos pendientes de revisión por el momento.</p>
+                <a href="{% url 'panel_reservas' %}" class="pagos-volver">Volver a gestionar reservas</a>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>

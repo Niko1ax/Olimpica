@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar seña | Olímpica</title>
+    <link rel="stylesheet" href="{% static 'reservas/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reservas/css/registrar_pago.css' %}">
+    <script src="{% static 'reservas/js/registrar_pago.js' %}" defer></script>
+</head>
+<body class="page-registrar-pago rp-pagina">
+    {% include 'reservas/navbar.html' %}
+
+    <main class="rp-contenedor">
+        <!-- <div class="rp-superior">
+            <a class="rp-volver" href="{% url 'mis_reservas' %}">← Volver a mis reservas</a>
+            <span class="rp-paso">PASO FINAL · SEÑA</span>
+        </div>-->
+        <header class="rp-encabezado">
+            <p class="rp-kicker">CONFIRMÁ TU PARTIDO</p>
+            <h1>Registrar seña</h1>
+            <p>Elegí cómo pagar tu seña y adjuntá el comprobante para que el propietario pueda verificarla.</p>
+        </header>
+
+        <div class="rp-columnas">
+            <section class="rp-tarjeta rp-resumen" aria-labelledby="rp-resumen-titulo">
+                <div class="rp-tarjeta-cabecera">
+                    <span class="rp-icono" aria-hidden="true">▦</span>
+                    <div>
+                        <p class="rp-eyebrow">DATOS DE LA RESERVA</p>
+                        <h2 id="rp-resumen-titulo">Resumen del turno</h2>
+                    </div>
+                    <span class="rp-numero">#{{ reserva.id }}</span>
+                </div>
+                <div class="rp-datos">
+                    <div class="rp-dato"><span>Cancha</span><strong>{{ reserva.cancha.nombre }}</strong></div>
+                    <div class="rp-dato"><span>Complejo</span><strong>{{ reserva.cancha.complejo.nombre }}</strong></div>
+                    <div class="rp-dato"><span>Fecha</span><strong>{{ reserva.fecha|date:"d/m/Y" }}</strong></div>
+                    <div class="rp-dato"><span>Horario</span><strong>{{ reserva.hora_inicio|time:"H:i" }} a {{ reserva.hora_fin|time:"H:i" }}</strong></div>
+                    <div class="rp-dato"><span>Precio total</span><strong>$<span class="rp-monto" data-monto="{{ reserva.precio_total }}">{{ reserva.precio_total }}</span></strong></div>
+                </div>
+                <div class="rp-destacado">
+                    <span>Seña a abonar <strong>30%</strong></span>
+                    <div class="rp-importe">$<span class="rp-monto" data-monto="{{ importe_senia }}">{{ importe_senia }}</span></div>
+                    <p>El 70% restante se abona en el complejo.</p>
+                </div>
+                <p class="rp-nota">La seña queda pendiente de aprobación hasta que el propietario revise el comprobante.</p>
+                <div class="rp-superior">
+                    <a class="rp-volver" href="{% url 'mis_reservas' %}">← Volver a mis reservas</a>
+                    <span class="rp-paso">PASO FINAL · SEÑA</span>
+                </div>
+            </section>
+
+            <section class="rp-tarjeta rp-formulario-tarjeta" aria-labelledby="rp-form-titulo">
+                <p class="rp-eyebrow">ELEGÍ CÓMO PAGAR</p>
+                <h2 id="rp-form-titulo">Datos del pago</h2>
+                <form method="post" enctype="multipart/form-data" id="rp-formulario">
+                    {% csrf_token %}
+                    {% if formulario.non_field_errors %}
+                        <div class="rp-error" role="alert">{{ formulario.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="rp-campo">
+                        <label for="{{ formulario.metodo.id_for_label }}">Método de pago</label>
+                        {{ formulario.metodo }}
+                        {{ formulario.metodo.errors }}
+                    </div>
+
+                    <div id="rp-mercadopago" class="rp-mercadopago" hidden data-qr-src="{% static 'reservas/img/mercadopago-qr.png' %}">
+                        <div class="rp-mp-cabecera"><strong>Escaneá el QR de Mercado Pago</strong><span>Seña 30%</span></div>
+                        <div class="rp-mp-contenido">
+                            <img id="rp-codigo-qr" alt="QR de cobro de Mercado Pago del propietario" width="224" height="224" hidden>
+                            <div id="rp-qr-faltante" class="rp-qr-faltante" hidden role="status">
+                                El código QR todavía no está configurado. Solicitá al propietario sus datos de cobro antes de realizar el pago.
+                            </div>
+                            <div class="rp-mp-instrucciones">
+                                <strong>Cómo pagar</strong>
+                                <ol>
+                                    <li>Abrí Mercado Pago desde tu teléfono.</li>
+                                    <li>Escaneá el QR y verificá el destinatario y el importe.</li>
+                                    <li>Pagá la seña y descargá o capturá el comprobante.</li>
+                                    <li>Adjuntalo en el campo de abajo.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <p class="rp-mp-aviso">El QR no confirma automáticamente tu pago: el dueño revisará el comprobante. Nunca pagues si los datos del destinatario no coinciden con los informados por el complejo.</p>
+                    </div>
+
+                    <div class="rp-campo">
+                        <label for="{{ formulario.comprobante.id_for_label }}">Comprobante de pago</label>
+                        {{ formulario.comprobante }}
+                        {{ formulario.comprobante.errors }}
+                        <p class="rp-ayuda">Adjuntá el archivo o captura de la operación realizada.</p>
+                    </div>
+                    <button class="rp-boton" type="submit">Enviar comprobante <span aria-hidden="true">→</span></button>
+                </form>
+                <p class="rp-seguridad">El envío del comprobante no acredita el pago hasta su revisión.</p>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
